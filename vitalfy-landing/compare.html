@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Vitalfy" />
+    <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+    <!-- SEO -->
+    <title>Vitalfy vs. alternativas — Por que a documentação clínica mudou</title>
+    <meta name="description"
+        content="Compare a Vitalfy com papel, Word, gravadores de celular e IA genérica. Veja por que médicos que valorizam documentação clara escolhem uma plataforma feita para a clínica." />
+    <meta name="keywords"
+        content="Vitalfy comparação, documentação clínica IA vs Word, alternativa ao papel médico, transcrição médica vs IA genérica, software documentação clínica" />
+    <meta name="theme-color" content="#09090B" />
+    <link rel="canonical" href="https://www.vitalfy.com.br/compare" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vitalfy" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Vitalfy vs. alternativas — Documentação clínica comparada" />
+    <meta property="og:description"
+        content="Compare a Vitalfy com papel, Word e IA genérica. Veja onde cada abordagem falha e onde a Vitalfy entrega resultado real." />
+    <meta property="og:url" content="https://www.vitalfy.com.br/compare" />
+    <meta property="og:image" content="https://www.vitalfy.com.br/og-compare.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vitalfy vs. alternativas" />
+    <meta name="twitter:description"
+        content="Documentação clínica: o que funciona, o que não funciona e por que a abordagem importa." />
+    <meta name="twitter:image" content="https://www.vitalfy.com.br/og-compare.png" />
+
+    <!-- Schema markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://www.vitalfy.com.br/" },
+                    { "@type": "ListItem", "position": 2, "name": "Comparativo", "item": "https://www.vitalfy.com.br/compare" }
+                ]
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    { "@type": "Question", "name": "A Vitalfy substitui o prontuário eletrônico?", "acceptedAnswer": { "@type": "Answer", "text": "Não. A Vitalfy é uma camada de documentação inteligente. Ela organiza e estrutura o conteúdo clínico para que você o registre ou exporte para o sistema que preferir." } },
+                    { "@type": "Question", "name": "Por que IA genérica não é suficiente para documentação clínica?", "acceptedAnswer": { "@type": "Answer", "text": "IAs genéricas não conhecem a estrutura de uma anamnese, não identificam CID-10, não sugerem diagnósticos diferenciais e não seguem o raciocínio clínico. A Vitalfy foi treinada especificamente para o contexto da medicina." } }
+                ]
+            }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'rgb(var(--c-base) / <alpha-value>)',
+                        raised: 'rgb(var(--c-raised) / <alpha-value>)',
+                        elev: 'rgb(var(--c-elev) / <alpha-value>)',
+                        panel: 'rgb(var(--c-panel) / <alpha-value>)',
+                        surface: 'rgb(var(--c-surface) / <alpha-value>)',
+                        surface2: 'rgb(var(--c-surface2) / <alpha-value>)',
+                        ink: 'rgb(var(--c-ink) / <alpha-value>)',
+                        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+                        dim: 'rgb(var(--c-dim) / <alpha-value>)',
+                        faint: 'rgb(var(--c-faint) / <alpha-value>)',
+                        accent: 'rgb(var(--c-accent) / <alpha-value>)',
+                        'accent-deep': 'rgb(var(--c-accent-deep) / <alpha-value>)',
+                        health: 'rgb(var(--c-health) / <alpha-value>)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+                    },
+                    letterSpacing: {
+                        tightest: '-0.04em',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('vitalfy-theme');
+                if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+                else if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
+                    document.documentElement.setAttribute('data-theme', 'light');
+            } catch (e) { }
+        })();
+    </script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --c-base: 9 9 11;
+            --c-raised: 14 14 17;
+            --c-elev: 17 17 19;
+            --c-panel: 24 24 27;
+            --c-surface: 31 31 35;
+            --c-surface2: 39 39 42;
+            --c-ink: 250 250 250;
+            --c-muted: 161 161 170;
+            --c-dim: 113 113 122;
+            --c-faint: 82 82 91;
+            --c-accent: 110 139 255;
+            --c-accent-deep: 58 102 224;
+            --c-health: 52 214 173;
+            --btn-bg: 250 250 250;
+            --btn-fg: 9 9 11;
+            --hairline: rgba(255, 255, 255, 0.08);
+            --hairline-strong: rgba(255, 255, 255, 0.12);
+            --glass-bg: linear-gradient(180deg, rgba(39, 39, 42, 0.55), rgba(24, 24, 27, 0.55));
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --brand-grad: linear-gradient(95deg, #8FA6FF 0%, #6E8BFF 38%, #34D6AD 100%);
+            --grain-blend: overlay;
+            --grain-opacity: 0.025;
+        }
+
+        :root[data-theme="light"] {
+            color-scheme: light;
+            --c-base: 255 255 255;
+            --c-raised: 248 248 250;
+            --c-elev: 255 255 255;
+            --c-panel: 244 244 246;
+            --c-surface: 235 235 238;
+            --c-surface2: 224 224 228;
+            --c-ink: 24 24 27;
+            --c-muted: 82 82 91;
+            --c-dim: 113 113 122;
+            --c-faint: 161 161 170;
+            --c-accent: 58 102 224;
+            --c-accent-deep: 42 78 192;
+            --c-health: 13 156 128;
+            --btn-bg: 24 24 27;
+            --btn-fg: 250 250 250;
+            --hairline: rgba(9, 9, 11, 0.10);
+            --hairline-strong: rgba(9, 9, 11, 0.16);
+            --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(244, 244, 246, 0.62));
+            --glass-border: rgba(9, 9, 11, 0.08);
+            --brand-grad: linear-gradient(95deg, #4C70EC 0%, #3A66E0 40%, #0D9C80 100%);
+            --grain-blend: multiply;
+            --grain-opacity: 0.04;
+        }
+
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+
+        body {
+            background-color: rgb(var(--c-base));
+            color: rgb(var(--c-ink));
+            transition: background-color .4s ease, color .4s ease;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        .grain::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: var(--grain-opacity);
+            mix-blend-mode: var(--grain-blend);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .brand-gradient {
+            background: var(--brand-grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hairline { border-color: var(--hairline); }
+        .hairline-strong { border-color: var(--hairline-strong); }
+
+        .glow {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid var(--glass-border);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .card-hover {
+            transition: transform .35s cubic-bezier(.16, 1, .3, 1), border-color .35s ease, background-color .35s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .link-underline { position: relative; }
+        .link-underline::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            height: 1px;
+            width: 100%;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+        }
+        .link-underline:hover::after { transform: scaleX(1); }
+        .link-underline.is-active::after { transform: scaleX(1); }
+
+        .btn-primary {
+            background: rgb(var(--btn-bg));
+            color: rgb(var(--btn-fg));
+            transition: transform .25s cubic-bezier(.16, 1, .3, 1), box-shadow .25s ease, opacity .2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 40px -12px rgba(110, 139, 255, 0.5);
+        }
+
+        .btn-ghost {
+            transition: background-color .25s ease, border-color .25s ease, transform .25s cubic-bezier(.16, 1, .3, 1);
+        }
+        .btn-ghost:hover { transform: translateY(-1px); }
+
+        .theme-sun { display: block; }
+        .theme-moon { display: none; }
+        :root[data-theme="light"] .theme-sun { display: none; }
+        :root[data-theme="light"] .theme-moon { display: block; }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(24px, -18px); }
+        }
+        .ambient { animation: drift 14s ease-in-out infinite; }
+
+        *:focus-visible {
+            outline: 2px solid #6E8BFF;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] .faq-chevron { transform: rotate(45deg); }
+        .faq-chevron { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+
+        .alt-bad { color: rgb(var(--c-faint)); }
+        .alt-warn { color: rgb(248 188 73); }
+
+        /* Table responsive scroll */
+        .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+            .ambient { animation: none; }
+            * { transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+
+<body class="bg-base text-ink font-sans antialiased grain selection:bg-accent/30">
+
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white">Pular para o conteúdo</a>
+
+    <!-- ====================== NAV ====================== -->
+    <header id="nav" class="fixed top-0 inset-x-0 z-40 transition-all duration-500">
+        <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Principal">
+            <div id="nav-inner" class="mt-3 flex items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-500">
+                <a href="/" class="flex items-center gap-2.5" aria-label="Vitalfy, página inicial">
+                    <img src="/assets/img/vitalfy-logo.png" alt="Vitalfy" class="h-8 w-auto" />
+                    <span class="text-[15px] font-semibold tracking-tight">Vitalfy</span>
+                </a>
+
+                <div class="hidden items-center gap-8 md:flex">
+                    <a href="/" class="link-underline text-sm text-muted hover:text-ink transition-colors">Plataforma</a>
+                    <a href="/pricing.html" class="link-underline text-sm text-muted hover:text-ink transition-colors">Preços</a>
+                    <a href="/compare.html" class="link-underline is-active text-sm text-accent transition-colors" aria-current="page">Comparativo</a>
+                    <a href="/security.html" class="link-underline text-sm text-muted hover:text-ink transition-colors">Segurança</a>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a href="https://app.vitalfy.health/" class="hidden text-sm text-muted hover:text-ink transition-colors sm:block">Entrar</a>
+                    <button id="theme-btn" class="grid h-9 w-9 place-items-center rounded-lg border hairline text-muted hover:text-ink transition-colors" aria-label="Alternar tema" aria-pressed="false">
+                        <svg class="theme-sun h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4" />
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                        </svg>
+                        <svg class="theme-moon h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                    </button>
+                    <a href="https://app.vitalfy.health/" class="btn-primary hidden rounded-full px-4 py-2 text-sm font-medium min-[480px]:inline-block min-[768px]:max-[840px]:hidden">Começar grátis</a>
+                    <button id="menu-btn" class="grid h-9 w-9 place-items-center rounded-lg border hairline md:hidden" aria-label="Abrir menu" aria-expanded="false">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="glass mt-2 hidden rounded-2xl p-2 md:hidden">
+                <a href="/" class="block rounded-xl px-4 py-3 text-sm text-muted hover:bg-surface hover:text-ink">Plataforma</a>
+                <a href="/pricing.html" class="block rounded-xl px-4 py-3 text-sm text-muted hover:bg-surface hover:text-ink">Preços</a>
+                <a href="/compare.html" class="block rounded-xl px-4 py-3 text-sm text-accent bg-surface/50" aria-current="page">Comparativo</a>
+                <a href="/security.html" class="block rounded-xl px-4 py-3 text-sm text-muted hover:bg-surface hover:text-ink">Segurança</a>
+                <div class="mt-2 border-t hairline pt-2 min-[480px]:hidden">
+                    <a href="https://app.vitalfy.health/" class="btn-primary flex items-center justify-center rounded-xl px-4 py-3 text-sm font-medium">Começar grátis</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main">
+
+        <!-- ====================== HERO ====================== -->
+        <section class="relative overflow-hidden pt-36 pb-20 sm:pt-44 lg:pb-28">
+            <div class="glow ambient" style="width:580px;height:580px;top:-160px;left:50%;margin-left:-290px;background:radial-gradient(circle,rgba(110,139,255,0.2),transparent 65%)"></div>
+            <div class="glow" style="width:440px;height:440px;top:100px;right:-80px;background:radial-gradient(circle,rgba(52,214,173,0.1),transparent 65%)"></div>
+
+            <div class="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
+                <div class="reveal mx-auto inline-flex items-center gap-2 rounded-full border hairline bg-panel/60 px-3.5 py-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+                    <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Comparativo honesto</span>
+                </div>
+
+                <h1 class="reveal mx-auto mt-7 max-w-4xl text-balance text-5xl font-semibold leading-[1.04] tracking-tightest sm:text-6xl lg:text-7xl" style="transition-delay:.06s">
+                    Cada médico escolhe<br class="hidden sm:block" /> como <span class="brand-gradient">documentar</span>.
+                </h1>
+
+                <p class="reveal mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted" style="transition-delay:.12s">
+                    Papel, Word, celular, IA genérica — todas as alternativas têm seus momentos. Mas quando documentação clínica é parte central da rotina, a escolha da ferramenta impacta diretamente o tempo, a qualidade e a segurança do registro.
+                </p>
+
+                <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row" style="transition-delay:.18s">
+                    <a href="https://app.vitalfy.health/" class="btn-primary w-full rounded-full px-6 py-3 text-sm font-medium sm:w-auto">Experimentar grátis</a>
+                    <a href="#comparativo" class="btn-ghost flex w-full items-center justify-center gap-2 rounded-full border hairline-strong bg-panel/40 px-6 py-3 text-sm font-medium text-ink hover:bg-surface sm:w-auto">
+                        Ver o comparativo <i data-lucide="arrow-down" class="h-4 w-4"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== CUSTO DE TEMPO ====================== -->
+        <section class="border-y hairline bg-raised/40">
+            <div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+                <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+                    <div class="reveal">
+                        <p class="font-mono text-3xl font-medium tracking-tight text-ink">8–12 min</p>
+                        <p class="mt-1 text-sm text-dim">por documento estruturado manualmente</p>
+                    </div>
+                    <div class="reveal" style="transition-delay:.05s">
+                        <p class="font-mono text-3xl font-medium tracking-tight text-health">~2 min</p>
+                        <p class="mt-1 text-sm text-dim">para revisar um documento gerado pela Vitalfy</p>
+                    </div>
+                    <div class="reveal" style="transition-delay:.1s">
+                        <p class="font-mono text-3xl font-medium tracking-tight text-ink">20–40%</p>
+                        <p class="mt-1 text-sm text-dim">do dia clínico gasto em documentação</p>
+                    </div>
+                    <div class="reveal" style="transition-delay:.15s">
+                        <p class="font-mono text-3xl font-medium tracking-tight text-accent">+30</p>
+                        <p class="mt-1 text-sm text-dim">templates clínicos por especialidade</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== COMPARATIVO GERAL ====================== -->
+        <section id="comparativo" class="relative scroll-mt-24 py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl text-center">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Comparativo</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">Onde cada abordagem chega ao limite.</h2>
+                    <p class="reveal mt-5 text-lg leading-relaxed text-muted" style="transition-delay:.1s">Cada ferramenta tem um ponto de excelência. O problema surge quando ela precisa ir além do que foi feita para fazer.</p>
+                </div>
+
+                <!-- Comparison table -->
+                <div class="reveal mt-14 table-scroll" style="transition-delay:.1s">
+                    <table class="w-full min-w-[720px] border-collapse text-sm">
+                        <thead>
+                            <tr>
+                                <th class="w-[28%] py-4 pr-4 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Critério</th>
+                                <th class="w-[18%] px-4 py-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Papel / Word</th>
+                                <th class="w-[18%] px-4 py-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Gravador / Celular</th>
+                                <th class="w-[18%] px-4 py-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-faint">IA genérica</th>
+                                <th class="w-[18%] px-4 py-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-health">Vitalfy</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y" style="border-color:var(--hairline)">
+                            <!-- Row 1 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Estrutura clínica automática</p>
+                                    <p class="mt-0.5 text-xs text-dim">Queixa, HDA, histórico, conduta</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Contexto clínico real</p>
+                                    <p class="mt-0.5 text-xs text-dim">Entende a linguagem da medicina</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">CID-10 e diagnósticos sugeridos</p>
+                                    <p class="mt-0.5 text-xs text-dim">Hipóteses baseadas no conteúdo</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Identificação de red flags</p>
+                                    <p class="mt-0.5 text-xs text-dim">Sinais de alerta detectados no texto</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 5 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Templates por especialidade</p>
+                                    <p class="mt-0.5 text-xs text-dim">Cardiologia, ortopedia, dermatologia…</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 6 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Diarização de locutores</p>
+                                    <p class="mt-0.5 text-xs text-dim">Separa médico e paciente no áudio</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 7 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Exportação em PDF profissional</p>
+                                    <p class="mt-0.5 text-xs text-dim">Documento pronto para imprimir ou enviar</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 8 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Conformidade com LGPD</p>
+                                    <p class="mt-0.5 text-xs text-dim">Dados clínicos tratados com segurança</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 9 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Português médico com precisão</p>
+                                    <p class="mt-0.5 text-xs text-dim">Terminologia clínica em pt-BR</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="minus" class="mx-auto h-4 w-4 alt-warn"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                            <!-- Row 10 -->
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-medium text-ink">Histórico por paciente</p>
+                                    <p class="mt-0.5 text-xs text-dim">Linha do tempo consolidada por atendimento</p>
+                                </td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="x" class="mx-auto h-4 w-4 text-faint"></i></td>
+                                <td class="px-4 py-4 text-center"><i data-lucide="check" class="mx-auto h-4 w-4 text-health"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Legend -->
+                    <div class="mt-4 flex flex-wrap items-center gap-6 text-xs text-dim">
+                        <span class="flex items-center gap-1.5"><i data-lucide="check" class="h-3.5 w-3.5 text-health"></i> Disponível</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="h-3.5 w-3.5 alt-warn"></i> Parcial / limitado</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="x" class="h-3.5 w-3.5 text-faint"></i> Não disponível</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== ALTERNATIVA 1: PAPEL / WORD ====================== -->
+        <section class="relative border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid items-center gap-16 lg:grid-cols-2">
+                    <div>
+                        <div class="reveal inline-flex items-center gap-2 rounded-full border hairline bg-panel/60 px-3 py-1">
+                            <i data-lucide="file-text" class="h-3.5 w-3.5 text-faint"></i>
+                            <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">Alternativa 1</span>
+                        </div>
+                        <h2 class="reveal mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">
+                            Papel e Word: o padrão que cansa.
+                        </h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            Escrever à mão ou digitar depois da consulta é o método mais antigo e ainda o mais comum. Funciona. Mas cobra um preço alto em tempo e padronização.
+                        </p>
+                        <div class="mt-9 space-y-4">
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.12s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-500/10"><i data-lucide="clock" class="h-3.5 w-3.5 text-red-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Documentação após o atendimento</p>
+                                    <p class="mt-1 text-sm text-dim">Escrever o que foi dito em consulta requer memória e tempo extra — frequentemente nas horas finais do dia.</p>
+                                </div>
+                            </div>
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.16s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-500/10"><i data-lucide="shuffle" class="h-3.5 w-3.5 text-red-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Inconsistência entre registros</p>
+                                    <p class="mt-1 text-sm text-dim">Cada documento tem seu próprio estilo e formato. Rever ou comparar atendimentos vira trabalho manual.</p>
+                                </div>
+                            </div>
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.2s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-500/10"><i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-red-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Informação que se perde</p>
+                                    <p class="mt-1 text-sm text-dim">Detalhes ditos em consulta e não anotados somem. Não há como recuperar o que não foi registrado no momento.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal" style="transition-delay:.1s">
+                        <div class="glass rounded-2xl p-6">
+                            <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Como o fluxo costuma ser</p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 rounded-xl border hairline bg-panel/40 p-4">
+                                    <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface font-mono text-xs text-dim">01</span>
+                                    <p class="text-sm text-muted">Atendimento acontece — médico toma notas rápidas ou tenta lembrar</p>
+                                </div>
+                                <div class="flex items-center gap-3 rounded-xl border hairline bg-panel/40 p-4">
+                                    <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface font-mono text-xs text-dim">02</span>
+                                    <p class="text-sm text-muted">Após a consulta (às vezes horas depois), digita o registro</p>
+                                </div>
+                                <div class="flex items-center gap-3 rounded-xl border hairline bg-panel/40 p-4">
+                                    <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface font-mono text-xs text-dim">03</span>
+                                    <p class="text-sm text-muted">Revisa e formata manualmente, sem padrão definido</p>
+                                </div>
+                                <div class="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/[0.04] p-4">
+                                    <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-red-500/10 font-mono text-xs text-red-400">!</span>
+                                    <p class="text-sm text-dim">Resultado: 8–12 minutos por documento, padrão inconsistente, informação perdida</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== ALTERNATIVA 2: GRAVADOR / CELULAR ====================== -->
+        <section class="relative border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid items-center gap-16 lg:grid-cols-2">
+                    <!-- visual first on mobile via order -->
+                    <div class="reveal order-2 lg:order-1" style="transition-delay:.1s">
+                        <div class="glass rounded-2xl p-6">
+                            <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">O que o gravador entrega</p>
+                            <div class="rounded-xl border hairline bg-raised/80 p-4">
+                                <div class="flex items-center gap-2 mb-3 pb-3 border-b hairline">
+                                    <i data-lucide="file-audio" class="h-4 w-4 text-dim"></i>
+                                    <span class="font-mono text-xs text-dim">consulta_junho.m4a — 18min 42s</span>
+                                </div>
+                                <div class="space-y-2 text-sm text-muted">
+                                    <p>Bom dia. Sente aqui. O que te trouxe hoje?</p>
+                                    <p>Ah, doutor, tô sentindo muita dor aqui no peito quando respiro fundo já tem uns três dias...</p>
+                                    <p>E tem mais alguma coisa? Febre? Tosse?</p>
+                                    <p>Tosse seca bastante. Febre não.</p>
+                                    <p class="text-dim text-xs mt-3">...18 minutos de áudio, sem estrutura, sem campos, sem CID, sem red flags detectados.</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center gap-2 rounded-xl border border-amber-500/20 bg-amber-500/[0.05] p-3">
+                                <i data-lucide="alert-circle" class="h-4 w-4 shrink-0 text-amber-400"></i>
+                                <p class="text-xs text-dim">Para usar esse áudio, você ainda precisa transcrever, estruturar e formatar manualmente.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="reveal inline-flex items-center gap-2 rounded-full border hairline bg-panel/60 px-3 py-1">
+                            <i data-lucide="mic" class="h-3.5 w-3.5 text-faint"></i>
+                            <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">Alternativa 2</span>
+                        </div>
+                        <h2 class="reveal mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">
+                            Gravar no celular: capturo tudo. Uso o quê?
+                        </h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            Gravar a consulta parece uma solução elegante. E é — para não perder o que foi dito. O problema é o que vem depois: um áudio bruto que ainda precisa virar documentação clínica.
+                        </p>
+                        <div class="mt-9 space-y-4">
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.12s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-amber-500/10"><i data-lucide="file-x" class="h-3.5 w-3.5 text-amber-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Áudio não é documento</p>
+                                    <p class="mt-1 text-sm text-dim">Sem transcrição e estruturação, o áudio é apenas arquivo. Não entra no prontuário, não é auditável, não gera insight clínico.</p>
+                                </div>
+                            </div>
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.16s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-amber-500/10"><i data-lucide="shield-off" class="h-3.5 w-3.5 text-amber-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Risco de privacidade real</p>
+                                    <p class="mt-1 text-sm text-dim">Gravações de consultas armazenadas em smartphones pessoais sem controle de acesso, backup seguro ou conformidade LGPD.</p>
+                                </div>
+                            </div>
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.2s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-amber-500/10"><i data-lucide="hourglass" class="h-3.5 w-3.5 text-amber-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">O trabalho continua depois</p>
+                                    <p class="mt-1 text-sm text-dim">Alguém ainda precisa ouvir o áudio e produzir a documentação. O tempo economizado na consulta é gasto depois.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== ALTERNATIVA 3: IA GENÉRICA ====================== -->
+        <section class="relative border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid items-center gap-16 lg:grid-cols-2">
+                    <div>
+                        <div class="reveal inline-flex items-center gap-2 rounded-full border hairline bg-panel/60 px-3 py-1">
+                            <i data-lucide="bot" class="h-3.5 w-3.5 text-faint"></i>
+                            <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">Alternativa 3</span>
+                        </div>
+                        <h2 class="reveal mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">
+                            IA genérica: inteligente para tudo, especialista em nada.
+                        </h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            Usar ChatGPT ou ferramentas genéricas de IA para documentação clínica é como pedir a um generalista que assine um laudo de especialidade. A ferramenta é capaz. Mas o contexto — clínico, regulatório, ético — está fora do seu escopo.
+                        </p>
+                        <div class="mt-9 space-y-4">
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.12s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-500/10"><i data-lucide="search-x" class="h-3.5 w-3.5 text-red-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Sem estrutura clínica nativa</p>
+                                    <p class="mt-1 text-sm text-dim">Uma IA genérica não sabe distinguir HDA de queixa principal, não organiza campos por especialidade, não segue o raciocínio clínico de forma consistente.</p>
+                                </div>
+                            </div>
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.16s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-500/10"><i data-lucide="database-x" class="h-3.5 w-3.5 text-red-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Dados clínicos sem controle</p>
+                                    <p class="mt-1 text-sm text-dim">Colar informações de pacientes em ferramentas genéricas cria riscos de privacidade não gerenciados, sem DPO, sem base legal e sem conformidade LGPD.</p>
+                                </div>
+                            </div>
+                            <div class="reveal flex items-start gap-4" style="transition-delay:.2s">
+                                <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-500/10"><i data-lucide="wrench" class="h-3.5 w-3.5 text-red-400"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium text-ink">Prompt engineering constante</p>
+                                    <p class="mt-1 text-sm text-dim">Para obter um resultado aceitável, o médico precisa aprender a construir prompts. Isso cria dependência de habilidade técnica — e variação no resultado.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal" style="transition-delay:.1s">
+                        <div class="glass rounded-2xl p-6">
+                            <div class="grid grid-cols-2 divide-x" style="border-color:var(--hairline)">
+                                <div class="pr-5">
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">IA genérica</p>
+                                    <p class="mt-3 text-xs leading-relaxed text-dim">"Aqui está um resumo da consulta: o paciente relatou dor no peito e tosse seca. O médico perguntou sobre febre e o paciente negou. Foram discutidas opções de tratamento."</p>
+                                    <p class="mt-3 text-[11px] text-faint italic">Sem CID. Sem campos. Sem red flags. Sem estrutura clínica.</p>
+                                </div>
+                                <div class="pl-5">
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-health">Vitalfy</p>
+                                    <div class="mt-3 space-y-2 text-xs">
+                                        <div>
+                                            <p class="font-medium text-ink">Queixa Principal</p>
+                                            <p class="text-dim">Dor torácica pleurítica há 3 dias + tosse seca.</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-ink">Red flags detectados</p>
+                                            <div class="flex flex-wrap gap-1 mt-1">
+                                                <span class="rounded-full bg-red-500/10 px-1.5 py-0.5 text-[10px] text-red-400">Dor torácica</span>
+                                                <span class="rounded-full bg-red-500/10 px-1.5 py-0.5 text-[10px] text-red-400">Dispneia</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-ink">CIDs sugeridos</p>
+                                            <p class="text-dim">R07.1 · J18.9</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== PARA QUEM A VITALFY É ====================== -->
+        <section class="relative border-t hairline bg-raised/30 py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl text-center">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Onde a Vitalfy faz mais sentido</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">Para quem a documentação é parte central da prática.</h2>
+                    <p class="reveal mt-5 text-lg leading-relaxed text-muted" style="transition-delay:.1s">A Vitalfy não é para quem documenta raramente. É para quem documenta todo dia e sente o peso disso.</p>
+                </div>
+
+                <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-7">
+                        <i data-lucide="stethoscope" class="h-5 w-5 text-accent"></i>
+                        <h3 class="mt-5 text-lg font-medium">Clínico geral e de família</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">Alto volume de atendimentos variados. A Vitalfy padroniza registros sem reduzir a personalização clínica de cada caso.</p>
+                    </div>
+                    <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-7" style="transition-delay:.07s">
+                        <i data-lucide="heart-pulse" class="h-5 w-5 text-accent"></i>
+                        <h3 class="mt-5 text-lg font-medium">Especialistas com anamnese extensa</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">Cardiologia, neurologia, psiquiatria — especialidades com histórico longo se beneficiam diretamente de estrutura e campos específicos.</p>
+                    </div>
+                    <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-7" style="transition-delay:.14s">
+                        <i data-lucide="building-2" class="h-5 w-5 text-accent"></i>
+                        <h3 class="mt-5 text-lg font-medium">Consultórios com múltiplos profissionais</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">Um padrão de documentação consistente entre médicos da mesma clínica facilita continuidade do cuidado e auditoria interna.</p>
+                    </div>
+                    <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-7" style="transition-delay:.07s">
+                        <i data-lucide="user-check" class="h-5 w-5 text-health"></i>
+                        <h3 class="mt-5 text-lg font-medium">Médico que valoriza o registro</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">Para quem sabe que um bom prontuário é proteção jurídica, continuidade clínica e respeito ao paciente ao mesmo tempo.</p>
+                    </div>
+                    <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-7" style="transition-delay:.14s">
+                        <i data-lucide="zap" class="h-5 w-5 text-health"></i>
+                        <h3 class="mt-5 text-lg font-medium">Profissionais que querem eficiência real</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">Não é sobre fazer mais rápido por fazer. É sobre recuperar o tempo que hoje vai para tarefas que a tecnologia pode resolver.</p>
+                    </div>
+                    <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-7" style="transition-delay:.21s">
+                        <i data-lucide="shield-check" class="h-5 w-5 text-health"></i>
+                        <h3 class="mt-5 text-lg font-medium">Clínicas preocupadas com conformidade</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">Para gestores que precisam de rastreabilidade, segurança de dados e conformidade com LGPD em cada registro clínico.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== FAQ ====================== -->
+        <section class="relative border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-3xl px-6 lg:px-8">
+                <div class="text-center">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Dúvidas comuns</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">Perguntas sobre o comparativo.</h2>
+                </div>
+
+                <div class="reveal mt-12 divide-y divide-white/[0.08] border-y hairline" style="transition-delay:.08s">
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left">
+                            <span class="font-medium">A Vitalfy substitui o prontuário eletrônico?</span>
+                            <i data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Não. A Vitalfy é uma camada de documentação inteligente. Ela organiza e estrutura o conteúdo clínico para que você o exporte, imprima ou registre no sistema que já usa. Ela complementa o prontuário — não o substitui.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left">
+                            <span class="font-medium">Por que IA genérica não é suficiente para documentação clínica?</span>
+                            <i data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">IAs genéricas não conhecem a estrutura de uma anamnese, não identificam CID-10, não sugerem diagnósticos diferenciais e não seguem o raciocínio clínico de forma consistente. Além disso, inserir dados sensíveis de pacientes em ferramentas genéricas levanta questões sérias de privacidade e conformidade com a LGPD.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left">
+                            <span class="font-medium">Preciso abandonar o que uso hoje para adotar a Vitalfy?</span>
+                            <i data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Não necessariamente. A Vitalfy funciona como uma etapa anterior ao seu sistema atual: ela gera o documento estruturado, que você revisa e exporta para onde precisar. Muitos médicos usam a Vitalfy junto com o prontuário que já têm.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left">
+                            <span class="font-medium">E se o áudio tiver qualidade ruim?</span>
+                            <i data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">A Vitalfy usa o Deepgram nova-2 com reconhecimento otimizado para português médico, um dos modelos de transcrição mais precisos disponíveis. Mesmo em ambientes com ruído moderado, a precisão é consideravelmente superior a transcritores genéricos.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left">
+                            <span class="font-medium">Posso testar antes de assinar?</span>
+                            <i data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Sim. O plano gratuito permite usar a Vitalfy com um limite mensal de documentos, sem cartão de crédito, para que você veja o resultado real antes de qualquer compromisso.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== CTA FINAL ====================== -->
+        <section class="relative overflow-hidden border-t hairline py-28 sm:py-36">
+            <div class="glow ambient" style="width:680px;height:480px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(110,139,255,0.18),transparent 60%)"></div>
+            <div class="relative z-10 mx-auto max-w-3xl px-6 text-center lg:px-8">
+                <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-health">A alternativa que entende a clínica</p>
+                <h2 class="reveal mt-6 text-balance text-4xl font-semibold leading-[1.08] tracking-tightest sm:text-5xl" style="transition-delay:.05s">
+                    Veja a diferença na prática.<br /><span class="text-muted">Sem compromisso.</span>
+                </h2>
+                <p class="reveal mt-5 max-w-xl mx-auto text-lg leading-relaxed text-muted" style="transition-delay:.08s">Comece com o plano gratuito e gere seus primeiros documentos clínicos estruturados com IA. Sem cartão de crédito.</p>
+                <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row" style="transition-delay:.1s">
+                    <a href="https://app.vitalfy.health/" class="btn-primary w-full rounded-full px-7 py-3.5 text-sm font-medium sm:w-auto">Começar grátis</a>
+                    <a href="/pricing.html" class="btn-ghost flex w-full items-center justify-center gap-2 rounded-full border hairline-strong bg-panel/40 px-7 py-3.5 text-sm font-medium hover:bg-surface sm:w-auto">Ver planos <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====================== FOOTER ====================== -->
+    <footer class="border-t hairline bg-raised/40">
+        <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+            <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+                <div>
+                    <a href="/" class="flex items-center gap-2.5" aria-label="Vitalfy">
+                        <img src="/assets/img/vitalfy-logo.png" alt="Vitalfy" class="h-8 w-auto" />
+                        <span class="text-[15px] font-semibold tracking-tight">Vitalfy</span>
+                    </a>
+                    <p class="mt-4 max-w-xs text-sm leading-relaxed text-dim">Inteligência aplicada à saúde. A plataforma que organiza o conhecimento clínico.</p>
+                </div>
+                <nav aria-label="Produto">
+                    <h3 class="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Produto</h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li><a href="/" class="text-muted hover:text-ink transition-colors">Plataforma</a></li>
+                        <li><a href="/pricing.html" class="text-muted hover:text-ink transition-colors">Preços</a></li>
+                        <li><a href="/compare.html" class="text-ink">Comparativo</a></li>
+                    </ul>
+                </nav>
+                <nav aria-label="Confiança">
+                    <h3 class="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Confiança</h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li><a href="/security.html" class="text-muted hover:text-ink transition-colors">Segurança e LGPD</a></li>
+                        <li><a href="#" class="text-muted hover:text-ink transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-muted hover:text-ink transition-colors">Termos de Uso</a></li>
+                    </ul>
+                </nav>
+                <nav aria-label="Contato">
+                    <h3 class="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Contato</h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li><a href="https://app.vitalfy.health/" class="text-muted hover:text-ink transition-colors">Começar grátis</a></li>
+                        <li><a href="mailto:contato@vitalfy.com.br" class="text-muted hover:text-ink transition-colors">contato@vitalfy.com.br</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t hairline pt-8 sm:flex-row">
+                <p class="font-mono text-xs text-faint">© 2026 Vitalfy. Todos os direitos reservados.</p>
+                <p class="font-mono text-xs text-faint">Construído para a prática clínica.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lucide -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        const root = document.documentElement;
+        const themeBtn = document.getElementById('theme-btn');
+        const syncPressed = () => themeBtn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'light'));
+        syncPressed();
+        themeBtn.addEventListener('click', () => {
+            const isLight = root.getAttribute('data-theme') === 'light';
+            if (isLight) root.removeAttribute('data-theme'); else root.setAttribute('data-theme', 'light');
+            try { localStorage.setItem('vitalfy-theme', isLight ? 'dark' : 'light'); } catch (e) { }
+            syncPressed();
+        });
+
+        lucide.createIcons();
+
+        const navInner = document.getElementById('nav-inner');
+        const onScroll = () => {
+            if (window.scrollY > 16) navInner.classList.add('glass', 'shadow-lg', 'shadow-black/30');
+            else navInner.classList.remove('glass', 'shadow-lg', 'shadow-black/30');
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            const open = mobileMenu.classList.toggle('hidden') === false;
+            menuBtn.setAttribute('aria-expanded', String(open));
+        });
+        mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            menuBtn.setAttribute('aria-expanded', 'false');
+        }));
+
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    </script>
+</body>
+
+</html>

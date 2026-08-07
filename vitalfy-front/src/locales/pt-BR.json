@@ -1,0 +1,217 @@
+{
+    "app_name": "Vitalfy",
+    "welcome": "Bem-vindo",
+    "termOfUse": "Termo de Uso",
+    "privacyPolicy": "Política de Privacidade",
+    "newConsultation": "Nova consulta",
+    "button": {
+        "accept": "Aceitar",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "close": "Fechar",
+        "newTranscription": "Nova transcrição",
+        "copyText": "Copiar texto",
+        "rename": "Renomear",
+        "exclude": "Excluir",
+        "leave": "Sair",
+        "signature": {
+            "unlockProPlan": "Desbloquear plano Pro",
+            "onlyRemaining": "Restam apenas",
+            "transcriptions": "transcrições"
+        }
+    },
+    "form": {
+        "label": {
+            "email": "E-mail",
+            "name": "Nome",
+            "phone": "Telefone",
+            "cpf": "CPF",
+            "birthDate": "Data de Nascimento",
+            "options": "Opções"
+        },
+        "errors": {
+            "required": "Este campo é obrigatório",
+            "nameMin": "O nome deve ter no mínimo 2 caracteres",
+            "nameMax": "O nome deve ter no máximo 50 caracteres",
+            "email": "E-mail inválido",
+            "passwordMin": "A senha deve ter no mínimo 8 caracteres",
+            "passwordUppercase": "A senha deve conter pelo menos uma letra maiúscula",
+            "passwordLowercase": "A senha deve conter pelo menos uma letra minúscula",
+            "passwordNumber": "A senha deve conter pelo menos um número",
+            "acceptTerms": "Você deve aceitar os Termos de Uso e a Política de Privacidade",
+            "passwordDontMatch": "As senhas não coincidem"
+        }
+    },
+    "auth": {
+        "form": {
+            "label": {
+                "password": "Senha",
+                "passowrdConfirmation": "Confirmação de Senha",
+                "rememberMe": "Lembrar-me",
+                "forgotPassword": "Esqueceu a senha",
+                "haveAnAccount": "Não tem uma conta?",
+                "orContinueWith": "ou continue com",
+                "continueWithGoogle": "Continuar com Google",
+                "declareTermsParcial": "Declaro e certifico que tenho mais de 18 anos e aceito os",
+                "terms": "Termos de Uso",
+                "declareTermsAnd": "e a",
+                "privacyPolicy": "Política de Privacidade",
+                "alredyHaveAnAccount": "Já possui uma conta?",
+                "enterName": "Digite seu nome",
+                "enterEmail": "Digite seu e-mail",
+                "enterPassword": "Digite sua senha",
+                "confirmPassword": "Confirme sua senha"
+            },
+            "button": {
+                "signIn": "Entrar",
+                "signUp": "Cadastrar-se",
+                "registerNow": "Registre-se agora",
+                "sendResetLink": "Enviar link de redefinição",
+                "resetPassword": "Redefinir senha"
+            }
+        },
+        "login": {
+            "description": "Faça login para acessar a plataforma."
+        },
+        "register": {
+            "title": "Crie sua conta"
+        },
+        "socialCallback": {
+            "loading": "Autenticando com Google...",
+            "error": "Não foi possível autenticar com o Google. Tente novamente."
+        },
+        "forgotPassword": {
+            "title": "Esqueceu sua senha?",
+            "description": "Informe o e-mail da sua conta e enviaremos um link para redefinir sua senha.",
+            "emailSentTitle": "E-mail enviado!",
+            "emailSentDescription": "Se este endereço estiver cadastrado, você receberá as instruções em breve. Verifique também sua caixa de spam.",
+            "backToLogin": "Voltar para o login",
+            "tryAnotherEmail": "Tentar com outro e-mail"
+        },
+        "resetPassword": {
+            "title": "Redefinir senha",
+            "description": "Crie uma nova senha segura para sua conta.",
+            "newPassword": "Nova senha",
+            "confirmNewPassword": "Confirmar nova senha",
+            "invalidToken": "Este link de redefinição é inválido ou expirou.",
+            "requestNewLink": "Solicitar novo link"
+        },
+        "emailVerification": {
+            "checkEmailTitle": "Verifique seu e-mail",
+            "checkEmailDescription": "Enviamos um link de confirmação para {email}. Acesse sua caixa de entrada e clique no link para ativar sua conta.",
+            "checkEmailNote": "Você já pode fazer login agora — a verificação de e-mail não bloqueia o acesso à plataforma.",
+            "checkSpam": "Não encontrou? Verifique também a pasta de spam.",
+            "goToLogin": "Ir para o login",
+            "verifiedTitle": "E-mail verificado com sucesso!",
+            "verifiedDescription": "Sua conta está ativa e pronta para uso. Faça login para começar.",
+            "alreadyVerifiedTitle": "E-mail já verificado",
+            "alreadyVerifiedDescription": "Seu e-mail já foi confirmado anteriormente. Faça login para continuar.",
+            "invalidTitle": "Link inválido ou expirado",
+            "invalidDescription": "Este link de verificação não é mais válido. Faça login e solicite um novo link de verificação.",
+            "goToDashboard": "Ir para a plataforma",
+            "backToLogin": "Voltar para o login"
+        }
+    },
+    "notifications": {
+        "titles": {
+            "success": "Sucesso",
+            "error": "Erro",
+            "warning": "Aviso",
+            "info": "Informação"
+        },
+        "messages": {
+            "wrongUserOrPassword": "Usuário ou senha incorretos",
+            "itemExcludedSuccessfully": "Item excluído com sucesso",
+            "itemExcludingError": "Erro ao excluir o item",
+            "dataSavedSuccessfully": "Dados salvos com sucesso",
+            "dataSavingError": "Erro ao salvar os dados",
+            "dataLoadingError": "Erro ao carregar os dados. Tente novamente mais tarde.",
+            "textCopiedSuccessfully": "Texto copiado com sucesso",
+            "anamnesisSavedSuccessfully": "Anamnese salva com sucesso",
+            "anamnesisSavingError": "Erro ao salvar a anamnese",
+            "anamnesisGeneratedSuccessfully": "Anamnese gerada com sucesso",
+            "anamnesisGeneratingError": "Erro ao gerar a anamnese",
+            "userCreatedSuccessfully": "Usuário criado com sucesso",
+            "userCreatingError": "Erro ao criar o usuário",
+            "editSuccessfully": "Edição realizada com sucesso",
+            "editError": "Erro ao realizar a edição",
+            "passwordResetSuccess": "Senha redefinida com sucesso",
+            "passwordResetError": "Não foi possível redefinir a senha. Tente novamente."
+        }
+    },
+    "transcription": {
+        "howCanIHelpToday": "Como posso ajudar hoje?",
+        "queryContext": "Contexto da consulta",
+        "sendAudioFile": "Enviar arquivo de áudio",
+        "onlyMp3": "Permitido apenas arquivos .mp3",
+        "testMicrophone": "Testar microfone",
+        "vitalfyError": "Vitalfy pode cometer erros. Considere verificar informações importantes.",
+        "noTranscriptsFound": "Nenhuma transcrição encontrada",
+        "noTranscriptsRegisteredYet": "Sem transcrições cadastradas até o momento...",
+        "button": {
+            "recordQuery": "Gravar consulta",
+            "cancelRecord": "Cancelar gravação",
+            "pauseRecord": "Pausar gravação",
+            "continueRecord": "Continuar gravação",
+            "finishRecord": "Finalizar gravação"
+        },
+        "listPage": {
+            "allTranscripts":"Todas as transcrições",
+            "table": {
+                "title": "Título",
+                "createdAt": "Criado em",
+                "actions": "Ações"
+            }
+        },
+        "tab": {
+            "conversation": "Conversa",
+            "transcription": "Transcrição"
+        }
+    },
+    "sidebar": {
+        "allTranscripts": "Todas as transcrições",
+        "helpAndSupport": "Ajuda e suporte",
+        "signature": {
+            "free": "Free",
+            "pro": "Pro"
+        },
+        "buttons": {
+            "helpAndSupport": "Ajuda e suporte",
+            "feedback": "Feedback",
+            "talkToSupport": "Falar com suporte"
+        }
+    },
+    "signature": {
+        "modal": {
+            "proPlan": "Plano PRO",
+            "economize": "Economize",
+            "forty": "40%",
+            "thirty": "30%",
+            "twenty": "20%",
+            "signatureDescription": "Maximize suas transcrições com a Vitalfy Pro! Tenha acesso ilimitado a ferramentas exclusivas e eleve a qualidade do seu atendimento.",
+            "month": "/mês",
+            "signaturePrice": "de R${priceTotal} por R${pricePromotion} por {signatureType}",
+            "totalDoctorsDescription": "❤️ Mais de {totalDoctors} médicos utilizando a Vitalfy Pro",
+            "seeTheBenefits": "Veja os benefícios:",
+            "benefits": {
+                "benefit1": "Consultas ilimitadas",
+                "benefit2": "Mais de 30 modelos de anamneses",
+                "benefit3": "Colaboração ilimitada em tempo real em consultas",
+                "benefit4": "Impressão personalizada dos documentos gerados",
+                "benefit5": "Melhorar anamnese com IA",
+                "benefit6": "Geração de outros documentos clínicos",
+                "benefit7": "Compartilhamento de todos documentos gerados"
+            }
+        }
+    },
+    "dialog": {
+        "exclude": {
+            "title": "Confirmar exclusão",
+            "description": "Você tem certeza de que deseja excluir esta transcrição?",
+            "button": {
+                "cancel": "Cancelar",
+                "confirm": "Confirmar"
+            }
+        }
+    }
+}

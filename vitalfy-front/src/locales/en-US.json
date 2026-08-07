@@ -1,0 +1,201 @@
+{
+    "app_name": "Vitalfy",
+    "welcome": "Welcome",
+    "termOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "newConsultation": "Nova consulta",
+    "button": {
+        "accept": "Accept",
+        "cancel": "Cancel",
+        "save": "Save",
+        "close": "Close",
+        "newTranscription": "New transcription",
+        "copyText": "Copiar texto",
+        "rename": "Rename",
+        "exclude": "Exclude",
+        "leave": "Leave",
+        "signature": {
+            "unlockProPlan": "Unlock Pro plan",
+            "onlyRemaining": "Only remaining",
+            "transcriptions": "transcriptions"
+        }
+    },
+    "form": {
+        "label": {
+            "email": "Email",
+            "name": "Name",
+            "phone": "Phone",
+            "cpf": "CPF",
+            "birthDate": "Birth Date",
+            "options": "Options"
+        },
+        "errors": {
+            "required": "This field is required",
+            "nameMin": "Name must be at least {min} characters",
+            "nameMax": "Name must be at most 50 characters",
+            "email": "Invalid email",
+            "passwordMin": "Password must be at least 6 characters",
+            "passwordUppercase": "Password must contain at least one uppercase letter",
+            "passwordLowercase": "Password must contain at least one lowercase letter",
+            "passwordNumber": "Password must contain at least one number",
+            "acceptTerms": "You must accept the Terms of Use and Privacy Policy",
+            "passwordDontMatch": "Passwords don't match"
+        }
+    },
+    "auth": {
+        "form": {
+            "label": {
+                "password": "Password",
+                "passowrdConfirmation": "Password confirmation",
+                "rememberMe": "Remember me",
+                "forgotPassword": "Forgot password",
+                "haveAnAccount": "Don't have an account?",
+                "orContinueWith": "or continue with",
+                "continueWithGoogle": "Continue with Google",
+                "declareTermsParcial": "I declare and certify that I am over 18 years old and accept the",
+                "terms": "Terms of Use",
+                "declareTermsAnd": "and the",
+                "privacyPolicy": "Privacy Policy",
+                "alredyHaveAnAccount": "Already have an account?",
+                "enterName": "Enter your name",
+                "enterEmail": "Enter your email",
+                "enterPassword": "Enter your password",
+                "confirmPassword": "Confirm your password"
+            },
+            "button": {
+                "signIn": "Sign In",
+                "signUp": "Sign Up",
+                "registerNow": "Register now",
+                "sendResetLink": "Send reset link",
+                "resetPassword": "Reset password"
+            }
+        },
+        "login": {
+            "description": "Welcome back! Please Log in to access the platform."
+        },
+        "register": {
+            "title": "Create your account"
+        },
+        "socialCallback": {
+            "loading": "Authenticating with Google...",
+            "error": "Unable to authenticate with Google. Please try again."
+        },
+        "forgotPassword": {
+            "title": "Forgot your password?",
+            "description": "Enter your account email and we will send a link to reset your password.",
+            "emailSentTitle": "Email sent!",
+            "emailSentDescription": "If this address is registered, you will receive instructions shortly. Check your spam folder too.",
+            "backToLogin": "Back to login",
+            "tryAnotherEmail": "Try another email"
+        },
+        "resetPassword": {
+            "title": "Reset password",
+            "description": "Create a new secure password for your account.",
+            "newPassword": "New password",
+            "confirmNewPassword": "Confirm new password",
+            "invalidToken": "This reset link is invalid or has expired.",
+            "requestNewLink": "Request new link"
+        }
+    },
+    "notifications": {
+        "titles": {
+            "success": "Success",
+            "error": "Error",
+            "warning": "Warning",
+            "info": "Information"
+        },
+        "messages": {
+            "wrongUserOrPassword": "Wrong user or password",
+            "itemExcludedSuccessfully": "Item excluded successfully",
+            "itemExcludingError": "Error excluding item",
+            "dataSavedSuccessfully": "Data saved successfully",
+            "dataSavingError": "Error saving data",
+            "dataLoadingError": "Error loading data",
+            "textCopiedSuccessfully": "Text copied successfully",
+            "anamnesisSavedSuccessfully": "Anamnesis saved successfully",
+            "anamnesisSavingError": "Error saving anamnesis",
+            "anamnesisGeneratedSuccessfully": "Anamnesis generated successfully",
+            "anamnesisGeneratingError": "Error generating anamnesis",
+            "userCreatedSuccessfully": "User created successfully",
+            "userCreatingError": "Error creating user",
+            "editSuccessfully": "Edit made successfully",
+            "editError": "Error making the edit",
+            "passwordResetSuccess": "Password reset successfully",
+            "passwordResetError": "Unable to reset password. Please try again."
+        }
+    },
+    "transcription": {
+        "howCanIHelpToday": "How can I help you today?",
+        "queryContext": "Query context",
+        "sendAudioFile": "Send audio file",
+        "onlyMp3": "Only .mp3 files allowed",
+        "testMicrophone": "Test microphone",
+        "vitalfyError": "Vitalfy may make mistakes. Consider checking important information.",
+        "noTranscriptsFound": "No transcripts found",
+        "noTranscriptsRegisteredYet": "No transcripts registered yet...",
+        "button": {
+            "recordQuery": "Record query",
+            "cancelRecord": "Cancel record",
+            "pauseRecord": "Pause record",
+            "continueRecord": "Continue record",
+            "finishRecord": "Finish record"
+        },
+        "listPage": {
+            "allTranscripts":"All transcripts",
+            "table": {
+                "title": "Título",
+                "createdAt": "Criado em",
+                "actions": "Ações"
+            }
+        },
+        "tab": {
+            "conversation": "Conversation",
+            "transcription": "Transcription"
+        }
+    },
+    "sidebar": {
+        "allTranscripts": "All transcripts",
+        "helpAndSupport": "Help and support",
+        "signature": {
+            "free": "Free",
+            "pro": "Pro"
+        },
+        "buttons": {
+            "feedback": "Feedback",
+            "talkToSupport": "Falar com suporte"
+        }
+    },
+    "signature": {
+        "modal": {
+            "proPlan": "PRO plan",
+            "economize": "Economize",
+            "forty": "40%",
+            "thirty": "30%",
+            "twenty": "20%",
+            "signatureDescription": "Maximize your transcripts with Vitalfy Pro! Get unlimited access to exclusive tools and improve the quality of your service.",
+            "month": "/month",
+            "signaturePrice": "by R${priceTotal} by R${pricePromotion} by {signatureType}",
+            "totalDoctorsDescription": "❤️ More from {totalDoctors} doctors using Vitalfy Pro",
+            "seeTheBenefits": "See the benefits:",
+            "benefits": {
+                "benefit1": "Unlimited queries",
+                "benefit2": "More than 30 anamnesis templates",
+                "benefit3": "Unlimited real-time collaboration on queries",
+                "benefit4": "Personalized printing of generated documents",
+                "benefit5": "Improving anamnesis with AI",
+                "benefit6": "Generation of other clinical documents",
+                "benefit7": "Sharing of all generated documents"
+            }
+        }
+    },
+    "dialog": {
+        "exclude": {
+            "title": "Confirm exclusion",
+            "description": "Are you sure you want to exclude this transcription?",
+            "button": {
+                "cancel": "Cancel",
+                "confirm": "Confirm"
+            }
+        }
+    }
+}

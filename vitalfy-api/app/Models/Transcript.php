@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Transcript extends Model
+{
+    use HasUuids, SoftDeletes;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'user_id',
+        'patient',
+        'conversation',
+        'end_conversation_time',
+        'transcript_type_id',
+        'file_size',
+        'description'
+    ];
+
+    protected $casts = [
+        'conversation' => 'array',
+        'file_size' => 'integer',
+    ];
+
+    public function user(): BelongsTo 
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function document(): HasOne 
+    {
+        return $this->hasOne(Document::class);
+    }
+
+    public function transcriptType(): BelongsTo
+    {
+        return $this->belongsTo(TranscriptType::class);
+    }
+
+    public function scopeFromUserBetweenDates(Builder $query, string $userId, Carbon $start, Carbon $end): Builder
+    {
+        return $query
+            ->where('user_id', $userId)
+            ->whereBetween('created_at', [$start, $end]);
+    }
+}

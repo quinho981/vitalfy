@@ -1,0 +1,93 @@
+services:
+  frontend:
+    build:
+      context: ./vitalfy-front
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_BASE_URL: /api
+    container_name: vitalfy_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api-nginx
+    networks:
+      - vitalfy
+
+  api-nginx:
+    image: nginx:alpine
+    container_name: vitalfy_api_nginx
+    restart: always
+    volumes:
+      - ./vitalfy-api:/var/www:cached
+      - ./vitalfy-api/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - vitalfy
+
+  app:
+    build:
+      context: ./vitalfy-api
+      dockerfile: docker/php/Dockerfile
+    container_name: vitalfy_app
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ./vitalfy-api:/var/www:cached
+      - vendor_data:/var/www/vendor
+      - ./vitalfy-api/docker/php/opcache.prod.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+    networks:
+      - vitalfy
+    depends_on:
+      - db
+      - redis
+
+  horizon:
+    build:
+      context: ./vitalfy-api
+      dockerfile: docker/php/Dockerfile
+    container_name: vitalfy_horizon
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan horizon
+    volumes:
+      - ./vitalfy-api:/var/www:cached
+      - vendor_data:/var/www/vendor
+      - ./vitalfy-api/docker/php/opcache.prod.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+    networks:
+      - vitalfy
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16-alpine
+    container_name: vitalfy_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - vitalfy
+
+  redis:
+    image: redis:alpine
+    container_name: vitalfy_redis
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis:/data
+    networks:
+      - vitalfy
+
+networks:
+  vitalfy:
+
+volumes:
+  dbdata:
+  redis:
+  vendor_data:

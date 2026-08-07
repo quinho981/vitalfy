@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Vitalfy" />
+    <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+    <!-- SEO -->
+    <title>Vitalfy — A inteligência que organiza a prática clínica</title>
+    <meta name="description"
+        content="A Vitalfy transforma as informações de cada atendimento em documentação clínica clara, estruturada e pronta para uso. Inteligência aplicada à saúde, em conformidade com a LGPD." />
+    <meta name="theme-color" content="#09090B" />
+    <link rel="canonical" href="https://www.vitalfy.com.br/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vitalfy" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Vitalfy — A inteligência que organiza a prática clínica" />
+    <meta property="og:description"
+        content="Documentação clínica clara, estruturada e pronta para uso. Menos tempo documentando, mais tempo cuidando." />
+    <meta property="og:url" content="https://www.vitalfy.com.br/" />
+    <meta property="og:image" content="https://www.vitalfy.com.br/og.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vitalfy — A inteligência que organiza a prática clínica" />
+    <meta name="twitter:description"
+        content="Documentação clínica clara, estruturada e pronta para uso. Inteligência aplicada à saúde." />
+    <meta name="twitter:image" content="https://www.vitalfy.com.br/og.png" />
+
+    <!-- Schema markup -->
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Vitalfy",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Web",
+    "description": "Plataforma de inteligência artificial que organiza o conhecimento clínico, convertendo informações de atendimento em documentação estruturada e pronta para uso.",
+    "offers": { "@type": "Offer", "category": "SaaS" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vitalfy",
+      "url": "https://www.vitalfy.com.br/"
+    }
+  }
+  </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'rgb(var(--c-base) / <alpha-value>)',
+                        raised: 'rgb(var(--c-raised) / <alpha-value>)',
+                        elev: 'rgb(var(--c-elev) / <alpha-value>)',
+                        panel: 'rgb(var(--c-panel) / <alpha-value>)',
+                        surface: 'rgb(var(--c-surface) / <alpha-value>)',
+                        surface2: 'rgb(var(--c-surface2) / <alpha-value>)',
+                        ink: 'rgb(var(--c-ink) / <alpha-value>)',
+                        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+                        dim: 'rgb(var(--c-dim) / <alpha-value>)',
+                        faint: 'rgb(var(--c-faint) / <alpha-value>)',
+                        accent: 'rgb(var(--c-accent) / <alpha-value>)',
+                        'accent-deep': 'rgb(var(--c-accent-deep) / <alpha-value>)',
+                        health: 'rgb(var(--c-health) / <alpha-value>)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+                    },
+                    letterSpacing: {
+                        tightest: '-0.04em',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <script>
+            // Apply theme before paint to avoid flash. Dark is the default.
+            (function () {
+                try {
+                    var saved = localStorage.getItem('vitalfy-theme');
+                    if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+                    else if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
+                        document.documentElement.setAttribute('data-theme', 'light');
+                } catch (e) { }
+            })();
+    </script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --c-base: 9 9 11;
+            --c-raised: 14 14 17;
+            --c-elev: 17 17 19;
+            --c-panel: 24 24 27;
+            --c-surface: 31 31 35;
+            --c-surface2: 39 39 42;
+            --c-ink: 250 250 250;
+            --c-muted: 161 161 170;
+            --c-dim: 113 113 122;
+            --c-faint: 82 82 91;
+            --c-accent: 110 139 255;
+            --c-accent-deep: 58 102 224;
+            --c-health: 52 214 173;
+            --btn-bg: 250 250 250;
+            --btn-fg: 9 9 11;
+            --hairline: rgba(255, 255, 255, 0.08);
+            --hairline-strong: rgba(255, 255, 255, 0.12);
+            --glass-bg: linear-gradient(180deg, rgba(39, 39, 42, 0.55), rgba(24, 24, 27, 0.55));
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --brand-grad: linear-gradient(95deg, #8FA6FF 0%, #6E8BFF 38%, #34D6AD 100%);
+            --grain-blend: overlay;
+            --grain-opacity: 0.025;
+        }
+
+        :root[data-theme="light"] {
+            color-scheme: light;
+            --c-base: 255 255 255;
+            --c-raised: 248 248 250;
+            --c-elev: 255 255 255;
+            --c-panel: 244 244 246;
+            --c-surface: 235 235 238;
+            --c-surface2: 224 224 228;
+            --c-ink: 24 24 27;
+            --c-muted: 82 82 91;
+            --c-dim: 113 113 122;
+            --c-faint: 161 161 170;
+            --c-accent: 58 102 224;
+            --c-accent-deep: 42 78 192;
+            --c-health: 13 156 128;
+            --btn-bg: 24 24 27;
+            --btn-fg: 250 250 250;
+            --hairline: rgba(9, 9, 11, 0.10);
+            --hairline-strong: rgba(9, 9, 11, 0.16);
+            --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(244, 244, 246, 0.62));
+            --glass-border: rgba(9, 9, 11, 0.08);
+            --brand-grad: linear-gradient(95deg, #4C70EC 0%, #3A66E0 40%, #0D9C80 100%);
+            --grain-blend: multiply;
+            --grain-opacity: 0.04;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            background-color: rgb(var(--c-base));
+            color: rgb(var(--c-ink));
+            transition: background-color .4s ease, color .4s ease;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Subtle grain to lift flat black */
+        .grain::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: var(--grain-opacity);
+            mix-blend-mode: var(--grain-blend);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .brand-gradient {
+            background: var(--brand-grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hairline {
+            border-color: var(--hairline);
+        }
+
+        .hairline-strong {
+            border-color: var(--hairline-strong);
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glass panels */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Reveal-on-scroll (Framer-Motion-style whileInView) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .card-hover {
+            transition: transform .35s cubic-bezier(.16, 1, .3, 1), border-color .35s ease, background-color .35s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .link-underline {
+            position: relative;
+        }
+
+        .link-underline::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            height: 1px;
+            width: 100%;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .link-underline:hover::after {
+            transform: scaleX(1);
+        }
+
+        .link-underline.is-active::after {
+            transform: scaleX(1);
+        }
+
+        .btn-primary {
+            background: rgb(var(--btn-bg));
+            color: rgb(var(--btn-fg));
+            transition: transform .25s cubic-bezier(.16, 1, .3, 1), box-shadow .25s ease, opacity .2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 40px -12px rgba(110, 139, 255, 0.5);
+        }
+
+        /* Theme toggle icon swap */
+        .theme-sun {
+            display: block;
+        }
+
+        .theme-moon {
+            display: none;
+        }
+
+        :root[data-theme="light"] .theme-sun {
+            display: none;
+        }
+
+        :root[data-theme="light"] .theme-moon {
+            display: block;
+        }
+
+        .btn-ghost {
+            transition: background-color .25s ease, border-color .25s ease, transform .25s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .btn-ghost:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Signature: fragments organizing into aligned structure */
+        .frag {
+            transition: all .8s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        /* Drifting ambient glow */
+        @keyframes drift {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(24px, -18px);
+            }
+        }
+
+        .ambient {
+            animation: drift 14s ease-in-out infinite;
+        }
+
+        *:focus-visible {
+            outline: 2px solid #6E8BFF;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        details>summary {
+            list-style: none;
+            cursor: pointer;
+        }
+
+        details>summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details[open] .faq-chevron {
+            transform: rotate(45deg);
+        }
+
+        .faq-chevron {
+            transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .demo-panel {
+            display: none;
+        }
+
+        .demo-panel.active {
+            display: block;
+            animation: fadeUp .5s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none;
+            }
+
+            .ambient {
+                animation: none;
+            }
+
+            .demo-panel.active {
+                animation: none;
+            }
+
+            * {
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-base text-ink font-sans antialiased grain selection:bg-accent/30">
+
+    <a href="#solucao"
+        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white">Pular
+        para o conteúdo</a>
+
+    <!-- ====================== NAV ====================== -->
+    <header id="nav" class="fixed top-0 inset-x-0 z-40 transition-all duration-500">
+        <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Principal">
+            <div id="nav-inner"
+                class="mt-3 flex items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-500">
+                <a href="#top" class="flex items-center gap-2.5" aria-label="Vitalfy, página inicial">
+                    <img src="/assets/img/vitalfy-logo.png" alt="Vitalfy" class="h-8 w-auto" />
+                    <span class="text-[15px] font-semibold tracking-tight">Vitalfy</span>
+                </a>
+
+                <div class="hidden items-center gap-8 md:flex">
+                    <a href="#plataforma" class="link-underline is-active text-sm text-accent transition-colors"
+                        aria-current="page">Plataforma</a>
+                    <a href="/pricing.html"
+                        class="link-underline text-sm text-muted hover:text-ink transition-colors">Preços</a>
+                    <a href="/compare.html"
+                        class="link-underline text-sm text-muted hover:text-ink transition-colors">Comparativo</a>
+                    <a href="/security.html"
+                        class="link-underline text-sm text-muted hover:text-ink transition-colors">Segurança</a>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a href="https://app.vitalfy.health/"
+                        class="hidden text-sm text-muted hover:text-ink transition-colors sm:block">Entrar</a>
+                    <button id="theme-btn"
+                        class="grid h-9 w-9 place-items-center rounded-lg border hairline text-muted hover:text-ink transition-colors"
+                        aria-label="Alternar tema claro e escuro" aria-pressed="false">
+                        <svg class="theme-sun h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4" />
+                            <path
+                                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                        </svg>
+                        <svg class="theme-moon h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                    </button>
+                    <a href="https://app.vitalfy.health/"
+                        class="btn-primary hidden rounded-full px-4 py-2 text-sm font-medium min-[480px]:inline-block min-[768px]:max-[840px]:hidden">Começar
+                        grátis</a>
+                    <button id="menu-btn" class="grid h-9 w-9 place-items-center rounded-lg border hairline md:hidden"
+                        aria-label="Abrir menu" aria-expanded="false">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="glass mt-2 hidden rounded-2xl p-2 md:hidden">
+                <a href="#plataforma" class="block rounded-xl px-4 py-3 text-sm text-accent bg-surface/50"
+                    aria-current="page">Plataforma</a>
+                <a href="/pricing.html"
+                    class="block rounded-xl px-4 py-3 text-sm text-muted hover:bg-surface hover:text-ink">Preços</a>
+                <a href="/compare.html"
+                    class="block rounded-xl px-4 py-3 text-sm text-muted hover:bg-surface hover:text-ink">Comparativo</a>
+                <a href="/security.html"
+                    class="block rounded-xl px-4 py-3 text-sm text-muted hover:bg-surface hover:text-ink">Segurança</a>
+                <div class="mt-2 border-t hairline pt-2 min-[480px]:hidden">
+                    <a href="https://app.vitalfy.health/"
+                        class="btn-primary flex items-center justify-center rounded-xl px-4 py-3 text-sm font-medium">Começar
+                        grátis</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="top">
+
+        <!-- ====================== HERO ====================== -->
+        <section class="relative overflow-hidden pt-36 pb-20 sm:pt-44 lg:pb-28">
+            <div class="glow ambient"
+                style="width:620px;height:620px;top:-180px;left:50%;margin-left:-310px;background:radial-gradient(circle,rgba(110,139,255,0.22),transparent 65%)">
+            </div>
+            <div class="glow"
+                style="width:520px;height:520px;top:120px;right:-120px;background:radial-gradient(circle,rgba(52,214,173,0.12),transparent 65%)">
+            </div>
+
+            <div class="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
+                <div
+                    class="reveal mx-auto inline-flex items-center gap-2 rounded-full border hairline bg-panel/60 px-3.5 py-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-health"></span>
+                    <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Inteligência clínica
+                        aplicada</span>
+                </div>
+
+                <h1 class="reveal mx-auto mt-7 max-w-4xl text-balance text-5xl font-semibold leading-[1.04] tracking-tightest sm:text-6xl lg:text-7xl"
+                    style="transition-delay:.06s">
+                    A inteligência que organiza<br class="hidden sm:block" /> a <span class="brand-gradient">prática
+                        clínica</span>.
+                </h1>
+
+                <p class="reveal mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted"
+                    style="transition-delay:.12s">
+                    A Vitalfy transforma as informações de cada atendimento em documentação clara, estruturada e pronta
+                    para uso — para que o tempo do médico volte a ser do paciente.
+                </p>
+
+                <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+                    style="transition-delay:.18s">
+                    <a href="https://app.vitalfy.health/"
+                        class="btn-primary w-full rounded-full px-6 py-3 text-sm font-medium sm:w-auto">Começar
+                        grátis</a>
+                    <a href="#plataforma"
+                        class="btn-ghost flex w-full items-center justify-center gap-2 rounded-full border hairline-strong bg-panel/40 px-6 py-3 text-sm font-medium text-ink hover:bg-surface sm:w-auto">
+                        Conhecer a plataforma <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                    </a>
+                </div>
+
+                <p class="reveal mt-5 font-mono text-xs text-faint" style="transition-delay:.24s">Construída para a
+                    rotina clínica · Em conformidade com a LGPD</p>
+
+                <!-- Product mockup -->
+                <div class="reveal relative mx-auto mt-16 max-w-5xl" style="transition-delay:.3s">
+                    <div class="glow"
+                        style="width:80%;height:60%;top:8%;left:10%;background:radial-gradient(ellipse,rgba(110,139,255,0.16),transparent 70%)">
+                    </div>
+                    <div class="glass relative rounded-2xl p-1.5 shadow-2xl shadow-black/60">
+                        <div class="rounded-xl bg-raised/90 ring-1 ring-white/5">
+                            <!-- window chrome -->
+                            <div class="flex items-center gap-2 border-b hairline px-4 py-3">
+                                <span class="h-3 w-3 rounded-full bg-surface2"></span>
+                                <span class="h-3 w-3 rounded-full bg-surface2"></span>
+                                <span class="h-3 w-3 rounded-full bg-surface2"></span>
+                                <div class="ml-3 flex items-center gap-2 rounded-md bg-surface px-3 py-1">
+                                    <i data-lucide="lock" class="h-3 w-3 text-dim"></i>
+                                    <span class="font-mono text-[11px] text-dim">app.vitalfy.com.br</span>
+                                </div>
+                            </div>
+                            <!-- app body -->
+                            <div class="grid grid-cols-12 text-left">
+                                <!-- sidebar -->
+                                <aside class="col-span-3 hidden border-r hairline p-3 sm:block">
+                                    <div
+                                        class="flex items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-[12px] font-medium text-white">
+                                        <i data-lucide="plus" class="h-3.5 w-3.5"></i> Novo atendimento
+                                    </div>
+                                    <p class="mt-4 px-2 font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
+                                        Principal</p>
+                                    <nav class="mt-2 space-y-1">
+                                        <div
+                                            class="flex items-center gap-2.5 rounded-lg bg-accent/10 px-3 py-2 text-[13px] text-ink">
+                                            <i data-lucide="mic" class="h-4 w-4 text-accent"></i> Transcrição</div>
+                                        <div
+                                            class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                            <i data-lucide="history" class="h-4 w-4"></i> Histórico</div>
+                                        <div
+                                            class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                            <i data-lucide="file-text" class="h-4 w-4"></i> Templates</div>
+                                    </nav>
+                                    <p class="mt-4 px-2 font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
+                                        Análises</p>
+                                    <nav class="mt-2 space-y-1">
+                                        <div
+                                            class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                            <i data-lucide="bar-chart-3" class="h-4 w-4"></i> Dashboard</div>
+                                        <div
+                                            class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                            <i data-lucide="settings" class="h-4 w-4"></i> Configurações</div>
+                                    </nav>
+                                </aside>
+                                <!-- main -->
+                                <div class="col-span-12 p-5 sm:col-span-9">
+                                    <div class="mb-4 flex items-center justify-between">
+                                        <div>
+                                            <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+                                                Detalhes do documento clínico</p>
+                                            <h3 class="mt-1 text-sm font-medium">Dor de Cabeça e Cansaço</h3>
+                                        </div>
+                                        <span
+                                            class="inline-flex items-center gap-1.5 rounded-full bg-health/10 px-2.5 py-1 font-mono text-[10px] text-health"><span
+                                                class="h-1.5 w-1.5 rounded-full bg-health"></span> Pronto para
+                                            uso</span>
+                                    </div>
+                                    <div class="mb-3 grid grid-cols-3 gap-2">
+                                        <div class="rounded-lg border hairline bg-panel/60 px-3 py-2">
+                                            <p class="font-mono text-[9px] uppercase tracking-wide text-faint">Paciente
+                                            </p>
+                                            <p class="mt-0.5 text-[12px] text-ink">Johny</p>
+                                        </div>
+                                        <div class="rounded-lg border hairline bg-panel/60 px-3 py-2">
+                                            <p class="font-mono text-[9px] uppercase tracking-wide text-faint">Duração
+                                            </p>
+                                            <p class="mt-0.5 text-[12px] text-ink">2min 21s</p>
+                                        </div>
+                                        <div class="rounded-lg border hairline bg-panel/60 px-3 py-2">
+                                            <p class="font-mono text-[9px] uppercase tracking-wide text-faint">Template
+                                            </p>
+                                            <p class="mt-0.5 text-[12px] text-ink">Clínica Médica</p>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-5 gap-3">
+                                        <div class="col-span-3 space-y-3">
+                                            <div class="rounded-lg border hairline bg-panel/60 p-3">
+                                                <p class="font-mono text-[10px] uppercase tracking-wide text-faint">
+                                                    Queixa principal</p>
+                                                <p class="mt-1.5 text-[13px] text-muted">Dor de cabeça intensa e cansaço
+                                                    excessivo há aproximadamente 2 semanas.</p>
+                                            </div>
+                                            <div class="rounded-lg border hairline bg-panel/60 p-3">
+                                                <p class="font-mono text-[10px] uppercase tracking-wide text-faint">
+                                                    História da doença atual</p>
+                                                <div class="mt-2 space-y-1.5">
+                                                    <div class="h-1.5 w-full rounded bg-surface2"></div>
+                                                    <div class="h-1.5 w-5/6 rounded bg-surface2"></div>
+                                                    <div class="h-1.5 w-2/3 rounded bg-surface2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-2 rounded-lg border border-accent/20 bg-accent/[0.06] p-3">
+                                            <div class="flex items-center gap-1.5"><i data-lucide="brain-circuit"
+                                                    class="h-3.5 w-3.5 text-accent"></i>
+                                                <p class="text-[11px] font-medium">Insights Vitalfy</p>
+                                            </div>
+                                            <p class="mt-2.5 font-mono text-[9px] uppercase tracking-wide text-faint">
+                                                Sinais de alerta</p>
+                                            <div class="mt-1.5 flex flex-wrap gap-1">
+                                                <span
+                                                    class="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] text-red-400">Dor
+                                                    de cabeça intensa</span>
+                                                <span
+                                                    class="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] text-red-400">Tontura</span>
+                                            </div>
+                                            <p class="mt-2.5 font-mono text-[9px] uppercase tracking-wide text-faint">
+                                                Gravidade</p>
+                                            <div class="mt-1 flex items-center gap-1.5 text-[11px] text-ink"><span
+                                                    class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Urgente</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== TRUST / STATS ====================== -->
+        <section class="border-y hairline bg-raised/40">
+            <div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+                <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+                    <div class="reveal">
+                        <p class="font-mono text-3xl font-medium tracking-tight">~8 min</p>
+                        <p class="mt-1 text-sm text-dim">economizados por documento</p>
+                    </div>
+                    <div class="reveal" style="transition-delay:.05s">
+                        <p class="font-mono text-3xl font-medium tracking-tight">1 fluxo</p>
+                        <p class="mt-1 text-sm text-dim">do atendimento ao registro</p>
+                    </div>
+                    <div class="reveal" style="transition-delay:.1s">
+                        <p class="font-mono text-3xl font-medium tracking-tight">100%</p>
+                        <p class="mt-1 text-sm text-dim">estruturado e padronizado</p>
+                    </div>
+                    <div class="reveal" style="transition-delay:.15s">
+                        <p class="font-mono text-3xl font-medium tracking-tight">LGPD</p>
+                        <p class="mt-1 text-sm text-dim">dados protegidos por padrão</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== PROBLEMA ====================== -->
+        <section class="relative py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid items-center gap-16 lg:grid-cols-2">
+                    <div>
+                        <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">O problema</p>
+                        <h2 class="reveal mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                            style="transition-delay:.05s">
+                            A documentação consome o tempo que deveria ser do cuidado.
+                        </h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            Cada atendimento gera informação valiosa. Sem o suporte certo, ela se perde em anotações
+                            dispersas, registros inconsistentes e horas administrativas que se acumulam silenciosamente.
+                        </p>
+
+                        <div class="mt-9 space-y-3">
+                            <div class="reveal card-hover flex items-start gap-4 rounded-xl border hairline bg-panel/40 p-4"
+                                style="transition-delay:.12s">
+                                <span class="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface"><i
+                                        data-lucide="files" class="h-4 w-4 text-muted"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium">Excesso de documentação</p>
+                                    <p class="mt-1 text-sm text-dim">Tarefas que se repetem e roubam horas de cada
+                                        semana clínica.</p>
+                                </div>
+                            </div>
+                            <div class="reveal card-hover flex items-start gap-4 rounded-xl border hairline bg-panel/40 p-4"
+                                style="transition-delay:.16s">
+                                <span class="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface"><i
+                                        data-lucide="shuffle" class="h-4 w-4 text-muted"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium">Registros inconsistentes</p>
+                                    <p class="mt-1 text-sm text-dim">Cada nota em um formato diferente, difíceis de
+                                        revisar e comparar.</p>
+                                </div>
+                            </div>
+                            <div class="reveal card-hover flex items-start gap-4 rounded-xl border hairline bg-panel/40 p-4"
+                                style="transition-delay:.2s">
+                                <span class="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface"><i
+                                        data-lucide="hourglass" class="h-4 w-4 text-muted"></i></span>
+                                <div>
+                                    <p class="text-sm font-medium">Tempo administrativo</p>
+                                    <p class="mt-1 text-sm text-dim">Atenção fragmentada entre o paciente e a burocracia
+                                        do registro.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Storytelling visual: fragmented -> structured -->
+                    <div class="reveal relative" style="transition-delay:.1s">
+                        <div class="glass rounded-2xl p-6">
+                            <div class="grid grid-cols-2 gap-5">
+                                <div>
+                                    <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Sem a
+                                        Vitalfy</p>
+                                    <div class="space-y-2">
+                                        <div class="frag h-2.5 w-3/4 -rotate-1 rounded bg-surface2"></div>
+                                        <div class="frag h-2.5 w-1/2 rotate-2 rounded bg-surface2"></div>
+                                        <div class="frag h-2.5 w-5/6 -rotate-2 rounded bg-surface2"></div>
+                                        <div class="frag h-2.5 w-2/5 rotate-1 rounded bg-surface2"></div>
+                                        <div class="frag h-2.5 w-3/5 -rotate-1 rounded bg-surface2"></div>
+                                        <div class="frag h-2.5 w-1/2 rotate-2 rounded bg-surface2"></div>
+                                    </div>
+                                </div>
+                                <div class="border-l hairline pl-5">
+                                    <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-health">Com a
+                                        Vitalfy</p>
+                                    <div class="space-y-2">
+                                        <div class="h-2.5 w-full rounded bg-gradient-to-r from-accent/60 to-accent/20">
+                                        </div>
+                                        <div class="h-2.5 w-11/12 rounded bg-surface2"></div>
+                                        <div class="h-2.5 w-full rounded bg-surface2"></div>
+                                        <div class="h-2.5 w-10/12 rounded bg-gradient-to-r from-health/50 to-health/10">
+                                        </div>
+                                        <div class="h-2.5 w-full rounded bg-surface2"></div>
+                                        <div class="h-2.5 w-9/12 rounded bg-surface2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex items-center justify-center gap-2 border-t hairline pt-5 text-dim">
+                                <span class="font-mono text-[11px]">fragmentado</span>
+                                <i data-lucide="arrow-right" class="h-3.5 w-3.5 text-health"></i>
+                                <span class="font-mono text-[11px] text-ink">estruturado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== SOLUÇÃO ====================== -->
+        <section id="plataforma" class="relative scroll-mt-24 overflow-hidden border-t hairline py-24 sm:py-32">
+            <div class="glow ambient"
+                style="width:560px;height:560px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(110,139,255,0.1),transparent 65%)">
+            </div>
+            <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl text-center">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Como funciona</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                        style="transition-delay:.05s">Um fluxo contínuo, do atendimento ao registro.</h2>
+                    <p class="reveal mt-5 text-lg leading-relaxed text-muted" style="transition-delay:.1s">A Vitalfy
+                        opera em segundo plano. A tecnologia desaparece, e o que permanece é a clareza.</p>
+                </div>
+
+                <div class="mt-16 grid gap-6 md:grid-cols-3">
+                    <div class="reveal card-hover group relative rounded-2xl border hairline bg-panel/40 p-7">
+                        <span class="font-mono text-sm text-faint">01</span>
+                        <span
+                            class="mt-5 grid h-11 w-11 place-items-center rounded-xl bg-surface ring-1 ring-white/5"><i
+                                data-lucide="mic" class="h-5 w-5 text-accent"></i></span>
+                        <h3 class="mt-5 text-lg font-medium">Captura das informações</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">As informações do atendimento entram de forma
+                            natural, sem interromper a relação com o paciente.</p>
+                    </div>
+                    <div class="reveal card-hover group relative rounded-2xl border hairline bg-panel/40 p-7"
+                        style="transition-delay:.07s">
+                        <span class="font-mono text-sm text-faint">02</span>
+                        <span
+                            class="mt-5 grid h-11 w-11 place-items-center rounded-xl bg-surface ring-1 ring-white/5"><i
+                                data-lucide="brain-circuit" class="h-5 w-5 text-accent"></i></span>
+                        <h3 class="mt-5 text-lg font-medium">Organização inteligente</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">A IA especializada interpreta o contexto
+                            clínico e organiza cada informação em seu lugar.</p>
+                    </div>
+                    <div class="reveal card-hover group relative rounded-2xl border hairline bg-panel/40 p-7"
+                        style="transition-delay:.14s">
+                        <span class="font-mono text-sm text-faint">03</span>
+                        <span
+                            class="mt-5 grid h-11 w-11 place-items-center rounded-xl bg-surface ring-1 ring-white/5"><i
+                                data-lucide="file-check-2" class="h-5 w-5 text-health"></i></span>
+                        <h3 class="mt-5 text-lg font-medium">Documentação estruturada</h3>
+                        <p class="mt-2.5 text-sm leading-relaxed text-dim">O resultado é um registro claro, padronizado
+                            e pronto para uso — revisável em segundos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== BENEFÍCIOS ====================== -->
+        <section class="relative border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="max-w-2xl">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Benefícios</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                        style="transition-delay:.05s">O que muda na rotina clínica.</h2>
+                </div>
+
+                <div
+                    class="mt-14 grid gap-px overflow-hidden rounded-2xl border hairline bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
+                    <!-- each cell -->
+                    <div class="reveal card-hover bg-panel p-7"><i data-lucide="gauge" class="h-5 w-5 text-accent"></i>
+                        <h3 class="mt-4 font-medium">Mais produtividade</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Documentos prontos em uma fração do tempo, sem
+                            retrabalho.</p>
+                    </div>
+                    <div class="reveal card-hover bg-panel p-7" style="transition-delay:.04s"><i data-lucide="sparkle"
+                            class="h-5 w-5 text-accent"></i>
+                        <h3 class="mt-4 font-medium">Mais clareza</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Registros legíveis e bem ordenados, fáceis de
+                            retomar a qualquer momento.</p>
+                    </div>
+                    <div class="reveal card-hover bg-panel p-7" style="transition-delay:.08s"><i
+                            data-lucide="layout-grid" class="h-5 w-5 text-accent"></i>
+                        <h3 class="mt-4 font-medium">Mais padronização</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Um padrão consistente entre atendimentos,
+                            profissionais e especialidades.</p>
+                    </div>
+                    <div class="reveal card-hover bg-panel p-7" style="transition-delay:.04s"><i
+                            data-lucide="shield-check" class="h-5 w-5 text-health"></i>
+                        <h3 class="mt-4 font-medium">Mais segurança</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Informação clínica protegida e tratada com
+                            rigor e confidencialidade.</p>
+                    </div>
+                    <div class="reveal card-hover bg-panel p-7" style="transition-delay:.08s"><i
+                            data-lucide="trending-up" class="h-5 w-5 text-health"></i>
+                        <h3 class="mt-4 font-medium">Mais eficiência</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Menos passos manuais, menos atrito, mais
+                            consultas bem documentadas.</p>
+                    </div>
+                    <div class="reveal card-hover bg-panel p-7" style="transition-delay:.12s"><i
+                            data-lucide="heart-pulse" class="h-5 w-5 text-health"></i>
+                        <h3 class="mt-4 font-medium">Mais foco no paciente</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Atenção plena no cuidado, enquanto a
+                            organização acontece em segundo plano.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== DIFERENCIAIS ====================== -->
+        <section class="relative border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid items-center gap-16 lg:grid-cols-2">
+                    <div>
+                        <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Diferenciais</p>
+                        <h2 class="reveal mt-4 max-w-md text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                            style="transition-delay:.05s">Não é um transcritor. É inteligência clínica.</h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            Ferramentas genéricas devolvem texto bruto. A Vitalfy entende o contexto clínico e devolve
+                            estrutura — o tipo de diferença que só uma IA especializada em saúde consegue entregar.</p>
+
+                        <dl class="mt-9 space-y-6">
+                            <div class="reveal flex gap-4" style="transition-delay:.12s">
+                                <i data-lucide="stethoscope" class="mt-0.5 h-5 w-5 shrink-0 text-health"></i>
+                                <div>
+                                    <dt class="text-sm font-medium">Contexto clínico</dt>
+                                    <dd class="mt-1 text-sm text-dim">Interpreta a informação como um profissional de
+                                        saúde a leria, não como texto isolado.</dd>
+                                </div>
+                            </div>
+                            <div class="reveal flex gap-4" style="transition-delay:.16s">
+                                <i data-lucide="list-tree" class="mt-0.5 h-5 w-5 shrink-0 text-health"></i>
+                                <div>
+                                    <dt class="text-sm font-medium">Estruturação inteligente</dt>
+                                    <dd class="mt-1 text-sm text-dim">Cada dado encontra seu campo: queixa, história,
+                                        conduta, plano.</dd>
+                                </div>
+                            </div>
+                            <div class="reveal flex gap-4" style="transition-delay:.2s">
+                                <i data-lucide="gem" class="mt-0.5 h-5 w-5 shrink-0 text-health"></i>
+                                <div>
+                                    <dt class="text-sm font-medium">Experiência premium</dt>
+                                    <dd class="mt-1 text-sm text-dim">Uma interface precisa e silenciosa, à altura de
+                                        quem a usa.</dd>
+                                </div>
+                            </div>
+                            <div class="reveal flex gap-4" style="transition-delay:.24s">
+                                <i data-lucide="cpu" class="mt-0.5 h-5 w-5 shrink-0 text-health"></i>
+                                <div>
+                                    <dt class="text-sm font-medium">IA especializada</dt>
+                                    <dd class="mt-1 text-sm text-dim">Construída para o vocabulário e os fluxos da
+                                        prática clínica.</dd>
+                                </div>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <!-- comparison card -->
+                    <div class="reveal" style="transition-delay:.1s">
+                        <div class="glass rounded-2xl p-6">
+                            <div class="grid grid-cols-2 divide-x divide-white/[0.08]">
+                                <div class="pr-5">
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Ferramenta
+                                        genérica</p>
+                                    <ul class="mt-4 space-y-3 text-sm text-dim">
+                                        <li class="flex items-center gap-2"><i data-lucide="x"
+                                                class="h-4 w-4 text-faint"></i> Texto corrido</li>
+                                        <li class="flex items-center gap-2"><i data-lucide="x"
+                                                class="h-4 w-4 text-faint"></i> Sem contexto clínico</li>
+                                        <li class="flex items-center gap-2"><i data-lucide="x"
+                                                class="h-4 w-4 text-faint"></i> Revisão manual extensa</li>
+                                        <li class="flex items-center gap-2"><i data-lucide="x"
+                                                class="h-4 w-4 text-faint"></i> Formato inconsistente</li>
+                                    </ul>
+                                </div>
+                                <div class="pl-5">
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-health">Vitalfy</p>
+                                    <ul class="mt-4 space-y-3 text-sm text-ink">
+                                        <li class="flex items-center gap-2"><i data-lucide="check"
+                                                class="h-4 w-4 text-health"></i> Documentação estruturada</li>
+                                        <li class="flex items-center gap-2"><i data-lucide="check"
+                                                class="h-4 w-4 text-health"></i> Contexto clínico aplicado</li>
+                                        <li class="flex items-center gap-2"><i data-lucide="check"
+                                                class="h-4 w-4 text-health"></i> Pronto para revisar</li>
+                                        <li class="flex items-center gap-2"><i data-lucide="check"
+                                                class="h-4 w-4 text-health"></i> Padrão consistente</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== FUNCIONALIDADES ====================== -->
+        <section id="recursos" class="relative scroll-mt-24 overflow-hidden border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="max-w-2xl">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Recursos</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                        style="transition-delay:.05s">Tudo o que a documentação clínica precisa ser.</h2>
+                </div>
+
+                <div class="mt-14 grid gap-6 lg:grid-cols-12">
+                    <!-- feature large left -->
+                    <div class="reveal card-hover lg:col-span-7 rounded-2xl border hairline bg-panel/40 p-8">
+                        <div class="flex items-center gap-3"><i data-lucide="clipboard-list"
+                                class="h-5 w-5 text-accent"></i>
+                            <h3 class="text-lg font-medium">Anamnese inteligente</h3>
+                        </div>
+                        <p class="mt-2 max-w-md text-sm leading-relaxed text-dim">As informações do atendimento são
+                            organizadas nos campos certos, seguindo a lógica da consulta.</p>
+                        <div class="mt-6 rounded-xl border hairline bg-raised/80 p-4">
+                            <div class="mb-3 flex items-center justify-between border-b hairline pb-3">
+                                <div class="flex items-center gap-1 text-faint">
+                                    <span class="rounded px-1.5 py-0.5 text-[11px] font-medium">H1</span>
+                                    <span
+                                        class="rounded bg-accent/15 px-1.5 py-0.5 text-[11px] font-medium text-accent">H2</span>
+                                    <span class="rounded px-1.5 py-0.5 text-[11px] font-medium">H3</span>
+                                    <span
+                                        class="ml-1 rounded bg-accent/15 px-1.5 py-0.5 text-[11px] font-bold text-accent">B</span>
+                                    <span class="rounded px-1.5 py-0.5 text-[11px] italic">I</span>
+                                    <i data-lucide="list" class="ml-1 h-3.5 w-3.5"></i>
+                                    <i data-lucide="list-ordered" class="h-3.5 w-3.5"></i>
+                                </div>
+                                <span
+                                    class="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-[10px] font-medium text-white"><i
+                                        data-lucide="sparkles" class="h-3 w-3"></i> Refinar anamnese</span>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-[13px] font-semibold text-ink">Dor de Cabeça e Cansaço</p>
+                                <div class="rounded-lg bg-surface/50 p-3">
+                                    <p class="font-mono text-[10px] uppercase tracking-wide text-faint">Queixa principal
+                                    </p>
+                                    <div class="mt-2 space-y-1.5">
+                                        <div class="h-1.5 w-full rounded bg-surface2"></div>
+                                        <div class="h-1.5 w-2/3 rounded bg-surface2"></div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="rounded-lg bg-surface/50 p-3">
+                                        <p class="font-mono text-[10px] uppercase tracking-wide text-faint">História da
+                                            doença atual</p>
+                                        <div class="mt-2 space-y-1.5">
+                                            <div class="h-1.5 w-full rounded bg-surface2"></div>
+                                            <div class="h-1.5 w-4/5 rounded bg-surface2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="rounded-lg bg-surface/50 p-3">
+                                        <p class="font-mono text-[10px] uppercase tracking-wide text-faint">Histórico
+                                            familiar</p>
+                                        <div class="mt-2 space-y-1.5">
+                                            <div class="h-1.5 w-3/4 rounded bg-surface2"></div>
+                                            <div class="h-1.5 w-1/2 rounded bg-surface2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- feature right column -->
+                    <div class="lg:col-span-5 grid gap-6">
+                        <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-8"
+                            style="transition-delay:.05s">
+                            <div class="flex items-center gap-3"><i data-lucide="scroll-text"
+                                    class="h-5 w-5 text-accent"></i>
+                                <h3 class="text-lg font-medium">Resumos automáticos</h3>
+                            </div>
+                            <p class="mt-2 text-sm leading-relaxed text-dim">Sínteses precisas de cada atendimento,
+                                prontas para a próxima consulta.</p>
+                        </div>
+                        <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-8"
+                            style="transition-delay:.1s">
+                            <div class="flex items-center gap-3"><i data-lucide="search-check"
+                                    class="h-5 w-5 text-health"></i>
+                                <h3 class="text-lg font-medium">Busca inteligente</h3>
+                            </div>
+                            <p class="mt-2 text-sm leading-relaxed text-dim">Encontre qualquer registro pelo que
+                                importa, não pelo que foi digitado.</p>
+                        </div>
+                    </div>
+
+                    <!-- bottom row -->
+                    <div class="reveal card-hover lg:col-span-4 rounded-2xl border hairline bg-panel/40 p-8"
+                        style="transition-delay:.05s">
+                        <div class="flex items-center gap-3"><i data-lucide="layers" class="h-5 w-5 text-accent"></i>
+                            <h3 class="text-lg font-medium">Organização clínica</h3>
+                        </div>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Registros agrupados por paciente, especialidade
+                            e contexto.</p>
+                    </div>
+                    <div class="reveal card-hover lg:col-span-4 rounded-2xl border hairline bg-panel/40 p-8"
+                        style="transition-delay:.1s">
+                        <div class="flex items-center gap-3"><i data-lucide="history" class="h-5 w-5 text-accent"></i>
+                            <h3 class="text-lg font-medium">Histórico estruturado</h3>
+                        </div>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">A trajetória completa do paciente, sempre clara
+                            e acessível.</p>
+                    </div>
+                    <div class="reveal card-hover lg:col-span-4 rounded-2xl border hairline bg-panel/40 p-8"
+                        style="transition-delay:.15s">
+                        <div class="flex items-center gap-3"><i data-lucide="database" class="h-5 w-5 text-health"></i>
+                            <h3 class="text-lg font-medium">Gestão de registros</h3>
+                        </div>
+                        <p class="mt-2 text-sm leading-relaxed text-dim">Controle total sobre o que foi documentado,
+                            revisado e arquivado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== DEMONSTRAÇÃO ====================== -->
+        <section class="relative overflow-hidden border-t hairline py-24 sm:py-32">
+            <div class="glow ambient"
+                style="width:560px;height:420px;bottom:-80px;right:-80px;background:radial-gradient(circle,rgba(52,214,173,0.1),transparent 65%)">
+            </div>
+            <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl text-center">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">A plataforma</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                        style="transition-delay:.05s">Conheça o ambiente de trabalho.</h2>
+                </div>
+
+                <div class="reveal mx-auto mt-14 max-w-5xl" style="transition-delay:.1s">
+                    <div class="glass overflow-hidden rounded-2xl">
+                        <!-- chrome -->
+                        <div class="flex items-center justify-between border-b hairline px-4 py-3">
+                            <div class="flex items-center gap-2"><span
+                                    class="h-3 w-3 rounded-full bg-surface2"></span><span
+                                    class="h-3 w-3 rounded-full bg-surface2"></span><span
+                                    class="h-3 w-3 rounded-full bg-surface2"></span></div>
+                            <div class="flex items-center gap-1.5 rounded-lg bg-surface/60 px-3 py-1"><i
+                                    data-lucide="user" class="h-3 w-3 text-dim"></i><span
+                                    class="font-mono text-[11px] text-dim">Paciente · Johny · 20 jun 2026</span></div>
+                            <span class="hidden font-mono text-[11px] text-faint sm:block">Vitalfy</span>
+                        </div>
+
+                        <div class="grid grid-cols-12">
+                            <!-- sidebar -->
+                            <aside class="col-span-12 border-b hairline p-3 sm:col-span-3 sm:border-b-0 sm:border-r">
+                                <div
+                                    class="hidden sm:flex sm:items-center sm:justify-center sm:gap-1.5 sm:rounded-lg sm:bg-accent sm:px-3 sm:py-2 sm:text-[12px] sm:font-medium sm:text-white">
+                                    <i data-lucide="plus" class="h-3.5 w-3.5"></i> Novo atendimento
+                                </div>
+                                <div
+                                    class="flex gap-2 overflow-x-auto sm:mt-4 sm:flex-col sm:gap-1 sm:overflow-visible">
+                                    <div
+                                        class="flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                        <i data-lucide="mic" class="h-4 w-4"></i> Transcrição</div>
+                                    <div
+                                        class="flex shrink-0 items-center gap-2.5 rounded-lg bg-accent/10 px-3 py-2 text-[13px] text-ink">
+                                        <i data-lucide="history" class="h-4 w-4 text-accent"></i> Histórico</div>
+                                    <div
+                                        class="flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                        <i data-lucide="file-text" class="h-4 w-4"></i> Templates</div>
+                                    <div
+                                        class="flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-muted">
+                                        <i data-lucide="bar-chart-3" class="h-4 w-4"></i> Dashboard</div>
+                                </div>
+                            </aside>
+
+                            <!-- main -->
+                            <div class="col-span-12 border-b hairline p-5 sm:col-span-6 sm:border-b-0 sm:border-r">
+                                <div class="mb-3 flex items-center justify-between">
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Documento
+                                        clínico</p>
+                                    <div class="flex items-center gap-1.5 text-faint">
+                                        <span class="rounded-md border hairline px-2 py-1 text-[10px]">Copiar</span>
+                                        <span class="rounded-md border hairline px-2 py-1 text-[10px]">Exportar</span>
+                                    </div>
+                                </div>
+                                <!-- tabs -->
+                                <div class="flex gap-1 border-b hairline" role="tablist"
+                                    aria-label="Visualizações do documento">
+                                    <button
+                                        class="demo-tab border-b-2 border-transparent px-3 py-2 text-sm text-dim hover:text-ink"
+                                        data-tab="contexto" role="tab" aria-selected="false">Contexto da
+                                        consulta</button>
+                                    <button class="demo-tab border-b-2 border-accent px-3 py-2 text-sm text-ink"
+                                        data-tab="clinica" role="tab" aria-selected="true">Clínica Médica</button>
+                                </div>
+
+                                <div class="pt-4">
+                                    <div class="demo-panel active" data-panel="clinica" role="tabpanel">
+                                        <div class="mb-3 flex items-center justify-between border-b hairline pb-3">
+                                            <div class="flex items-center gap-1 text-faint">
+                                                <span class="rounded px-1.5 py-0.5 text-[11px] font-medium">H1</span>
+                                                <span
+                                                    class="rounded bg-accent/15 px-1.5 py-0.5 text-[11px] font-medium text-accent">H2</span>
+                                                <span class="rounded px-1.5 py-0.5 text-[11px] font-medium">H3</span>
+                                                <span
+                                                    class="ml-1 rounded bg-accent/15 px-1.5 py-0.5 text-[11px] font-bold text-accent">B</span>
+                                                <span class="rounded px-1.5 py-0.5 text-[11px] italic">I</span>
+                                                <i data-lucide="list" class="ml-1 h-3.5 w-3.5"></i>
+                                                <i data-lucide="list-ordered" class="h-3.5 w-3.5"></i>
+                                            </div>
+                                            <span
+                                                class="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-[10px] font-medium text-white"><i
+                                                    data-lucide="sparkles" class="h-3 w-3"></i> Refinar anamnese</span>
+                                        </div>
+                                        <div class="space-y-3">
+                                            <p class="text-sm font-semibold text-ink">Dor de Cabeça e Cansaço</p>
+                                            <div>
+                                                <p class="text-[12px] font-medium text-ink">Queixa Principal</p>
+                                                <p class="mt-1 text-[12px] leading-relaxed text-muted">Dor de cabeça
+                                                    intensa e cansaço excessivo, com duração de aproximadamente 2
+                                                    semanas.</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[12px] font-medium text-ink">História da Doença Atual</p>
+                                                <div class="mt-1.5 space-y-1.5">
+                                                    <div class="h-1.5 w-full rounded bg-surface2"></div>
+                                                    <div class="h-1.5 w-11/12 rounded bg-surface2"></div>
+                                                    <div class="h-1.5 w-3/4 rounded bg-surface2"></div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="text-[12px] font-medium text-ink">Histórico Clínico Relevante
+                                                </p>
+                                                <div class="mt-1.5 space-y-1.5">
+                                                    <div class="h-1.5 w-5/6 rounded bg-surface2"></div>
+                                                    <div class="h-1.5 w-2/3 rounded bg-surface2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="demo-panel" data-panel="contexto" role="tabpanel">
+                                        <div
+                                            class="mb-3 flex items-center gap-2 rounded-lg border hairline bg-raised/60 px-3 py-2">
+                                            <i data-lucide="file-audio" class="h-3.5 w-3.5 text-dim"></i>
+                                            <span
+                                                class="truncate font-mono text-[11px] text-dim">consulta_2026-06-20.mp3</span>
+                                            <span class="ml-auto font-mono text-[10px] text-faint">11:16</span>
+                                        </div>
+                                        <div class="space-y-2.5">
+                                            <div>
+                                                <p class="mb-1 font-mono text-[9px] text-faint">0.08s — Falante 1</p>
+                                                <div
+                                                    class="inline-block max-w-[90%] rounded-lg rounded-tl-sm bg-surface px-3 py-1.5 text-[12px] text-muted">
+                                                    Bom dia, pode entrar.</div>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="mb-1 font-mono text-[9px] text-faint">5.6s — Falante 2</p>
+                                                <div
+                                                    class="inline-block max-w-[90%] rounded-lg rounded-tr-sm bg-accent/15 px-3 py-1.5 text-left text-[12px] text-ink">
+                                                    Faz alguns dias que estou sentindo muita dor de cabeça e cansaço
+                                                    fora do normal.</div>
+                                            </div>
+                                            <div>
+                                                <p class="mb-1 font-mono text-[9px] text-faint">12.16s — Falante 1</p>
+                                                <div
+                                                    class="inline-block max-w-[90%] rounded-lg rounded-tl-sm bg-surface px-3 py-1.5 text-[12px] text-muted">
+                                                    Há quanto tempo esses sintomas começaram?</div>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="mb-1 font-mono text-[9px] text-faint">14.88s — Falante 2</p>
+                                                <div
+                                                    class="inline-block max-w-[90%] rounded-lg rounded-tr-sm bg-accent/15 px-3 py-1.5 text-left text-[12px] text-ink">
+                                                    Acho que faz umas 2 semanas.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- insights -->
+                            <aside class="col-span-12 p-4 sm:col-span-3">
+                                <div class="flex items-center gap-2"><i data-lucide="brain-circuit"
+                                        class="h-4 w-4 text-accent"></i>
+                                    <p class="text-[12px] font-medium">Insights Vitalfy</p>
+                                </div>
+                                <p class="mt-0.5 text-[10px] text-dim">Análise clínica assistida por IA</p>
+
+                                <p class="mt-4 text-[11px] font-medium text-ink">Sinais de alerta</p>
+                                <div class="mt-2 flex flex-wrap gap-1">
+                                    <span class="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] text-red-400">Dor de
+                                        cabeça intensa</span>
+                                    <span
+                                        class="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] text-red-400">Cansaço
+                                        extremo</span>
+                                    <span
+                                        class="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] text-red-400">Tontura</span>
+                                    <span
+                                        class="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] text-red-400">Sensibilidade
+                                        à luz</span>
+                                </div>
+
+                                <p class="mt-4 text-[11px] font-medium text-ink">Gravidade estimada</p>
+                                <div class="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted"><span
+                                        class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Urgente</div>
+
+                                <p class="mt-4 text-[11px] font-medium text-ink">Possíveis diagnósticos</p>
+                                <ol class="mt-1.5 space-y-1 text-[11px] text-muted">
+                                    <li>1. Enxaqueca</li>
+                                    <li>2. Cefaleia de tensão</li>
+                                    <li>3. Distúrbios do sono</li>
+                                </ol>
+
+                                <p class="mt-4 text-[11px] font-medium text-ink">CIDs sugeridos</p>
+                                <ul class="mt-1.5 space-y-1 text-[11px] text-muted">
+                                    <li class="flex items-center gap-1.5"><span
+                                            class="h-1 w-1 rounded-full bg-dim"></span> G43 — Enxaqueca</li>
+                                    <li class="flex items-center gap-1.5"><span
+                                            class="h-1 w-1 rounded-full bg-dim"></span> R51 — Cefaleia</li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== SEGURANÇA ====================== -->
+        <section id="seguranca" class="relative scroll-mt-24 border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid gap-16 lg:grid-cols-2 lg:items-center">
+                    <div>
+                        <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Segurança</p>
+                        <h2 class="reveal mt-4 max-w-md text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                            style="transition-delay:.05s">Dado clínico é dado sensível. Tratamos como tal.</h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            Privacidade e proteção não são recursos adicionais — são a base sobre a qual a Vitalfy foi
+                            construída.</p>
+                        <a href="/security.html" class="reveal mt-6 inline-flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors" style="transition-delay:.15s">
+                            Ver política completa de segurança e LGPD <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                        </a>
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-6"><i
+                                data-lucide="scale" class="h-5 w-5 text-health"></i>
+                            <h3 class="mt-4 font-medium">Conformidade com a LGPD</h3>
+                            <p class="mt-2 text-sm text-dim">Tratamento de dados alinhado à legislação brasileira de
+                                proteção de dados.</p>
+                        </div>
+                        <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-6"
+                            style="transition-delay:.05s"><i data-lucide="lock-keyhole" class="h-5 w-5 text-health"></i>
+                            <h3 class="mt-4 font-medium">Criptografia</h3>
+                            <p class="mt-2 text-sm text-dim">Informações protegidas em trânsito e em repouso por padrões
+                                modernos.</p>
+                        </div>
+                        <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-6"
+                            style="transition-delay:.1s"><i data-lucide="eye-off" class="h-5 w-5 text-health"></i>
+                            <h3 class="mt-4 font-medium">Privacidade por princípio</h3>
+                            <p class="mt-2 text-sm text-dim">Acesso restrito e confidencialidade preservada em cada
+                                etapa.</p>
+                        </div>
+                        <div class="reveal card-hover rounded-2xl border hairline bg-panel/40 p-6"
+                            style="transition-delay:.15s"><i data-lucide="server" class="h-5 w-5 text-health"></i>
+                            <h3 class="mt-4 font-medium">Proteção de dados</h3>
+                            <p class="mt-2 text-sm text-dim">Controles e práticas para manter cada registro sob seu
+                                domínio.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== PLANOS (teaser) ====================== -->
+        <section class="relative overflow-hidden border-t hairline py-24 sm:py-32">
+            <div class="glow" style="width:500px;height:400px;top:50%;right:-80px;transform:translateY(-50%);background:radial-gradient(circle,rgba(110,139,255,0.1),transparent 65%)"></div>
+            <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="grid items-center gap-16 lg:grid-cols-2">
+                    <div>
+                        <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Planos</p>
+                        <h2 class="reveal mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:text-4xl" style="transition-delay:.05s">Comece grátis. Evolua quando precisar.</h2>
+                        <p class="reveal mt-5 max-w-md text-lg leading-relaxed text-muted" style="transition-delay:.1s">
+                            A Vitalfy tem plano gratuito para sempre — sem cartão de crédito. Quando a rotina exige mais, o Pro entrega documentação ilimitada com todos os recursos em um valor que cabe na sua prática.
+                        </p>
+                        <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row" style="transition-delay:.14s">
+                            <a href="/pricing.html" class="btn-primary rounded-full px-6 py-3 text-sm font-medium text-center">Ver planos e preços</a>
+                            <a href="https://app.vitalfy.health/" class="btn-ghost flex items-center justify-center gap-2 rounded-full border hairline-strong bg-panel/40 px-6 py-3 text-sm font-medium text-ink hover:bg-surface">Começar grátis <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+                        </div>
+                        <p class="reveal mt-5 font-mono text-xs text-faint" style="transition-delay:.18s">Plano Pro a partir de R$ 119/mês · Todos os recursos · Cancelamento a qualquer tempo</p>
+                    </div>
+
+                    <div class="reveal grid gap-4 sm:grid-cols-2" style="transition-delay:.1s">
+                        <!-- Gratuito -->
+                        <div class="card-hover flex flex-col rounded-2xl border hairline bg-panel/40 p-6">
+                            <p class="font-medium text-ink">Gratuito</p>
+                            <p class="mt-3 text-3xl font-semibold tracking-tight">R$ 0<span class="text-sm font-normal text-dim"> /mês</span></p>
+                            <p class="mt-1 font-mono text-[11px] text-faint">Para sempre.</p>
+                            <ul class="mt-5 space-y-2.5 text-sm text-dim">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Até 10 documentos/mês</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Documentação estruturada</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Templates essenciais</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> LGPD incluso</li>
+                            </ul>
+                        </div>
+                        <!-- Pro -->
+                        <div class="card-hover relative flex flex-col rounded-2xl border border-accent/40 bg-panel/60 p-6 ring-1 ring-accent/20">
+                            <div class="glow" style="width:90%;height:50%;top:0;left:5%;background:radial-gradient(ellipse,rgba(110,139,255,0.12),transparent 70%)"></div>
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-white">Pro</div>
+                            <div class="relative flex flex-col flex-1">
+                                <p class="font-medium text-ink">Ilimitado</p>
+                                <p class="mt-3 text-3xl font-semibold tracking-tight">R$ 119<span class="text-sm font-normal text-dim"> /mês</span></p>
+                                <p class="mt-1 font-mono text-[11px] text-faint">Plano anual · ~20% off</p>
+                                <ul class="mt-5 space-y-2.5 text-sm text-dim">
+                                    <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Documentos ilimitados</li>
+                                    <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Insights IA + CID sugerido</li>
+                                    <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Todos os 30+ templates</li>
+                                    <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-health"></i> Suporte prioritário</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== FAQ ====================== -->
+        <section id="faq" class="relative scroll-mt-24 border-t hairline py-24 sm:py-32">
+            <div class="mx-auto max-w-3xl px-6 lg:px-8">
+                <div class="text-center">
+                    <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-dim">Perguntas frequentes</p>
+                    <h2 class="reveal mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                        style="transition-delay:.05s">O que você precisa saber.</h2>
+                </div>
+
+                <div class="reveal mt-12 divide-y divide-white/[0.08] border-y hairline" style="transition-delay:.08s">
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left"><span
+                                class="font-medium">A Vitalfy é um transcritor de áudio?</span><i
+                                data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i></summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Não. A Vitalfy é uma plataforma de
+                            inteligência que organiza o conhecimento clínico. Em vez de devolver texto bruto, ela
+                            interpreta o contexto e entrega documentação estruturada e pronta para uso.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left"><span
+                                class="font-medium">Preciso mudar minha rotina de atendimento?</span><i
+                                data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i></summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Não. A Vitalfy se adapta à forma como você já
+                            trabalha. A tecnologia opera em segundo plano, sem interromper a relação com o paciente.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left"><span
+                                class="font-medium">Como a Vitalfy lida com dados sensíveis?</span><i
+                                data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i></summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Com rigor. As informações são tratadas em
+                            conformidade com a LGPD, protegidas por criptografia e mantidas sob acesso restrito e
+                            confidencial.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left"><span
+                                class="font-medium">Funciona para diferentes especialidades?</span><i
+                                data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i></summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">Sim. A plataforma oferece estruturas
+                            específicas por especialidade, mantendo um padrão consistente entre profissionais e
+                            contextos.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left"><span
+                                class="font-medium">Quanto tempo a Vitalfy economiza?</span><i
+                                data-lucide="plus" class="faq-chevron h-5 w-5 shrink-0 text-dim"></i></summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">A economia é medida de forma honesta,
+                            comparando o tempo que cada documento levaria manualmente com o tempo real na plataforma. Na
+                            prática, isso representa cerca de oito minutos recuperados por documento estruturado.</p>
+                    </details>
+                    <details class="group py-5">
+                        <summary class="flex items-center justify-between gap-4 text-left"><span
+                                class="font-medium">Como começo a usar?</span><i data-lucide="plus"
+                                class="faq-chevron h-5 w-5 shrink-0 text-dim"></i></summary>
+                        <p class="mt-3 text-sm leading-relaxed text-muted">É simples: crie sua conta no plano
+                            gratuito, sem cartão de crédito, e comece a usar na hora. Um passo a passo guiado
+                            apresenta a plataforma enquanto você estrutura seus primeiros registros.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== CTA FINAL ====================== -->
+        <section id="contato" class="relative scroll-mt-24 overflow-hidden border-t hairline py-28 sm:py-36">
+            <div class="glow ambient"
+                style="width:680px;height:480px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(110,139,255,0.18),transparent 60%)">
+            </div>
+            <div class="relative z-10 mx-auto max-w-3xl px-6 text-center lg:px-8">
+                <p class="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-health">Menos tempo documentando
+                    · Mais tempo cuidando</p>
+                <h2 class="reveal mt-6 text-balance text-4xl font-semibold leading-[1.08] tracking-tightest sm:text-5xl"
+                    style="transition-delay:.05s">
+                    Dedique seu tempo ao paciente.<br /><span class="text-muted">A Vitalfy cuida da organização.</span>
+                </h2>
+                <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+                    style="transition-delay:.1s">
+                    <a href="https://app.vitalfy.health/"
+                        class="btn-primary w-full rounded-full px-7 py-3.5 text-sm font-medium sm:w-auto">Começar
+                        grátis</a>
+                    <a href="#plataforma"
+                        class="btn-ghost flex w-full items-center justify-center gap-2 rounded-full border hairline-strong bg-panel/40 px-7 py-3.5 text-sm font-medium hover:bg-surface sm:w-auto">Conhecer
+                        a plataforma <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====================== FOOTER ====================== -->
+    <footer class="border-t hairline bg-raised/40">
+        <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+            <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+                <div>
+                    <a href="#top" class="flex items-center gap-2.5" aria-label="Vitalfy">
+                        <img src="/assets/img/vitalfy-logo.png" alt="Vitalfy" class="h-8 w-auto" />
+                        <span class="text-[15px] font-semibold tracking-tight">Vitalfy</span>
+                    </a>
+                    <p class="mt-4 max-w-xs text-sm leading-relaxed text-dim">Inteligência aplicada à saúde. A
+                        plataforma que organiza o conhecimento clínico.</p>
+                </div>
+
+                <nav aria-label="Produto">
+                    <h3 class="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Produto</h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li><a href="#plataforma" class="text-muted hover:text-ink transition-colors">Plataforma</a></li>
+                        <li><a href="#recursos" class="text-muted hover:text-ink transition-colors">Recursos</a></li>
+                        <li><a href="/pricing.html" class="text-muted hover:text-ink transition-colors">Preços</a></li>
+                        <li><a href="/compare.html" class="text-muted hover:text-ink transition-colors">Comparativo</a></li>
+                    </ul>
+                </nav>
+
+                <nav aria-label="Confiança">
+                    <h3 class="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Confiança</h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li><a href="/security.html" class="text-muted hover:text-ink transition-colors">Segurança e LGPD</a></li>
+                        <li><a href="#" class="text-muted hover:text-ink transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-muted hover:text-ink transition-colors">Termos de Uso</a></li>
+                    </ul>
+                </nav>
+
+                <nav aria-label="Contato">
+                    <h3 class="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Contato</h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li><a href="https://app.vitalfy.health/" class="text-muted hover:text-ink transition-colors">Começar
+                                grátis</a></li>
+                        <li><a href="mailto:contato@vitalfy.com.br"
+                                class="text-muted hover:text-ink transition-colors">contato@vitalfy.com.br</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t hairline pt-8 sm:flex-row">
+                <p class="font-mono text-xs text-faint">© 2026 Vitalfy. Todos os direitos reservados.</p>
+                <p class="font-mono text-xs text-faint">Construído para a prática clínica.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lucide -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        // Theme toggle
+        const root = document.documentElement;
+        const themeBtn = document.getElementById('theme-btn');
+        const syncPressed = () => themeBtn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'light'));
+        syncPressed();
+        themeBtn.addEventListener('click', () => {
+            const isLight = root.getAttribute('data-theme') === 'light';
+            if (isLight) root.removeAttribute('data-theme'); else root.setAttribute('data-theme', 'light');
+            try { localStorage.setItem('vitalfy-theme', isLight ? 'dark' : 'light'); } catch (e) { }
+            syncPressed();
+        });
+
+        // Icons
+        lucide.createIcons();
+
+        // Nav scroll state
+        const navInner = document.getElementById('nav-inner');
+        const onScroll = () => {
+            if (window.scrollY > 16) {
+                navInner.classList.add('glass', 'shadow-lg', 'shadow-black/30');
+            } else {
+                navInner.classList.remove('glass', 'shadow-lg', 'shadow-black/30');
+            }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Mobile menu
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            const open = mobileMenu.classList.toggle('hidden') === false;
+            menuBtn.setAttribute('aria-expanded', String(open));
+        });
+        mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            menuBtn.setAttribute('aria-expanded', 'false');
+        }));
+
+        // Reveal on scroll (Framer-Motion-style whileInView)
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        // Demo tabs
+        const tabs = document.querySelectorAll('.demo-tab');
+        const panels = document.querySelectorAll('.demo-panel');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('border-accent', 'text-ink');
+                    t.classList.add('border-transparent', 'text-dim');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.classList.add('border-accent', 'text-ink');
+                tab.classList.remove('border-transparent', 'text-dim');
+                tab.setAttribute('aria-selected', 'true');
+                const target = tab.dataset.tab;
+                panels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+            });
+        });
+    </script>
+</body>
+
+</html>
