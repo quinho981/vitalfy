@@ -179,7 +179,7 @@
                             </Button>
                             <Button
                                 @click="transcribeAndGenerateDocument"
-                                :disabled="!selectedFile || isTranscribing || loadingTranscribeAndGenerate"
+                                :disabled="!selectedFile || isTranscribing || loadingTranscribeAndGenerate || isAsyncProcessing"
                                 v-tooltip.top="isLimitReached ? 'Você atingiu o limite mensal. Faça upgrade para continuar.' : null"
                                 class="transcribe-and-generate-button !bg-gradient-to-br !from-blue-500 !to-blue-700 !border-none !text-white !rounded-lg font-semibold hover:!from-blue-600 hover:!to-blue-800"
                             >
@@ -187,6 +187,18 @@
                                 <FilePlus v-else :size="16" class="mr-1" />
                                 {{ loadingTranscribeAndGenerate ? 'Transcrevendo...' : 'Transcrever e gerar documento' }}
                             </Button>
+                        </div>
+                        <div
+                            v-if="isAsyncProcessing"
+                            class="flex flex-col items-center gap-y-2 p-4 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-900 w-full"
+                        >
+                            <div class="flex items-center gap-x-2">
+                                <Loader2 :size="18" class="animate-spin text-blue-600 dark:text-blue-400" />
+                                <p class="text-sm font-medium text-surface-700 dark:text-surface-200">{{ processingStageLabel }}</p>
+                            </div>
+                            <p class="text-xs text-surface-500 dark:text-surface-400 text-center">
+                                {{ $t('transcription.processing.hint') }}
+                            </p>
                         </div>
                         <button
                             v-tooltip.top="{
@@ -248,7 +260,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { Upload, FileVolume, Loader2, FilePlus, MessagesSquare, HelpCircle } from 'lucide-vue-next';
 import { AnamneseService } from '@/service/AnamneseService';
 import { TranscriptsService } from '@/service/TranscriptsService';
@@ -256,19 +268,29 @@ import { SelectOptionsService } from '@/service/SelectOptionsService';
 import { UserService } from '@/service/UserService'
 import { useShowToast } from '@/utils/useShowToast';
 import { useI18n } from 'vue-i18n';
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { useHelpers } from '@/utils/helper';
 import { useUserStore } from '@/stores/userStore'
 import { AUDIO_CONFIG } from '@/utils/constants'
+import { useTranscriptProcessing, persistInFlightTranscript, readInFlightTranscript, clearInFlightTranscript } from '@/composables/useTranscriptProcessing'
 import UpgradeReminderToast from '@/components/UploadPage/UpgradeReminderToast.vue'
 import UpgradeBanner from '@/components/UploadPage/UpgradeBanner.vue'
 
 const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
+const { t, te } = useI18n();
 const { showSuccess, showError, showAttention } = useShowToast();
 const { formatSize, getNextMonthResetDate } = useHelpers();
 const userStore = useUserStore()
+
+// FE-R1-03/04 (ai-vitalfy/action-plans/frontend/R1.md)
+const { status: asyncStatus, failureReason: asyncFailureReason, recoverable: asyncRecoverable, timedOut: asyncTimedOut, startPolling, stopPolling } = useTranscriptProcessing()
+const ASYNC_TERMINAL_STATUSES = ['completed', 'failed']
+const isAsyncProcessing = computed(() => asyncStatus.value !== null && !ASYNC_TERMINAL_STATUSES.includes(asyncStatus.value))
+const processingStageLabel = computed(() => {
+    const key = `transcription.processing.${asyncStatus.value}`
+    return te(key) ? t(key) : t('transcription.processing.default')
+})
 
 const inputMode = ref('record')
 const chatTranscription = ref();
@@ -465,6 +487,116 @@ const handleToastUpgrade = () => {
     showSignatureModal.value = true
 }
 
+// FE-R1-02 (ai-vitalfy/action-plans/frontend/R1.md): cobre só a janela em
+// que a requisição HTTP ainda está em voo. Se a resposta for 202
+// (assíncrono), o trabalho já está seguro no servidor e a navegação é
+// liberada — FE-R1-03 assume o acompanhamento a partir daí. Se for 200
+// (síncrono), a resposta só chega depois de tudo pronto, então o aviso já
+// não faz mais sentido nesse ponto.
+let unloadWarningActive = false
+const beforeUnloadHandler = (event) => {
+    event.preventDefault()
+    event.returnValue = ''
+}
+const enableUnloadWarning = () => {
+    if (unloadWarningActive) return
+    unloadWarningActive = true
+    window.addEventListener('beforeunload', beforeUnloadHandler)
+}
+const disableUnloadWarning = () => {
+    if (!unloadWarningActive) return
+    unloadWarningActive = false
+    window.removeEventListener('beforeunload', beforeUnloadHandler)
+}
+onBeforeRouteLeave(() => {
+    if (unloadWarningActive) {
+        return window.confirm(t('notifications.messages.leaveWhileProcessingConfirm'))
+    }
+})
+onBeforeUnmount(disableUnloadWarning)
+
+const handleAsyncCompleted = (data) => {
+    if (userStore.userId) clearInFlightTranscript(userStore.userId)
+    showSuccess(t('notifications.titles.success'), t('notifications.messages.documentGeneratedSuccessfully'), 3000);
+    redirectTo(data.transcript_id);
+}
+
+const handleAsyncFailed = (data) => {
+    if (userStore.userId) clearInFlightTranscript(userStore.userId)
+    const message = data.failure_reason || t('notifications.messages.generateDocumentFailedDefault')
+    showError(t('notifications.titles.error'), message, 10000);
+}
+
+const handleAsyncNotFound = () => {
+    if (userStore.userId) clearInFlightTranscript(userStore.userId)
+}
+
+const handleAsyncTimeout = () => {
+    showAttention(t('notifications.titles.warning'), t('notifications.messages.processingDelayedResumed'), 8000);
+}
+
+const startAsyncTracking = (transcriptId) => {
+    if (userStore.userId) persistInFlightTranscript(userStore.userId, transcriptId)
+    startPolling(transcriptId, {
+        onCompleted: handleAsyncCompleted,
+        onFailed: handleAsyncFailed,
+        onNotFound: handleAsyncNotFound,
+        onTimeout: handleAsyncTimeout,
+    })
+}
+
+const resumeAsyncTrackingIfNeeded = async () => {
+    if (!userStore.userId) return
+    const hint = readInFlightTranscript(userStore.userId)
+    if (!hint) return
+
+    try {
+        const data = await TranscriptsService.getTranscriptStatus(hint)
+        if (data.status === 'completed' || data.status === 'failed') {
+            clearInFlightTranscript(userStore.userId)
+            return
+        }
+        startAsyncTracking(hint)
+    } catch (error) {
+        if (error.response?.status === 404) {
+            clearInFlightTranscript(userStore.userId)
+        }
+    }
+}
+
+// FE-R1-01: distingue os modos de falha característicos do R1
+// (timeout/504/524) de cota, concorrência, arquivo inválido e erro
+// genérico — antes, tudo virava "Erro ao transcrever o áudio.", inclusive
+// quando o processamento continuava no servidor e o usuário só precisava
+// esperar.
+const handleGenerateDocumentError = (error) => {
+    const status = error.response?.status
+
+    if (status === 429) {
+        showSignatureModal.value = true
+        showAttention(t('notifications.titles.warning'), t('notifications.messages.transcriptionLimitReached'), 5000);
+        return
+    }
+
+    if (status === 409) {
+        showAttention(t('notifications.titles.warning'), t('notifications.messages.concurrentProcessing'), 6000);
+        return
+    }
+
+    if (status === 422 && error.response?.data?.errors?.audio) {
+        showError(t('notifications.titles.error'), error.response.data.errors.audio[0] || t('notifications.messages.audioTooLarge'), 6000);
+        return
+    }
+
+    const isTimeout = error.code === 'ECONNABORTED' || [502, 504, 524].includes(status)
+    if (isTimeout) {
+        showError(t('notifications.titles.error'), t('notifications.messages.processingDelayed'), 12000);
+        return
+    }
+
+    showError(t('notifications.titles.error'), t('notifications.messages.generateDocumentGenericError'), 10000);
+}
+
 const transcribeAndGenerateDocument = async () => {
     if (!validateForm()) return;
     if (!hasSelectedFile()) return;
@@ -474,6 +606,7 @@ const transcribeAndGenerateDocument = async () => {
     }
 
     loadingTranscribeAndGenerate.value = true;
+    enableUnloadWarning()
 
     const formData = new FormData();
     formData.append('audio', selectedFile.value);
@@ -485,24 +618,31 @@ const transcribeAndGenerateDocument = async () => {
 
     try {
         const response = await TranscriptsService.storeAndGenerateDocument(formData);
-        const result = response.data;
+        disableUnloadWarning()
 
+        // SH-R1-02: o front descobre o modo pelo status code da própria
+        // resposta — nunca por variável de build.
+        if (response.status === 202) {
+            loadingTranscribeAndGenerate.value = false
+            selectedFile.value = null
+            uploader.value?.clear()
+            startAsyncTracking(response.data.transcript_id)
+            return
+        }
+
+        const result = response.data;
         if (result) {
             setUsageOnStorage(response.data.remaining)
 
             loadingTranscribeAndGenerate.value = false
-            showSuccess('Sucesso', 'Documento gerado com sucesso!', 3000);
-            
+            showSuccess(t('notifications.titles.success'), t('notifications.messages.documentGeneratedSuccessfully'), 3000);
+
             redirectTo(result.document.transcript_id);
         }
     } catch (error) {
+        disableUnloadWarning()
         loadingTranscribeAndGenerate.value = false
-        if (error.response?.status === 429) {
-            showSignatureModal.value = true
-            showAttention('Atenção', 'Limite de transcrições atingido. Faça upgrade para continuar.', 5000);
-        } else {
-            showError('Erro', 'Erro ao transcrever o áudio.', 10000);
-        }
+        handleGenerateDocumentError(error)
     }
 };
 
@@ -678,6 +818,7 @@ const onTourComplete = async () => {
 onMounted(() => {
     loadTemplates();
     loadTypes();
+    resumeAsyncTrackingIfNeeded();
 });
 </script>
 

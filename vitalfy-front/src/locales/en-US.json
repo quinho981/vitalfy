@@ -121,13 +121,29 @@
             "editSuccessfully": "Edit made successfully",
             "editError": "Error making the edit",
             "passwordResetSuccess": "Password reset successfully",
-            "passwordResetError": "Unable to reset password. Please try again."
+            "passwordResetError": "Unable to reset password. Please try again.",
+            "documentGeneratedSuccessfully": "Document generated successfully!",
+            "transcriptionLimitReached": "Monthly transcription limit reached. Upgrade to continue.",
+            "concurrentProcessing": "You already have a processing job running. Wait for it to finish before sending another audio.",
+            "audioTooLarge": "The audio file must be at most 100MB.",
+            "processingDelayed": "Processing is taking longer than expected. It may have continued on the server — check your history before sending again.",
+            "processingDelayedResumed": "Processing is taking longer than expected. It may have continued on the server — check your history in a few minutes.",
+            "generateDocumentGenericError": "Error transcribing the audio.",
+            "generateDocumentFailedDefault": "Could not complete processing. Please try again.",
+            "leaveWhileProcessingConfirm": "The upload is still in progress. If you leave now, the processing may be lost. Leave anyway?"
         }
     },
     "transcription": {
         "howCanIHelpToday": "How can I help you today?",
         "queryContext": "Query context",
         "sendAudioFile": "Send audio file",
+        "processing": {
+            "pending": "Preparing processing...",
+            "transcribing": "Transcribing audio...",
+            "generating": "Generating clinical document...",
+            "default": "Processing...",
+            "hint": "You can navigate to another screen — processing continues on the server. You can also follow it from your history."
+        },
         "onlyMp3": "Only .mp3 files allowed",
         "testMicrophone": "Test microphone",
         "vitalfyError": "Vitalfy may make mistakes. Consider checking important information.",

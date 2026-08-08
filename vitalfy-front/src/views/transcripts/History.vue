@@ -96,7 +96,9 @@
                 :class="[
                     'flex items-start gap-x-3 px-4 py-3 hover:bg-surface-50 transition-colors duration-150 group dark:hover:bg-surface-700/30',
                     idx < transcripts.length - 1 ? 'border-b border-surface-100 dark:border-surface-600' : '',
-                    item.documentNotGenerated ? ' border-l-4 border-l-yellow-400 dark:border-l-yellow-500 bg-yellow-200/10 dark:bg-yellow-900/30 hover:bg-yellow-300/10 dark:hover:bg-yellow-800/30' : ''
+                    item.hasFailed ? ' border-l-4 border-l-red-400 dark:border-l-red-500 bg-red-200/10 dark:bg-red-900/20' :
+                        item.isProcessing ? ' border-l-4 border-l-blue-400 dark:border-l-blue-500 bg-blue-200/10 dark:bg-blue-900/20' :
+                        item.documentNotGenerated ? ' border-l-4 border-l-yellow-400 dark:border-l-yellow-500 bg-yellow-200/10 dark:bg-yellow-900/30 hover:bg-yellow-300/10 dark:hover:bg-yellow-800/30' : ''
                 ]"
             >
                 <div :class="`w-9 h-9 rounded-full flex items-center justify-center text-[11.5px] font-semibold flex-shrink-0 mt-0.5 ${getPatientAvatar(item.patient)}`">
@@ -109,18 +111,33 @@
                             <p class="text-[13.5px] font-semibold text-surface-800 leading-tight truncate dark:text-surface-200">
                                 {{ item.patient }}
                                 <Tag
-                                    v-if="item.documentNotGenerated"
-                                    severity="warn" 
-                                    value="Só transcrição" 
-                                    rounded 
-                                    class="!text-xs !py-0 ml-2" 
+                                    v-if="item.isProcessing"
+                                    severity="info"
+                                    value="Processando"
+                                    rounded
+                                    class="!text-xs !py-0 ml-2"
+                                />
+                                <Tag
+                                    v-else-if="item.hasFailed"
+                                    severity="danger"
+                                    value="Falha no processamento"
+                                    rounded
+                                    class="!text-xs !py-0 ml-2"
+                                    v-tooltip.top="item.failure_reason"
+                                />
+                                <Tag
+                                    v-else-if="item.documentNotGenerated"
+                                    severity="warn"
+                                    value="Só transcrição"
+                                    rounded
+                                    class="!text-xs !py-0 ml-2"
                                 />
                             </p>
                             <p class="text-[12.4px] text-surface-500 mt-0.5 line-clamp-1 dark:text-surface-400">{{ item.description }}</p>
                         </div>
 
                         <div class="hidden sm:flex items-center gap-x-2 flex-shrink-0 mt-0.5">
-                            <div v-if="item.documentNotGenerated">
+                            <div v-if="item.documentNotGenerated && !item.isProcessing && !item.hasFailed">
                                 <Button
                                     text
                                     size="small"
@@ -261,6 +278,11 @@ const selectedType = ref(null);
 const dropdownTypes = ref([]);
 const showGenerate = ref(false)
 
+// FE-R1-04 (ai-vitalfy/action-plans/frontend/R1.md): processamentos em
+// curso (fila assíncrona, BE-R1-06) aparecem aqui — não só na tela de
+// upload — porque é onde o usuário procura ao voltar depois. `status` e
+// `failure_reason` vêm do back em TranscriptService::baseTranscriptHistoryQuery.
+const NON_TERMINAL_STATUSES = ['pending', 'transcribing', 'generating']
 const mapperTranscript = (list) =>
     list.map((t) => ({
         ...t,
@@ -270,7 +292,9 @@ const mapperTranscript = (list) =>
         type: t.transcript_type.type,
         color: t.document?.document_template?.category?.color || 'bg-slate-100 text-slate-600',
         description: truncateText(t.description) || 'Documento clínico ainda não gerado',
-        documentNotGenerated: !t.document
+        documentNotGenerated: !t.document,
+        isProcessing: NON_TERMINAL_STATUSES.includes(t.status),
+        hasFailed: t.status === 'failed',
     }))
 
 function truncateText(text, maxLength = 100) {

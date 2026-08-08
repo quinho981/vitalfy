@@ -136,7 +136,16 @@
             "editSuccessfully": "Edição realizada com sucesso",
             "editError": "Erro ao realizar a edição",
             "passwordResetSuccess": "Senha redefinida com sucesso",
-            "passwordResetError": "Não foi possível redefinir a senha. Tente novamente."
+            "passwordResetError": "Não foi possível redefinir a senha. Tente novamente.",
+            "documentGeneratedSuccessfully": "Documento gerado com sucesso!",
+            "transcriptionLimitReached": "Limite de transcrições atingido. Faça upgrade para continuar.",
+            "concurrentProcessing": "Você já tem um processamento em andamento. Aguarde a conclusão antes de enviar outro áudio.",
+            "audioTooLarge": "O arquivo de áudio deve ter no máximo 100MB.",
+            "processingDelayed": "O processamento está demorando mais que o esperado. Ele pode ter continuado no servidor — confira o histórico antes de enviar de novo.",
+            "processingDelayedResumed": "O processamento está demorando mais que o esperado. Ele pode ter continuado no servidor — confira o histórico em alguns minutos.",
+            "generateDocumentGenericError": "Erro ao transcrever o áudio.",
+            "generateDocumentFailedDefault": "Não foi possível concluir o processamento. Tente novamente.",
+            "leaveWhileProcessingConfirm": "O envio ainda está em andamento. Se você sair agora, o processamento pode ser perdido. Deseja sair mesmo assim?"
         }
     },
     "transcription": {
@@ -148,6 +157,13 @@
         "vitalfyError": "Vitalfy pode cometer erros. Considere verificar informações importantes.",
         "noTranscriptsFound": "Nenhuma transcrição encontrada",
         "noTranscriptsRegisteredYet": "Sem transcrições cadastradas até o momento...",
+        "processing": {
+            "pending": "Preparando processamento...",
+            "transcribing": "Transcrevendo o áudio...",
+            "generating": "Gerando o documento clínico...",
+            "default": "Processando...",
+            "hint": "Você pode navegar para outra tela — o processamento continua no servidor. Acompanhe também pelo histórico."
+        },
         "button": {
             "recordQuery": "Gravar consulta",
             "cancelRecord": "Cancelar gravação",

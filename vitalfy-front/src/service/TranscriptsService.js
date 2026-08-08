@@ -22,14 +22,26 @@ export const TranscriptsService = {
             console.error(error);
         }
     },
+    // FE-R1-01 (ai-vitalfy/action-plans/frontend/R1.md): sem timeout
+    // explícito o axios espera indefinidamente (default 0) — quem corta é a
+    // cadeia de proxy, não o cliente, e o erro chega como falha de rede sem
+    // `error.response`. 190s: ~10s acima do teto de 180s alinhado nos três
+    // nginx por BE-R1-01, folga só para a própria requisição HTTP.
+    //
+    // Sem try/catch aqui de propósito: a promise rejeitada precisa chegar ao
+    // .catch()/try-catch de quem chama (upload.vue). Um try/catch em volta de
+    // um `return` sem `await` nunca captura nada — só dava a impressão de
+    // tratamento (ver nota histórica em ai-vitalfy/action-plans/frontend/R1.md#fe-r1-01).
     storeAndGenerateDocument(formData) {
-        try {
-            return api.post(`/transcripts/generate-document`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        return api.post(`/transcripts/generate-document`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            timeout: 190000,
+        });
+    },
+    // BE-R1-07: status do processamento assíncrono, para polling.
+    async getTranscriptStatus(id) {
+        const response = await api.get(`/transcripts/${id}/status`);
+        return response.data;
     },
     async show(id) {
         try {
