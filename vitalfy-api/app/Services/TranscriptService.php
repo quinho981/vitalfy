@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\TranscriptStatusEnum;
 use App\Events\TranscriptCreated;
 use App\Http\Requests\StoreTranscriptRequest;
+use App\Jobs\ProcessGenerateDocumentPipeline;
 use App\Jobs\ProcessGenerateInsightsAI;
 use App\Mail\TranscriptLimitWarningMail;
 use App\Models\Transcript;
@@ -16,7 +18,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class TranscriptService
@@ -26,7 +31,7 @@ class TranscriptService
     protected DocumentService $documentService;
 
     public function __construct(
-        Transcript $transcript, 
+        Transcript $transcript,
         DeepgramService $deepgramService,
         DocumentService $documentService
     )
@@ -65,7 +70,7 @@ class TranscriptService
         if ($type) {
             $query->where('transcript_type_id', $type);
         }
-         
+
         return $query->limit(30)->get();
     }
 
@@ -78,7 +83,7 @@ class TranscriptService
                 'document.documentTemplate.category:id,color',
                 'transcriptType:id,type',
             ])
-            ->select(['id', 'transcript_type_id', 'patient', 'end_conversation_time', 'file_size', 'description', 'created_at'])
+            ->select(['id', 'transcript_type_id', 'patient', 'end_conversation_time', 'file_size', 'description', 'status', 'failure_reason', 'created_at'])
             ->selectRaw('LEFT(description, 86) as description')
             ->latest();
     }
@@ -110,18 +115,49 @@ class TranscriptService
         return $transcript;
     }
 
+    /**
+     * Estado do processamento para o front (BE-R1-07). 404 para não-dono e
+     * inexistente é decidido pela policy, não aqui — ver
+     * TranscriptPolicy::viewStatus.
+     */
+    public function getStatus(string $id): array
+    {
+        $transcript = $this->transcript
+            ->where('id', $id)
+            ->firstOrFail(['id', 'status', 'failure_reason']);
+
+        return [
+            'id' => $transcript->id,
+            'status' => $transcript->status->value,
+            // Redireciona pelo id da transcrição — a rota de detalhe já
+            // resolve o documento associado (ver upload.vue#redirectTo).
+            'transcript_id' => $transcript->status === TranscriptStatusEnum::Completed ? $transcript->id : null,
+            'failure_reason' => $transcript->failure_reason,
+            // Falha de validação (áudio grande demais) é definitiva; qualquer
+            // outra (erro de API externa) pode ser tentada de novo pelo
+            // usuário — ver contrato em ai-vitalfy/action-plans/R1.md.
+            'recoverable' => $transcript->status === TranscriptStatusEnum::Failed
+                ? ! str_starts_with((string) $transcript->failure_reason, 'O áudio excede')
+                : null,
+        ];
+    }
+
     private function processAudioAndBuildConversation(StoreTranscriptRequest $request): array
     {
         $file = $request->file('audio');
-  
         $audio = $this->getAudioContent($file);
+
+        $deepgramStart = microtime(true);
         $utterances = $this->deepgramService->transcribeAudio($audio['content'], $audio['mimeType']);
+        $deepgramMs = (int) ((microtime(true) - $deepgramStart) * 1000);
+
         $conversation = $this->organizeUtterances($utterances);
 
         return [
             'file' => $file,
             'utterances' => $utterances,
             'conversation' => $conversation,
+            'deepgram_ms' => $deepgramMs,
         ];
     }
 
@@ -129,11 +165,13 @@ class TranscriptService
     {
         $user = $request->user();
         $remainingTranscripts = null;
+        $requestStart = microtime(true);
 
         [
             'file' => $file,
             'utterances' => $utterances,
-            'conversation' => $conversation
+            'conversation' => $conversation,
+            'deepgram_ms' => $deepgramMs,
         ] = $this->processAudioAndBuildConversation($request);
 
         $this->validateAudioDuration($utterances);
@@ -144,7 +182,8 @@ class TranscriptService
             'conversation' => $conversation,
             'transcript_type_id' => $request['type'],
             'end_conversation_time' => $this->getLastEndUtteranceTime($utterances),
-            'file_size' => $file->getSize()
+            'file_size' => $file->getSize(),
+            'status' => TranscriptStatusEnum::Completed,
         ]);
 
         if(!$user->hasProPlan()) {
@@ -154,26 +193,39 @@ class TranscriptService
 
         TranscriptCreated::dispatch($transcript, $user);
 
+        $this->logPipelineDuration($transcript->id, $file->getSize(), $deepgramMs, null, $requestStart, async: false);
+
         return [
             'transcript' => $transcript,
             'remaining' => $remainingTranscripts
         ];
     }
 
+    /**
+     * Caminho síncrono legado (D3, revisado em BE-R1-06). Mantido atrás da
+     * feature flag de SH-R1-02 como caminho de rollback sem deploy — ver
+     * TranscriptController::storeAndGenerateDocument. Não recebe mais
+     * mudanças estruturais; a evolução do pipeline acontece em
+     * enqueueGenerateDocument().
+     */
     public function storeAndGenerateDocument(StoreTranscriptRequest $request): array
     {
         $user = $request->user();
         $remainingTranscripts = null;
-    
+        $requestStart = microtime(true);
+
         [
             'file' => $file,
             'utterances' => $utterances,
-            'conversation' => $conversation
+            'conversation' => $conversation,
+            'deepgram_ms' => $deepgramMs,
         ] = $this->processAudioAndBuildConversation($request);
 
         $this->validateAudioDuration($utterances);
 
+        $groqStart = microtime(true);
         $documentContent = $this->documentService->generateLlmDocument($conversation, $request['template']);
+        $groqMs = (int) ((microtime(true) - $groqStart) * 1000);
 
         $document = DB::transaction(function () use ($request, $file, $utterances, $conversation, $documentContent) {
             $transcript = Transcript::create([
@@ -182,9 +234,10 @@ class TranscriptService
                 'conversation' => $conversation,
                 'transcript_type_id' => $request['type'],
                 'end_conversation_time' => $this->getLastEndUtteranceTime($utterances),
-                'file_size' => $file->getSize()
+                'file_size' => $file->getSize(),
+                'status' => TranscriptStatusEnum::Completed,
             ]);
-    
+
             $document = $transcript->document()->create([
                 'document_template_id' => $request['template'],
                 'patient' => $request['patient'],
@@ -203,10 +256,58 @@ class TranscriptService
         ProcessGenerateInsightsAI::dispatch($document->id, $conversation);
         TranscriptCreated::dispatch($document->transcript, $user);
 
+        $this->logPipelineDuration($document->transcript_id, $file->getSize(), $deepgramMs, $groqMs, $requestStart, async: false);
+
         return [
             'document' => $document,
             'remaining' => $remainingTranscripts
         ];
+    }
+
+    /**
+     * Caminho assíncrono (BE-R1-06). Responde rápido: cria a linha em
+     * `pending`, persiste o áudio em disco e enfileira o pipeline. Contrato
+     * completo em ai-vitalfy/action-plans/R1.md (SH-R1-01).
+     *
+     * Cota: debitada na conclusão (status completed), não aqui — ver
+     * Transcript::scopeCompleted() e CheckTranscriptLimit. Por isso este
+     * método não calcula `remaining`: o valor exibido ao criar não mudaria
+     * (o processamento ainda não terminou).
+     */
+    public function enqueueGenerateDocument(StoreTranscriptRequest $request): array
+    {
+        $user = $request->user();
+        $file = $request->file('audio');
+
+        $transcript = Transcript::create([
+            'user_id' => $user->id,
+            'patient' => $request['patient'],
+            'conversation' => null,
+            'transcript_type_id' => $request['type'],
+            'file_size' => $file->getSize(),
+            'status' => TranscriptStatusEnum::Pending,
+        ]);
+
+        $storagePath = $this->storeUploadedAudio($transcript->id, $file);
+        $transcript->update(['audio_storage_path' => $storagePath]);
+
+        ProcessGenerateDocumentPipeline::dispatch($transcript->id, (int) $request['template']);
+
+        return [
+            'transcript_id' => $transcript->id,
+            'status' => $transcript->status->value,
+        ];
+    }
+
+    private function storeUploadedAudio(string $transcriptId, UploadedFile $file): string
+    {
+        $extension = $file->getClientOriginalExtension() ?: $file->extension() ?: 'bin';
+
+        return Storage::disk('local')->putFileAs(
+            'transcript-uploads',
+            $file,
+            "{$transcriptId}." . Str::lower($extension)
+        );
     }
 
     private function dispatchLimitWarningIfNeeded($user, int $remaining): void
@@ -223,7 +324,8 @@ class TranscriptService
         $startOfMonth = now()->startOfMonth();
         $endOfMonth = now()->endOfMonth();
 
-        $usedTranscripts = Transcript::fromUserBetweenDates($userId, $startOfMonth, $endOfMonth)->count();
+        // ->completed(): ver nota de cota em enqueueGenerateDocument().
+        $usedTranscripts = Transcript::fromUserBetweenDates($userId, $startOfMonth, $endOfMonth)->completed()->count();
 
         return PlanLimits::FREE_MONTHLY_TRANSCRIPTS - $usedTranscripts;
     }
@@ -236,7 +338,7 @@ class TranscriptService
         return ['content' => $content, 'mimeType' => $mimeType];
     }
 
-    private function organizeUtterances(array $utterances): array
+    public function organizeUtterances(array $utterances): array
     {
         $conversation = [];
 
@@ -252,7 +354,7 @@ class TranscriptService
         return $conversation;
     }
 
-    private function getLastEndUtteranceTime(array $utterances): int
+    public function getLastEndUtteranceTime(array $utterances): int
     {
         if (empty($utterances)) return 0;
 
@@ -260,7 +362,11 @@ class TranscriptService
         return floor($lastUtterance['end']);
     }
 
-    private function validateAudioDuration(array $utterances): void
+    /**
+     * @throws InvalidArgumentException Falha definitiva (BE-R1-07): áudio
+     * acima do limite não deve ser retentado.
+     */
+    public function validateAudioDuration(array $utterances): void
     {
         $duration = $this->getLastEndUtteranceTime($utterances);
 
@@ -273,5 +379,28 @@ class TranscriptService
                 )
             );
         }
+    }
+
+    /**
+     * BE-R1-02: log estruturado por etapa, sem dado clínico nem conteúdo da
+     * conversa — só o necessário para caracterizar a distribuição real de
+     * duração (ver ai-vitalfy/action-plans/backend/R1.md#be-r1-02).
+     */
+    public function logPipelineDuration(
+        string $transcriptId,
+        int $audioBytes,
+        ?int $deepgramMs,
+        ?int $groqMs,
+        float $requestStart,
+        bool $async
+    ): void {
+        Log::info('transcript.pipeline', [
+            'transcript_id' => $transcriptId,
+            'audio_bytes' => $audioBytes,
+            'deepgram_ms' => $deepgramMs,
+            'groq_ms' => $groqMs,
+            'total_ms' => (int) ((microtime(true) - $requestStart) * 1000),
+            'async' => $async,
+        ]);
     }
 }

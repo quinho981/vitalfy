@@ -38,6 +38,19 @@ class TranscriptPolicy
     }
 
     /**
+     * BE-R1-07 (ai-vitalfy/action-plans/backend/R1.md): 404 para não-dono,
+     * não 403 — mesmo cuidado de DocumentPolicy::view (ver R2 em
+     * ai-vitalfy/risks.md). O id de um processamento em polling não deve
+     * confirmar sua existência a quem não é dono.
+     */
+    public function viewStatus(User $user, Transcript $transcript): Response
+    {
+        return $this->isOwner($user, $transcript)
+            ? Response::allow()
+            : Response::denyAsNotFound('Não encontrado.');
+    }
+
+    /**
      * Determine whether the user is the owner of the transcript.
      */
     private function isOwner(User $user, Transcript $transcript): bool

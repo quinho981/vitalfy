@@ -31,8 +31,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prependToGroup('api', \App\Http\Middleware\TokenFromCookie::class);
 
         $middleware->alias([
-            'check.subscription'    => \App\Http\Middleware\CheckSubscription::class,
-            'free.transcript.limit' => \App\Http\Middleware\CheckTranscriptLimit::class,
+            'check.subscription'      => \App\Http\Middleware\CheckSubscription::class,
+            'free.transcript.limit'   => \App\Http\Middleware\CheckTranscriptLimit::class,
+            'no.concurrent.transcript' => \App\Http\Middleware\PreventConcurrentTranscription::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

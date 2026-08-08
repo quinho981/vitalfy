@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTranscriptRequest;
 use App\Models\Transcript;
 use App\Services\DashboardService;
 use App\Services\TranscriptService;
+use App\Support\FeatureFlags;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,9 +39,33 @@ class TranscriptController extends Controller
         return response()->json($transcript, 201);
     }
 
-    public function storeAndGenerateDocument(StoreTranscriptRequest $request)
+    /**
+     * SH-R1-02 (ai-vitalfy/action-plans/shared/R1.md): a flag decide em
+     * runtime, sem deploy — ver App\Support\FeatureFlags. O front descobre o
+     * modo pela própria resposta (200 síncrono × 202 assíncrono), nunca por
+     * variável de build.
+     */
+    public function storeAndGenerateDocument(StoreTranscriptRequest $request): JsonResponse
     {
-        return $this->transcriptService->storeAndGenerateDocument($request);
+        if (FeatureFlags::asyncTranscriptPipeline()) {
+            $result = $this->transcriptService->enqueueGenerateDocument($request);
+
+            return response()->json($result, 202);
+        }
+
+        $result = $this->transcriptService->storeAndGenerateDocument($request);
+
+        return response()->json($result, 200);
+    }
+
+    /**
+     * BE-R1-07: estado do processamento assíncrono, para o front fazer polling.
+     */
+    public function status(Transcript $transcript): JsonResponse
+    {
+        $this->authorize('viewStatus', $transcript);
+
+        return response()->json($this->transcriptService->getStatus($transcript->id));
     }
 
     public function show(Transcript $transcript)

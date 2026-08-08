@@ -25,7 +25,10 @@ class CheckTranscriptLimit
 
         $currentMonthStart = now()->startOfMonth();
         $currentMonthEnd = now()->endOfMonth();
-        $monthlyTranscriptCount = Transcript::fromUserBetweenDates($user->id, $currentMonthStart, $currentMonthEnd)->count();
+        // ->completed(): cota é debitada na conclusão, não no envio — ver
+        // decisão de cota em ai-vitalfy/action-plans/shared/R1.md#sh-r1-01.
+        // Processamento em curso ou que falhou não consome a cota do usuário.
+        $monthlyTranscriptCount = Transcript::fromUserBetweenDates($user->id, $currentMonthStart, $currentMonthEnd)->completed()->count();
 
         if ($monthlyTranscriptCount >= PlanLimits::FREE_MONTHLY_TRANSCRIPTS) {
             return response()->json([

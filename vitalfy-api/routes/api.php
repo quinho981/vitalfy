@@ -60,12 +60,19 @@ Route::middleware([
 
     Route::prefix('transcripts')->group(function () {
         Route::middleware([
-            'free.transcript.limit', 
-            'throttle:transcripts'
+            'free.transcript.limit',
+            'throttle:transcripts',
+            // BE-R1-04 (ai-vitalfy/action-plans/backend/R1.md): concorrência,
+            // não taxa — impede o mesmo usuário de empilhar processamentos e
+            // esgotar o pool php-fpm compartilhado.
+            'no.concurrent.transcript',
         ])->group(function () {
             Route::post('/', [TranscriptController::class, 'store']);
             Route::post('/generate-document', [TranscriptController::class, 'storeAndGenerateDocument']);
         });
+        // BE-R1-07: fora do grupo de lock acima — consultar status não deve
+        // esperar nem disputar o lock de um processamento em andamento.
+        Route::get('/{transcript}/status', [TranscriptController::class, 'status']);
         Route::get('/user/filter', [TranscriptController::class, 'filterUserTranscripts']);
         Route::put('/{transcript}', [TranscriptController::class, 'update']);
         Route::get('/{transcript}', [TranscriptController::class, 'show']);
