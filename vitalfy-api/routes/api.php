@@ -11,7 +11,6 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\TranscriptTypesController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Laravel\Cashier\Http\Controllers\WebhookController;
 
@@ -55,6 +54,7 @@ Route::middleware([
         Route::post('/{document}/regenerate-insights', [DocumentController::class, 'regenerateInsights']);
         Route::put('/{document}', [DocumentController::class, 'update']);
         Route::get('/{document}/pdf', [DocumentController::class, 'generatePdf']);
+        Route::get('/{document}/insights', [DocumentController::class, 'insights']);
     });
     Route::get('user/transcripts', [TranscriptController::class, 'indexByUser']);
 
@@ -94,36 +94,4 @@ Route::middleware([
         Route::post('/cancel', [SubscriptionController::class, 'cancel']);
         Route::get('/verify-checkout', [SubscriptionController::class, 'verifyCheckout']);
     });
-});
-
-Route::middleware('throttle:stream')->get('/stream/insights-ai/{documentId}', function (string $documentId) {
-    return response()->stream(function () use ($documentId) {
-
-        $timeout = 15;
-        $start = time();
-        while (true) {
-            $response = Cache::pull("insights_ai_{$documentId}"); // pega e apaga
-
-            if ($response) {
-                echo "data: " . json_encode($response) . "\n\n";
-                ob_flush();
-                flush();
-                break; // encerra a conexão após enviar
-            }
-
-            if ((time() - $start) > $timeout) {
-                echo "event: timeout\n";
-                echo "data: {}\n\n";
-                ob_flush();
-                flush();
-                break;
-            }
-
-            sleep(1);
-        }
-    }, 200, [
-        'Content-Type' => 'text/event-stream',
-        'Cache-Control' => 'no-cache',
-        'Connection' => 'keep-alive',
-    ]);
 });

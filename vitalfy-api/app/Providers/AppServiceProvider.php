@@ -75,12 +75,5 @@ class AppServiceProvider extends ServiceProvider
                     ->by($request->user()?->id),
             ];
         });
-
-        RateLimiter::for('stream', function (Request $request) {
-            return [
-                Limit::perMinute(60)
-                    ->by($request->ip()),
-            ];
-        });
     }
 }

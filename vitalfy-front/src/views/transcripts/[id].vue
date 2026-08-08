@@ -212,7 +212,7 @@
                                     <p class="font-semibold text-xl mb-1">Insights Vitalfy</p>
                                 </div>
                                 <button
-                                    v-if="!hasMedicalInsights && !loadingTranscript && (sseFailed || !sseAttempted)"
+                                    v-if="!hasMedicalInsights && !loadingTranscript && (insightsFailed || !insightsAttempted)"
                                     @click="regenerateInsights"
                                     :disabled="regeneratingInsights"
                                     class="!text-[12px] !font-semibold !py-1 px-2 flex items-center gap-1 border rounded-full bg-surface-100 
@@ -308,10 +308,11 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref, watch, onMounted, onBeforeUnmount, computed } from 'vue';
+import { defineAsyncComponent, ref, watch, onMounted } from 'vue';
 import { User, Calendar, Clock, Share2, Download, BrainCircuit, LayoutTemplate, Loader2, Copy, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-vue-next';
 import { TranscriptsService } from '@/service/TranscriptsService';
 import { AnamneseService } from '@/service/AnamneseService';
+import { useDocumentInsights } from '@/composables/useDocumentInsights';
 import { useRoute, useRouter } from "vue-router";
 import { useShowToast } from '@/utils/useShowToast';
 import { useHelpers } from '@/utils/helper';
@@ -324,7 +325,7 @@ const Signature = defineAsyncComponent(() => import('@/components/Modal/Signatur
 
 const { t } = useI18n();
 const { showSuccess, showError } = useShowToast();
-const { formatPtBrCurto, convertSecondsToMinutes, capitalizeArray } = useHelpers();
+const { formatPtBrCurto, convertSecondsToMinutes } = useHelpers();
 const userStore = useUserStore();
 
 const route = useRoute();
@@ -346,32 +347,23 @@ const showUpgradeModal = ref(false);
 const upgradeLoading = ref(false);
 const tiptapKey = ref(0); // key responsável pela renderização do tiptap, necessário para atualizar o conteúdo após refinamento
 const isSaving = ref(false);
-const medicalAnalysis = ref({
-    red_flags: [],
-    case_severity: [],
-    brief_description: [],
-    possible_diagnoses: [],
-    suggested_cid_codes: [],
-    suggested_exams: [],
-    suggested_conducts: [],
-    missing_clinical_information: []
-})
-const sseFailed = ref(false);
-const sseAttempted = ref(false);
 const regeneratingInsights = ref(false);
 const documentFeedback = ref(null);
 const submittingFeedback = ref(false);
 
-let eventSource = null;
-
-const hasMedicalInsights = computed(() => {
-    return Object.values(medicalAnalysis.value).some(arr => arr.length > 0)
-})
+const {
+    medicalAnalysis,
+    hasMedicalInsights,
+    insightsAttempted,
+    insightsFailed,
+    applyInsights,
+    startPolling,
+} = useDocumentInsights();
 
 const showTranscript = async (id) => {
     loadingTranscript.value = true;
-    sseFailed.value = false;
-    sseAttempted.value = false;
+    insightsFailed.value = false;
+    insightsAttempted.value = false;
     try {
         const response = await TranscriptsService.show(id);
         documentContent.value = ''
@@ -383,19 +375,8 @@ const showTranscript = async (id) => {
         documentContent.value = response.document.result;
         documentId.value = response.document.id;
         documentFeedback.value = response.document.feedback ?? null;
-        if(response.document?.ai_insights) {
-            const ai = response.document.ai_insights
-
-            medicalAnalysis.value = {
-                red_flags: capitalizeArray(ai.red_flags) || [],
-                case_severity: capitalizeArray(ai.case_severity) || [],
-                brief_description: capitalizeArray(ai.brief_description) || [],
-                possible_diagnoses: capitalizeArray(ai.possible_diagnoses) || [],
-                suggested_cid_codes: capitalizeArray(ai.suggested_cid_codes) || [],
-                suggested_exams: capitalizeArray(ai.suggested_exams) || [],
-                suggested_conducts: capitalizeArray(ai.suggested_conducts) || [],
-                missing_clinical_information: capitalizeArray(ai.missing_clinical_information) || []
-            }
+        if (response.document?.ai_insights) {
+            applyInsights(response.document.ai_insights);
         }
     } catch (error) {
         showError(t('notifications.titles.error'), t('notifications.messages.dataLoadingError'), 3000)  
@@ -469,37 +450,6 @@ const shareDocument = async () => {
         showError(t('notifications.titles.error'), 'Não foi possível compartilhar o documento', 3000);
     }
 };
-const startSSE = () => {
-    sseAttempted.value = true;
-    sseFailed.value = false;
-    eventSource = new EventSource(`${import.meta.env.VITE_BASE_URL}/stream/insights-ai/${documentId.value}`);
-
-    eventSource.onmessage = handleInsightMessage;
-    eventSource.onerror = handleSSEError;
-
-    router.replace({ path: route.path });
-}
-
-const handleInsightMessage = (event) => {
-    let insights = JSON.parse(event.data);
-
-    const { red_flags, case_severity, brief_description, possible_diagnoses,
-        suggested_cid_codes, suggested_exams, suggested_conducts, missing_clinical_information} = insights
-
-    medicalAnalysis.value = {
-        red_flags: capitalizeArray(red_flags) || [],
-        case_severity: capitalizeArray(case_severity) || [],
-        brief_description: capitalizeArray(brief_description) || [],
-        possible_diagnoses: capitalizeArray(possible_diagnoses) || [],
-        suggested_cid_codes: capitalizeArray(suggested_cid_codes) || [],
-        suggested_exams: capitalizeArray(suggested_exams) || [],
-        suggested_conducts: capitalizeArray(suggested_conducts) || [],
-        missing_clinical_information: capitalizeArray(missing_clinical_information) || []
-    }
-
-    eventSource.close();
-}
-
 const updateContent = (content) => {
     documentContent.value = content
     tiptapKey.value++;
@@ -526,18 +476,12 @@ const handleUpgradeSubscribe = async (plan) => {
     }
 }
 
-const handleSSEError = (error) => {
-    sseFailed.value = true;
-    eventSource.close();
-    showError('Erro', 'Aconteceu um problema ao carregar insights. Tente novamente!', 3000);
-}
-
 const regenerateInsights = async () => {
     regeneratingInsights.value = true;
     try {
         await TranscriptsService.regenerateInsights(documentId.value);
         showSuccess(t('notifications.titles.success'), 'Geração de insights iniciada!', 3000);
-        startSSE();
+        startPolling(documentId.value);
     } catch (error) {
         showError(t('notifications.titles.error'), 'Erro ao regerar insights', 3000);
     } finally {
@@ -584,13 +528,12 @@ onMounted(async () => {
     const id = route.params.id;
     await showTranscript(id);
 
-    if(type === 'new' && documentId.value) {
-        startSSE();
+    if (type === 'new' && documentId.value) {
+        startPolling(documentId.value);
+        // remove ?type=new: um reload não deve reiniciar o polling, já que
+        // showTranscript acima carrega os insights persistidos se prontos.
+        router.replace({ path: route.path });
     }
-});
-
-onBeforeUnmount(() => {
-    if (eventSource) eventSource.close();
 });
 </script>
 

@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,6 +13,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Sem isso, $request->ip() retorna o IP do hop anterior na rede Docker
+        // (api-nginx), não o IP real do cliente encaminhado pela Cloudflare via
+        // X-Forwarded-For — o que torna todo throttle por IP (auth, api,
+        // transcripts, stream) efetivamente global/inútil (ver BE-R2-01).
+        // '*' é seguro aqui: a API só é alcançável pelos proxies internos do
+        // próprio compose, nunca diretamente pela internet.
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO,
+        );
+
         // Injeta o token HttpOnly como Bearer header antes do Sanctum processar
         $middleware->prependToGroup('api', \App\Http\Middleware\TokenFromCookie::class);
 

@@ -36,4 +36,7 @@ export const AnamneseService = {
             throw error;
         }
     },
+    async getInsights(documentId) {
+        return api.get(`/documents/${documentId}/insights`);
+    },
 }

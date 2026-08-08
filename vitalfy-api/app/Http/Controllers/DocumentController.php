@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessGenerateInsightsAI;
 use App\Models\Document;
+use App\Policies\DocumentPolicy;
 use App\Services\DocumentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class DocumentController extends Controller
@@ -47,6 +49,51 @@ class DocumentController extends Controller
         return response()->json([
             'message' => 'Insights regeneration started'
         ], 200);
+    }
+
+    /**
+     * Leitura direta dos insights, sem SSE (BE-R2-05). Lê de `ai_insights`
+     * (persistido por ProcessGenerateInsightsAI antes do cache), eliminando a
+     * dependência da janela de 60s do cache que o stream tinha.
+     *
+     * Busca manual em vez de route model binding implícito: o binding
+     * implícito lançaria ModelNotFoundException com mensagem diferente da que
+     * DocumentPolicy::view usa para não-dono — os dois 404 ficariam
+     * distinguíveis por texto, reabrindo o oráculo de existência (mesmo
+     * motivo documentado em InsightsStreamController::stream).
+     */
+    public function insights(string $document): JsonResponse|Response
+    {
+        $documentModel = Document::find($document);
+
+        if (! $documentModel) {
+            abort(404, DocumentPolicy::NOT_FOUND_MESSAGE);
+        }
+
+        $this->authorize('view', $documentModel);
+
+        $insights = $documentModel->ai_insights;
+
+        // 204: ainda processando (job não concluiu ou nunca foi disparado).
+        // O front distingue esse estado do "pronto" para saber quando parar
+        // de perguntar (ver FE-R2-03).
+        if (! $insights) {
+            return response()->noContent();
+        }
+
+        // Projeção explícita dos 8 campos — não ->toArray() cru, que vazaria
+        // id/document_id/timestamps/deleted_at (metadados do Eloquent que não
+        // existem no payload que o SSE emitia hoje).
+        return response()->json([
+            'red_flags' => $insights->red_flags,
+            'case_severity' => $insights->case_severity,
+            'brief_description' => $insights->brief_description,
+            'possible_diagnoses' => $insights->possible_diagnoses,
+            'suggested_cid_codes' => $insights->suggested_cid_codes,
+            'suggested_exams' => $insights->suggested_exams,
+            'suggested_conducts' => $insights->suggested_conducts,
+            'missing_clinical_information' => $insights->missing_clinical_information,
+        ]);
     }
 
     public function refine(Request $request): JsonResponse
