@@ -10,16 +10,11 @@ RUN apt-get update && apt-get install -y \
     zip \
     curl \
     libpq-dev \
-<<<<<<< Updated upstream
     gnupg \
     chromium
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
-=======
-    nodejs \
-    npm
->>>>>>> Stashed changes
 
 WORKDIR /var/www
 
@@ -49,7 +44,6 @@ COPY . .
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-<<<<<<< Updated upstream
     && npm ci --omit=dev \
     && chown -R www-data:www-data storage bootstrap/cache
 
@@ -63,6 +57,3 @@ ENV PUPPETEER_CACHE_DIR=/opt/puppeteer-cache
 RUN npx puppeteer browsers install chrome \
     && ln -sf "$(find /opt/puppeteer-cache -type f -name chrome -path '*chrome-linux64*')" /usr/local/bin/chrome-for-testing \
     && chmod -R a+rX /opt/puppeteer-cache
-=======
-    && chown -R www-data:www-data storage bootstrap/cache
->>>>>>> Stashed changes
