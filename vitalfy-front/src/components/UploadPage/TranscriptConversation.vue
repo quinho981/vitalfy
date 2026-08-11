@@ -21,7 +21,7 @@
         </div>
         <div class="p-3 h-full w-full rounded-lg border border-surface-200 dark:border-surface-700 dark:bg-surface-800 flex flex-col gap-y-2 xl:min-h-[350px] xl:max-h-[470px] overflow-y-auto">
             <div 
-                v-if="transcriptions.length === 0 && !isTranscribing && !loadingTranscribeAndGenerate" 
+                v-if="transcriptions.length === 0 && !isTranscribing && !isAsyncProcessing" 
                 class="flex items-center justify-center h-full"
             >
                 <p class="text-sm text-surface-400 text-center">Clique em <strong>Transcrever</strong> para visualizar o texto da consulta aqui,<br> ou em <strong>Transcrever e gerar documento</strong> para criar o documento completo automaticamente.</p>
@@ -50,7 +50,7 @@
                 </div>
             </div>
             
-            <div v-if="loadingTranscribeAndGenerate" class="flex flex-col gap-4 px-2 py-4 animate-[fadeUp_0.4s_ease]">
+            <div v-if="isAsyncProcessing" class="flex flex-col gap-4 px-2 py-4 animate-[fadeUp_0.4s_ease]">
                 <div class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-lg">
                     <div class="flex flex-col gap-0.5">
                         <p class="text-[12.5px] font-semibold text-blue-800 dark:text-blue-300">
@@ -79,14 +79,14 @@
                                 'bg-surface-300 dark:bg-surface-600 text-surface-600 dark:text-surface-300 opacity-70': index > currentStepIndex
                             }"
                         >
-                            <span v-if="index < currentStepIndex" class="text-[12px]">✓</span>
+                            <span v-if="index < currentStepIndex" class="text-[12px]"> ✓ </span>
                             <span v-else>{{ index + 1 }}</span>
                         </div>
 
                         <span
                             class="mb-2"
                             :class="{
-                                'text-blue-700 dark:text-blue-300 font-medium': index === currentStepIndex,
+                                'text-blue-700 dark:text-blue-300 font-medium': index === currentStep,
                                 'text-surface-500 opacity-70': index > currentStepIndex
                             }"
                         >
@@ -175,9 +175,13 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    loadingTranscribeAndGenerate: {
+    isAsyncProcessing: {
         type: Boolean,
         default: false
+    },
+    processingStageLabel: {
+        type: String,
+        default: ''
     }
 })
 
@@ -220,30 +224,13 @@ const scrollToBottom = async () => {
 }
 
 const steps = [
-    { key: 'sending', label: 'Recebendo o áudio...' },
+    { key: 'pending', label: 'Recebendo o áudio...' },
     { key: 'transcribing', label: 'Transcrevendo a consulta...' },
     { key: 'generating', label: 'Organizando as informações clínicas...' }
 ]
 
-const currentStepIndex = ref(0)
-
-const currentStep = computed(() => steps[currentStepIndex.value])
-
-let stepInterval = null
-
-watch(() => props.loadingTranscribeAndGenerate, (val) => {
-    if (val) {
-        currentStepIndex.value = 0
-
-        stepInterval = setInterval(() => {
-            if (currentStepIndex.value < steps.length - 1) {
-                currentStepIndex.value++
-            }
-        }, 2000)
-    } else {
-        clearInterval(stepInterval)
-    }
-})
+const currentStep = computed(() => steps.find(step => step.key === props.processingStageLabel) || steps[0])
+const currentStepIndex = computed(() => steps.findIndex(step => step.key === props.processingStageLabel) || 0)
 </script>
 
 <style>

@@ -219,7 +219,8 @@
                 :is-transcribing="isTranscribing"
                 :dialog-clear="dialogClear"
                 :loading-finish="loadingFinish"
-                :loading-transcribe-and-generate="loadingTranscribeAndGenerate"
+                :is-async-processing="isAsyncProcessing"
+                :processing-stage-label="asyncStatus"
                 @clear="dialogClear = true"
                 @finish="finishConversation"
             />
