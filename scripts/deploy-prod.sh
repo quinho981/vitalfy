@@ -68,6 +68,25 @@ deploy_frontend() {
     echo "==> OK: frontend reconstruído."
 }
 
+# BE-R14-03 (ai-vitalfy/risks.md#r14): `vendor_data` e `node_modules_data` são
+# volumes nomeados por cima do bind mount de ./vitalfy-api:/var/www -- rodar
+# `composer install`/`npm ci` no host NÃO chega ao container, o volume nomeado
+# tem precedência. É preciso rodar dentro do container `app` (que compartilha
+# volume com `horizon`, então um comando já atualiza os dois).
+deps_php() {
+    echo "==> Instalando dependências PHP dentro do container app (volume vendor_data)..."
+    "${COMPOSE[@]}" exec app composer install --no-dev --optimize-autoloader
+    echo "==> OK. horizon compartilha o mesmo volume vendor_data -- nada a fazer lá."
+}
+
+deps_node() {
+    echo "==> Instalando dependências Node dentro do container app (volume node_modules_data)..."
+    # Mesma flag usada no build da imagem (docker/php/Dockerfile) -- Puppeteer/
+    # Chrome for Testing para geração de PDF via Browsershot (ver DECISIONS.md#d9).
+    "${COMPOSE[@]}" exec app npm ci --omit=dev
+    echo "==> OK. horizon compartilha o mesmo volume node_modules_data -- nada a fazer lá."
+}
+
 case "${1:-help}" in
     app)
         deploy_app
@@ -75,9 +94,11 @@ case "${1:-help}" in
     frontend)
         deploy_frontend
         ;;
-    deps:php|deps:node)
-        echo "deploy-prod: comando '$1' ainda não implementado nesta versão do script (ver BE-R14-03)." >&2
-        exit 1
+    deps:php)
+        deps_php
+        ;;
+    deps:node)
+        deps_node
         ;;
     help|-h|--help)
         usage
