@@ -188,18 +188,6 @@
                                 {{ loadingTranscribeAndGenerate ? 'Transcrevendo...' : 'Transcrever e gerar documento' }}
                             </Button>
                         </div>
-                        <div
-                            v-if="isAsyncProcessing"
-                            class="flex flex-col items-center gap-y-2 p-4 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-900 w-full"
-                        >
-                            <div class="flex items-center gap-x-2">
-                                <Loader2 :size="18" class="animate-spin text-blue-600 dark:text-blue-400" />
-                                <p class="text-sm font-medium text-surface-700 dark:text-surface-200">{{ processingStageLabel }}</p>
-                            </div>
-                            <p class="text-xs text-surface-500 dark:text-surface-400 text-center">
-                                {{ $t('transcription.processing.hint') }}
-                            </p>
-                        </div>
                         <button
                             v-tooltip.top="{
                                 value: `<span class='text-sm'><u>Transcrever</u>: exibe o texto da consulta nesta tela. Você poderá gerar o documento clínico em seguida.</span>\n
@@ -288,10 +276,6 @@ const userStore = useUserStore()
 const { status: asyncStatus, failureReason: asyncFailureReason, recoverable: asyncRecoverable, timedOut: asyncTimedOut, startPolling, stopPolling } = useTranscriptProcessing()
 const ASYNC_TERMINAL_STATUSES = ['completed', 'failed']
 const isAsyncProcessing = computed(() => asyncStatus.value !== null && !ASYNC_TERMINAL_STATUSES.includes(asyncStatus.value))
-const processingStageLabel = computed(() => {
-    const key = `transcription.processing.${asyncStatus.value}`
-    return te(key) ? t(key) : t('transcription.processing.default')
-})
 
 const inputMode = ref('record')
 const chatTranscription = ref();
