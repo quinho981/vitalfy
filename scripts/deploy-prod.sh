@@ -32,6 +32,11 @@ Comandos:
   deps:php    Instala/atualiza dependências PHP dentro do volume nomeado
               `vendor_data`, sem rebuild de imagem.
   deps:node   Idem para dependências Node em `node_modules_data`.
+  restart     Reinicia (sem rebuild) todos os serviços sem estado: nginx-proxy,
+              frontend, api-nginx, app, horizon. Não toca db/redis
+              de propósito (restart deles derruba conexões/transações ativas
+              -- se precisar reiniciá-los, faça consciente, fora deste
+              comando: `docker compose -f docker-compose.prod.yml restart db redis`).
   help        Mostra esta mensagem.
 
 Todos os comandos assumem que o código já está atualizado no host (git pull
@@ -70,6 +75,16 @@ deploy_app() {
     if [[ "$app_image" != "$horizon_image" ]]; then
         echo "    (IDs de topo diferem -- $app_image vs $horizon_image -- normal entre builds separados, não indica divergência de código.)"
     fi
+}
+
+restart_all() {
+    echo "==> Reiniciando serviços sem estado (nginx-proxy, frontend, api-nginx, app, horizon)..."
+    # db e redis ficam de fora de propósito: restart em um serviço stateful
+    # derruba conexões e transações em andamento sem necessidade -- diferente
+    # dos serviços abaixo, que são proxies/processos sem estado local e
+    # reiniciam em segundos sem perda.
+    "${COMPOSE[@]}" restart nginx-proxy frontend api-nginx app horizon
+    echo "==> OK. db e redis não foram tocados -- reinicie-os manualmente e de propósito, se precisar mesmo."
 }
 
 deploy_frontend() {
@@ -112,6 +127,9 @@ case "${1:-help}" in
         ;;
     deps:node)
         deps_node
+        ;;
+    restart)
+        restart_all
         ;;
     help|-h|--help)
         usage
