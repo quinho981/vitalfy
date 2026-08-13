@@ -46,17 +46,30 @@ deploy_app() {
     echo "==> Reconstruindo e reiniciando app + horizon juntos..."
     "${COMPOSE[@]}" up -d --build app horizon
 
-    echo "==> Confirmando que app e horizon compartilham a mesma imagem..."
+    echo "==> Confirmando que app e horizon têm o mesmo conteúdo de imagem..."
+    # Comparar .Image (o ID de topo) direto é falso positivo em potencial:
+    # `up -d --build app horizon` builda os dois em invocações separadas, e o
+    # Docker inclui o timestamp de criação no config da imagem -- então o ID
+    # de topo pode divergir mesmo com as camadas 100% idênticas (cache
+    # totalmente reaproveitado). O que prova divergência real de código é a
+    # lista de camadas (RootFS.Layers), não o ID de topo. Visto em produção
+    # em 13/08/2026: IDs de topo diferentes, camadas idênticas -- falso
+    # alarme, corrigido aqui.
     app_image="$(docker inspect -f '{{.Image}}' vitalfy_app)"
     horizon_image="$(docker inspect -f '{{.Image}}' vitalfy_horizon)"
+    app_layers="$(docker inspect -f '{{json .RootFS.Layers}}' "$app_image")"
+    horizon_layers="$(docker inspect -f '{{json .RootFS.Layers}}' "$horizon_image")"
 
-    if [[ "$app_image" != "$horizon_image" ]]; then
-        echo "deploy-prod: ERRO -- app ($app_image) e horizon ($horizon_image) ficaram com imagens diferentes." >&2
+    if [[ "$app_layers" != "$horizon_layers" ]]; then
+        echo "deploy-prod: ERRO -- app ($app_image) e horizon ($horizon_image) têm CAMADAS diferentes -- código realmente divergente." >&2
         echo "deploy-prod: isso não deveria acontecer com o comando 'app' -- investigue antes de seguir." >&2
         exit 1
     fi
 
-    echo "==> OK: app e horizon na mesma imagem ($app_image)."
+    echo "==> OK: app e horizon com o mesmo conteúdo de imagem (mesmas camadas)."
+    if [[ "$app_image" != "$horizon_image" ]]; then
+        echo "    (IDs de topo diferem -- $app_image vs $horizon_image -- normal entre builds separados, não indica divergência de código.)"
+    fi
 }
 
 deploy_frontend() {
