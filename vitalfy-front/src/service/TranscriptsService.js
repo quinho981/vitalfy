@@ -13,14 +13,18 @@ export const TranscriptsService = {
             console.error(error);
         }
     },
+    // FE-R19-01 (ai-vitalfy/action-plans/frontend/R19.md): mesmo racional de
+    // storeAndGenerateDocument logo abaixo — timeout explícito porque o
+    // default do axios (0) espera indefinidamente, e sem try/catch porque um
+    // try/catch em volta de um `return` sem `await` nunca capturava nada, só
+    // dava a impressão de tratamento. 190s: mesmo teto usado abaixo — esta
+    // etapa é só Deepgram (mais barata que Deepgram+Groq), mas sem dado
+    // medido de percentil real não há base para um valor menor.
     store(formData) {
-        try {
-            return api.post(`/transcripts`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        return api.post(`/transcripts`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            timeout: 190000,
+        });
     },
     // FE-R1-01 (ai-vitalfy/action-plans/frontend/R1.md): sem timeout
     // explícito o axios espera indefinidamente (default 0) — quem corta é a
@@ -65,13 +69,16 @@ export const TranscriptsService = {
             console.error(error);
         }
     },
+    // FE-R19-02: sem try/catch de propósito — achado durante a implementação
+    // de R19 (ai-vitalfy/action-plans/frontend/R19.md), mesma classe de bug
+    // que FE-R19-01 já corrigiu em outros métodos deste arquivo. Este método
+    // agora está no caminho crítico do acompanhamento assíncrono do botão
+    // "Transcrever" (busca a conversa ao concluir); engolir o erro aqui fazia
+    // o chamador receber `undefined` e falhar mais adiante com um TypeError
+    // opaco em vez do erro real de rede/servidor.
     async getConversations(id) {
-        try {
-            const response = await api.get(`/transcripts/${id}/conversations`);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-        }
+        const response = await api.get(`/transcripts/${id}/conversations`);
+        return response.data;
     },
     async filterTranscripts(user = null, date = null, type = null) {
         try {

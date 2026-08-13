@@ -130,7 +130,10 @@
             "processingDelayedResumed": "Processing is taking longer than expected. It may have continued on the server — check your history in a few minutes.",
             "generateDocumentGenericError": "Error transcribing the audio.",
             "generateDocumentFailedDefault": "Could not complete processing. Please try again.",
-            "leaveWhileProcessingConfirm": "The upload is still in progress. If you leave now, the processing may be lost. Leave anyway?"
+            "generateClinicalDocumentError": "Error generating clinical document. Please try again.",
+            "leaveWhileProcessingConfirm": "The upload is still in progress. If you leave now, the processing may be lost. Leave anyway?",
+            "transcriptionGeneratedSuccessfully": "Transcription generated successfully!",
+            "transcriptConversationLoadError": "The transcription finished, but we couldn't load the conversation. Check your history."
         }
     },
     "transcription": {

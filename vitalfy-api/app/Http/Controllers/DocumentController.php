@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessGenerateInsightsAI;
 use App\Models\Document;
+use App\Models\Transcript;
 use App\Policies\DocumentPolicy;
 use App\Services\DocumentService;
+use App\Services\TranscriptService;
+use App\Support\FeatureFlags;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,10 +18,12 @@ use Spatie\LaravelPdf\Facades\Pdf;
 class DocumentController extends Controller
 {
     protected DocumentService $documentService;
+    protected TranscriptService $transcriptService;
 
-    public function __construct(DocumentService $documentService)
+    public function __construct(DocumentService $documentService, TranscriptService $transcriptService)
     {
         $this->documentService = $documentService;
+        $this->transcriptService = $transcriptService;
     }
 
     public function update(Document $document, Request $request): Document
@@ -31,8 +36,50 @@ class DocumentController extends Controller
         return $document;
     }
 
+    /**
+     * BE-R19 (ai-vitalfy/risks.md): esta era a única ação da classe sem
+     * authorize() — o payload manda transcript_id livre e o Document era
+     * criado para qualquer transcrição, inclusive de outro usuário.
+     *
+     * Busca manual em vez de route model binding implícito, pelo mesmo
+     * motivo documentado em insights() acima: o binding implícito lançaria
+     * ModelNotFoundException com mensagem diferente da que a policy usa,
+     * reabrindo o oráculo de existência por texto.
+     */
     public function generate(Request $request): JsonResponse
     {
+        $transcript = Transcript::find($request->input('transcript_id'));
+
+        if (! $transcript) {
+            abort(404, DocumentPolicy::NOT_FOUND_MESSAGE);
+        }
+
+        $this->authorize('generateDocument', $transcript);
+
+        // Duplo clique / retry não deve gerar um segundo Document nem pagar
+        // o Groq de novo — checagem de posse (authorize acima) sempre antes
+        // desta, para não vazar "documento já existe" a quem não é dono.
+        if ($transcript->document) {
+            return response()->json([
+                'message' => 'Documento já gerado para esta transcrição.',
+            ], 409);
+        }
+
+        // BE-R19-04 (ai-vitalfy/action-plans/shared/R19.md, SH-R19-01):
+        // reaproveita o mesmo pipeline assíncrono de R1/BE-R19-02 — a flag
+        // decide em runtime, sem deploy. enqueueDocumentGeneration() tem seu
+        // próprio lock por transcrição, para a janela de corrida entre duas
+        // requisições simultâneas que passam pelas duas checagens acima
+        // antes de qualquer uma delas criar o Document.
+        if (FeatureFlags::asyncTranscriptPipeline()) {
+            $result = $this->transcriptService->enqueueDocumentGeneration(
+                $transcript,
+                (int) $request->input('template')
+            );
+
+            return response()->json($result, 202);
+        }
+
         $document = $this->documentService->createDocumentAndDispatchInsights($request->all());
 
         return response()->json($document, 201);

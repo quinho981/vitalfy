@@ -32,8 +32,19 @@ class TranscriptController extends Controller
         return $this->transcriptService->getUserTranscripts($userId);
     }
 
+    /**
+     * BE-R19-02 (ai-vitalfy/action-plans/shared/R19.md, SH-R19-01): mesmo
+     * padrão condicional de storeAndGenerateDocument() abaixo — a flag
+     * decide em runtime, sem deploy.
+     */
     public function store(StoreTranscriptRequest $request): JsonResponse
     {
+        if (FeatureFlags::asyncTranscriptPipeline()) {
+            $result = $this->transcriptService->enqueueTranscription($request);
+
+            return response()->json($result, 202);
+        }
+
         $transcript = $this->transcriptService->processAudioAndCreate($request);
 
         return response()->json($transcript, 201);

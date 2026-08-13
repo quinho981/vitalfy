@@ -222,10 +222,11 @@
 
         <div ref="loadMoreTrigger" class="h-4" />
 
-        <GenerateDocument 
+        <GenerateDocument
             v-if="showGenerate"
             v-model:visible="showGenerate"
             :template="selectedTranscriptToGenerated"
+            @generation-started="handleGenerationStarted"
         />
         <EditTranscriptionName
             :active="dialogEditName"
@@ -253,12 +254,30 @@ import { Eye, Trash, Mic, Pencil, Calendar, Timer, FileAudio, Loader2, FileText 
 import { useHelpers } from '@/utils/helper';
 import { useI18n } from 'vue-i18n';
 import api from '@/services/axios';
+import { useUserStore } from '@/stores/userStore';
+import { useTranscriptProcessing, persistInFlightTranscript, clearInFlightTranscript } from '@/composables/useTranscriptProcessing';
 
 const { t } = useI18n();
 const { showSuccess, showError } = useShowToast();
 const { formatDate, formatSize, convertSecondsToMinutes, getInitials, getPatientAvatar } = useHelpers();
 const router = useRouter();
+const userStore = useUserStore();
 const today = new Date();
+
+// FE-R19-03: GenerateDocument.vue (o modal "Gerar documento clínico") não
+// compartilha escopo com upload.vue — quando o back responde 202, o modal
+// fecha e emite 'generation-started'; History.vue assume o acompanhamento
+// aqui, reaproveitando o mesmo useTranscriptProcessing (não uma segunda
+// instância por fluxo). Persistimos a dica com kind 'generate-document'
+// pelo mesmo motivo de upload.vue: se o usuário sair do Histórico antes de
+// concluir, um reload que pouse em upload.vue ainda consegue retomar e
+// redirecionar corretamente (SH-R19-01 decisão 4). O que este componente
+// não faz é reler essa dica ao montar — retomada "a partir do próprio
+// Histórico" depois de um reload não é coberta aqui; o pior caso é o
+// usuário perder o redirecionamento automático, não o trabalho em si (o
+// servidor é a fonte de verdade, e um novo carregamento da lista já mostra
+// o item como "Processando" via NON_TERMINAL_STATUSES).
+const { startPolling: startGenerationPolling } = useTranscriptProcessing();
 
 const transcripts = ref([]);
 const loading = ref(false);
@@ -347,6 +366,30 @@ const selectedTranscriptToGenerated = ref(null)
 const openGenerateModal = (template) => {
     selectedTranscriptToGenerated.value = template
     showGenerate.value = true
+}
+
+const handleGenerationCompleted = (data) => {
+    if (userStore.userId) clearInFlightTranscript(userStore.userId)
+    showSuccess(t('notifications.titles.success'), t('notifications.messages.documentGeneratedSuccessfully'), 3000)
+    router.push({ name: 'transcriptsShow', params: { id: data.transcript_id }, query: { type: 'new' } })
+}
+
+const handleGenerationFailed = (data) => {
+    if (userStore.userId) clearInFlightTranscript(userStore.userId)
+    const message = data.failure_reason || t('notifications.messages.generateDocumentFailedDefault')
+    showError(t('notifications.titles.error'), message, 10000)
+}
+
+// FE-R19-03: acionado pelo evento 'generation-started' de GenerateDocument.vue
+// quando o back responde 202 — o modal já fechou, o acompanhamento continua
+// aqui até o estado terminal (redireciona ao concluir, mesmo destino de
+// sempre; mostra a causa legível ao falhar).
+const handleGenerationStarted = (transcriptId) => {
+    if (userStore.userId) persistInFlightTranscript(userStore.userId, transcriptId, 'generate-document')
+    startGenerationPolling(transcriptId, {
+        onCompleted: handleGenerationCompleted,
+        onFailed: handleGenerationFailed,
+    })
 }
 
 const openEditDialog = (item) => {

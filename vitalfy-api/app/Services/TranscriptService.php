@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -276,6 +277,94 @@ class TranscriptService
      */
     public function enqueueGenerateDocument(StoreTranscriptRequest $request): array
     {
+        $transcript = $this->createPendingTranscriptAndStoreAudio($request);
+
+        ProcessGenerateDocumentPipeline::dispatch($transcript->id, (int) $request['template']);
+
+        return [
+            'transcript_id' => $transcript->id,
+            'status' => $transcript->status->value,
+        ];
+    }
+
+    /**
+     * BE-R19-02 (ai-vitalfy/action-plans/shared/R19.md, SH-R19-01): caminho
+     * assíncrono do botão "Transcrever" (sem documento). Idêntico a
+     * enqueueGenerateDocument() exceto por não ter templateId — o job roda
+     * em modo "só transcrição" (ver ProcessGenerateDocumentPipeline::handle).
+     */
+    public function enqueueTranscription(StoreTranscriptRequest $request): array
+    {
+        $transcript = $this->createPendingTranscriptAndStoreAudio($request);
+
+        ProcessGenerateDocumentPipeline::dispatch($transcript->id, null);
+
+        return [
+            'transcript_id' => $transcript->id,
+            'status' => $transcript->status->value,
+        ];
+    }
+
+    /**
+     * BE-R19-04 (ai-vitalfy/action-plans/shared/R19.md, SH-R19-01): caminho
+     * assíncrono de `POST /documents/generate` — enfileira o mesmo pipeline
+     * de R1/R19-02 para gerar o documento a partir de uma transcrição já
+     * concluída (chamado depois das guardas de posse/duplicidade de
+     * BE-R19-03 em DocumentController::generate()).
+     *
+     * Lock por transcrição, não por usuário (diferente de
+     * PreventConcurrentTranscription, que é por usuário): cobre a janela de
+     * corrida entre duas requisições simultâneas para a mesma transcrição —
+     * o 409 do controller (BE-R19-03) cobre "documento já existe", este
+     * cobre "duas requisições colidindo antes de qualquer uma delas ter
+     * criado o documento". TTL igual ao de
+     * PreventConcurrentTranscription::LOCK_SECONDS (200s) — mesma rede de
+     * segurança para o caso de o `finally` não rodar (worker morto, OOM).
+     */
+    public function enqueueDocumentGeneration(Transcript $transcript, int $templateId): array
+    {
+        if ($transcript->conversation === null) {
+            abort(422, 'Transcrição ainda não foi concluída.');
+        }
+
+        $lock = Cache::lock("transcript-document-generation:{$transcript->id}", 200);
+
+        if (! $lock->get()) {
+            abort(409, 'Geração de documento já em andamento para esta transcrição.');
+        }
+
+        try {
+            // Reconsulta direta ao banco, ignorando qualquer relação já
+            // carregada em memória (ex.: a checagem feita pelo controller
+            // antes de adquirir o lock) — é exatamente essa janela de
+            // corrida que este lock existe para fechar.
+            if ($transcript->document()->exists()) {
+                abort(409, 'Documento já gerado para esta transcrição.');
+            }
+
+            $transcript->status = TranscriptStatusEnum::Generating;
+            $transcript->save();
+
+            ProcessGenerateDocumentPipeline::dispatch($transcript->id, $templateId);
+
+            return [
+                'transcript_id' => $transcript->id,
+                'status' => $transcript->status->value,
+            ];
+        } finally {
+            $lock->release();
+        }
+    }
+
+    /**
+     * BE-R19-02 (ai-vitalfy/action-plans/shared/R19.md): parte comum entre
+     * enqueueGenerateDocument() e enqueueTranscription() — cria a transcrição
+     * em `pending` e persiste o áudio em disco. A única diferença real entre
+     * os dois fluxos é o templateId passado ao job, então só o construtor
+     * dela e o retorno de cada método chamador variam.
+     */
+    private function createPendingTranscriptAndStoreAudio(StoreTranscriptRequest $request): Transcript
+    {
         $user = $request->user();
         $file = $request->file('audio');
 
@@ -291,12 +380,7 @@ class TranscriptService
         $storagePath = $this->storeUploadedAudio($transcript->id, $file);
         $transcript->update(['audio_storage_path' => $storagePath]);
 
-        ProcessGenerateDocumentPipeline::dispatch($transcript->id, (int) $request['template']);
-
-        return [
-            'transcript_id' => $transcript->id,
-            'status' => $transcript->status->value,
-        ];
+        return $transcript;
     }
 
     private function storeUploadedAudio(string $transcriptId, UploadedFile $file): string

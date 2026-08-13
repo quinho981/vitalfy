@@ -5,6 +5,7 @@ namespace App\Policies;
 use Illuminate\Auth\Access\Response;
 use App\Models\Transcript;
 use App\Models\User;
+use App\Policies\DocumentPolicy;
 
 class TranscriptPolicy
 {
@@ -48,6 +49,19 @@ class TranscriptPolicy
         return $this->isOwner($user, $transcript)
             ? Response::allow()
             : Response::denyAsNotFound('Não encontrado.');
+    }
+
+    /**
+     * BE-R19: mesmo padrão de viewStatus() — 404 para não-dono, não 403.
+     * DocumentController::generate() recebe transcript_id no payload (não
+     * route model binding), então essa policy é o único portão entre "criar
+     * documento" e "criar documento para transcrição de outra pessoa".
+     */
+    public function generateDocument(User $user, Transcript $transcript): Response
+    {
+        return $this->isOwner($user, $transcript)
+            ? Response::allow()
+            : Response::denyAsNotFound(DocumentPolicy::NOT_FOUND_MESSAGE);
     }
 
     /**

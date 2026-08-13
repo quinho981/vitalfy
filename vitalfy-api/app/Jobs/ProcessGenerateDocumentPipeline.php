@@ -28,6 +28,14 @@ use Throwable;
  * começar e checada no início de handle() — uma retentativa nunca refaz uma
  * etapa que já produziu resultado, então nunca paga Deepgram/Groq duas vezes
  * pelo mesmo trabalho.
+ *
+ * BE-R19-02/04 (ai-vitalfy/action-plans/shared/R19.md, SH-R19-01): também
+ * processa os dois fluxos novos que reaproveitam este mesmo job —
+ * `POST /transcripts` assíncrono (só transcrição, $templateId null) e
+ * `POST /documents/generate` assíncrono (documento a partir de transcrição
+ * já concluída). $templateId null pula inteiramente a etapa de documento;
+ * a etapa de transcrição e o restante do fluxo (evento, log, aviso de
+ * limite) são idênticos nos dois modos.
  */
 class ProcessGenerateDocumentPipeline implements ShouldQueue
 {
@@ -53,9 +61,16 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
      */
     public int $retryAfter = 960;
 
+    /**
+     * BE-R19-02/04 (ai-vitalfy/action-plans/shared/R19.md, SH-R19-01):
+     * templateId agora é opcional — null significa "só transcrição", modo
+     * usado pelo endpoint `POST /transcripts` assíncrono, que não gera
+     * Document. Preenchido, o comportamento é idêntico ao pipeline original
+     * de R1 (transcrição + geração de documento).
+     */
     public function __construct(
         public readonly string $transcriptId,
-        public readonly int $templateId,
+        public readonly ?int $templateId = null,
     ) {
     }
 
@@ -91,21 +106,25 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
                 $this->deleteStoredAudio($transcript);
             }
 
-            if (! $transcript->document) {
-                $transcript->status = TranscriptStatusEnum::Generating;
-                $transcript->save();
+            $document = null;
 
-                $groqStart = microtime(true);
-                $documentContent = $documentService->generateLlmDocument($transcript->conversation, $this->templateId);
-                $groqMs = (int) ((microtime(true) - $groqStart) * 1000);
+            if ($this->templateId !== null) {
+                if (! $transcript->document) {
+                    $transcript->status = TranscriptStatusEnum::Generating;
+                    $transcript->save();
 
-                $document = $transcript->document()->create([
-                    'document_template_id' => $this->templateId,
-                    'patient' => $transcript->patient,
-                    'result' => $documentContent,
-                ]);
-            } else {
-                $document = $transcript->document;
+                    $groqStart = microtime(true);
+                    $documentContent = $documentService->generateLlmDocument($transcript->conversation, $this->templateId);
+                    $groqMs = (int) ((microtime(true) - $groqStart) * 1000);
+
+                    $document = $transcript->document()->create([
+                        'document_template_id' => $this->templateId,
+                        'patient' => $transcript->patient,
+                        'result' => $documentContent,
+                    ]);
+                } else {
+                    $document = $transcript->document;
+                }
             }
 
             $transcript->status = TranscriptStatusEnum::Completed;
@@ -120,7 +139,10 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
                 async: true,
             );
 
-            ProcessGenerateInsightsAI::dispatch($document->id, $transcript->conversation);
+            if ($document) {
+                ProcessGenerateInsightsAI::dispatch($document->id, $transcript->conversation);
+            }
+
             TranscriptCreated::dispatch($transcript, $transcript->user);
 
             $this->dispatchLimitWarningIfNeeded($transcript);

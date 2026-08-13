@@ -140,15 +140,35 @@ export function useTranscriptProcessing() {
  * FE-R1-04: dica de retomada, escopada por usuário — dois usuários no mesmo
  * navegador (ou o mesmo usuário logando de novo) não devem herdar o
  * ponteiro um do outro.
+ *
+ * SH-R19-01 (decisão 4): a dica passa a incluir `kind` para que a retomada
+ * saiba qual `onCompleted` aplicar — 'transcribe-only' (renderiza a
+ * conversa inline) ou 'generate-document' (redireciona para o documento).
+ * Retrocompatível: dicas gravadas antes deste campo existir são só o
+ * transcriptId puro (ver readInFlightTranscript).
  */
-export function persistInFlightTranscript(userId, transcriptId) {
+export function persistInFlightTranscript(userId, transcriptId, kind = 'generate-document') {
     if (!userId) return;
-    localStorage.setItem(`${STORAGE_PREFIX}${userId}`, transcriptId);
+    localStorage.setItem(`${STORAGE_PREFIX}${userId}`, JSON.stringify({ transcriptId, kind }));
 }
 
 export function readInFlightTranscript(userId) {
     if (!userId) return null;
-    return localStorage.getItem(`${STORAGE_PREFIX}${userId}`);
+    const raw = localStorage.getItem(`${STORAGE_PREFIX}${userId}`);
+    if (!raw) return null;
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object' && parsed.transcriptId) {
+            return { transcriptId: parsed.transcriptId, kind: parsed.kind || 'generate-document' };
+        }
+    } catch (error) {
+        // raw não é JSON válido — cai no formato antigo abaixo (string pura).
+    }
+
+    // Dica antiga (pré-R19): só o transcriptId, sem kind. Ausência de kind
+    // == 'generate-document', mesmo comportamento de hoje (SH-R19-01).
+    return { transcriptId: raw, kind: 'generate-document' };
 }
 
 export function clearInFlightTranscript(userId) {
