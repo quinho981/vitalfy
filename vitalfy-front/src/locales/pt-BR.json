@@ -145,7 +145,10 @@
             "processingDelayedResumed": "O processamento está demorando mais que o esperado. Ele pode ter continuado no servidor — confira o histórico em alguns minutos.",
             "generateDocumentGenericError": "Erro ao transcrever o áudio.",
             "generateDocumentFailedDefault": "Não foi possível concluir o processamento. Tente novamente.",
-            "leaveWhileProcessingConfirm": "O envio ainda está em andamento. Se você sair agora, o processamento pode ser perdido. Deseja sair mesmo assim?"
+            "generateClinicalDocumentError": "Erro ao gerar documento clínico. Por favor, tente novamente.",
+            "leaveWhileProcessingConfirm": "O envio ainda está em andamento. Se você sair agora, o processamento pode ser perdido. Deseja sair mesmo assim?",
+            "transcriptionGeneratedSuccessfully": "Transcrição gerada com sucesso!",
+            "transcriptConversationLoadError": "A transcrição foi concluída, mas não foi possível carregar a conversa. Confira no histórico."
         }
     },
     "transcription": {

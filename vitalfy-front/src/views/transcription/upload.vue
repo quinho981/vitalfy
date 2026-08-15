@@ -167,7 +167,7 @@
                             <Button
                                 ref="submitBtn"
                                 @click="transcribeAudio"
-                                :disabled="!selectedFile || isTranscribing || loadingTranscribeAndGenerate"
+                                :disabled="!selectedFile || isTranscribing || loadingTranscribeAndGenerate || isAsyncProcessing"
                                 v-tooltip.top="isLimitReached ? 'Você atingiu o limite mensal. Faça upgrade para continuar.' : null"
                                 outlined
                                 severity="secondary"
@@ -209,6 +209,7 @@
                 :loading-finish="loadingFinish"
                 :is-async-processing="isAsyncProcessing"
                 :processing-stage-label="asyncStatus"
+                :processing-kind="processingKind"
                 @clear="dialogClear = true"
                 @finish="finishConversation"
             />
@@ -275,7 +276,27 @@ const userStore = useUserStore()
 // FE-R1-03/04 (ai-vitalfy/action-plans/frontend/R1.md)
 const { status: asyncStatus, failureReason: asyncFailureReason, recoverable: asyncRecoverable, timedOut: asyncTimedOut, startPolling, stopPolling } = useTranscriptProcessing()
 const ASYNC_TERMINAL_STATUSES = ['completed', 'failed']
-const isAsyncProcessing = computed(() => asyncStatus.value !== null && !ASYNC_TERMINAL_STATUSES.includes(asyncStatus.value))
+
+// `status` vira 'completed' assim que o poll enxerga o estado terminal —
+// antes de handleAsyncCompleted()/handleTranscribeCompleted() terminarem o
+// trabalho que ainda depende disso (buscar a conversa, atualizar `remaining`,
+// redirecionar). Sem `finalizing`, `isAsyncProcessing` cai para `false` nesse
+// meio-tempo e o card de progresso some um frame antes do conteúdo final
+// estar pronto — a tela mostra a mensagem padrão de "clique para transcrever"
+// (ou a conversa antiga, no fluxo que redireciona) por um instante. Os dois
+// handlers ligam `finalizing` como primeira linha, na mesma volta síncrona em
+// que `status` muda — sem `await` entre as duas, o Vue nunca chega a
+// renderizar o estado intermediário.
+const finalizing = ref(false)
+const isAsyncProcessing = computed(() => (asyncStatus.value !== null && !ASYNC_TERMINAL_STATUSES.includes(asyncStatus.value)) || finalizing.value)
+
+// FE-R20-04 (ai-vitalfy/action-plans/frontend/R20.md): qual dos três
+// disparadores de processamento assíncrono está em curso agora — usado só
+// para escolher o conjunto certo de etapas no card de progresso
+// (TranscriptConversation.vue). Não confundir com o `kind` persistido por
+// persistInFlightTranscript() (só 'transcribe-only'/'generate-document',
+// usado para decidir inline vs. redirecionamento ao retomar após reload).
+const processingKind = ref('transcribe-and-generate')
 
 const inputMode = ref('record')
 const chatTranscription = ref();
@@ -406,6 +427,12 @@ const clearTranscriptionData = () => {
 }
 
 const transcriptId = ref()
+// FE-R19-02 (ai-vitalfy/action-plans/frontend/R19.md): com a flag ligada, o
+// back responde 202 e a conversa ainda não existe — o front acompanha via
+// startAsyncTranscribeTracking() e, ao concluir, renderiza a conversa
+// inline (sem redirecionar, ao contrário do fluxo irmão de "gerar
+// documento"). Com a flag desligada, 201 mantém o comportamento síncrono
+// de sempre.
 const transcribeAudio = async () => {
     if (!validateForm()) return;
     if (!hasSelectedFile()) return;
@@ -415,6 +442,7 @@ const transcribeAudio = async () => {
     }
 
     isTranscribing.value = true;
+    enableUnloadWarning()
 
     const formData = new FormData();
     formData.append('audio', selectedFile.value);
@@ -424,35 +452,43 @@ const transcribeAudio = async () => {
     formData.append('template', template);
     formData.append('type', type);
 
-    TranscriptsService.store(formData)
-        .then(response => {
-            const transcript = response.data.transcript
-            transcriptId.value = transcript.id
+    const fileName = selectedFile.value.name;
 
-            const processedTranscription = processDeepgramResultAndCreateChatDesign(transcript.conversation, selectedFile.value.name);
-            
-            chatTranscription.value = processedTranscription.utterances;
-            transcriptions.value.unshift(processedTranscription);
+    try {
+        const response = await TranscriptsService.store(formData);
+        disableUnloadWarning()
 
-            setUsageOnStorage(response.data.remaining)
-            triggerUpgradeToastIfNeeded(response.data.remaining)
-
+        // SH-R19-01: o front descobre o modo pelo status code da própria
+        // resposta — nunca por variável de build (mesmo padrão de
+        // transcribeAndGenerateDocument()).
+        if (response.status === 202) {
             selectedFile.value = null;
             uploader.value?.clear();
+            startAsyncTranscribeTracking(response.data.transcript_id, fileName);
+            return;
+        }
 
-            showSuccess('Sucesso', 'Transcrição gerada com sucesso!', 3000);
-        })
-        .catch(error => {
-            if (error.response?.status === 429) {
-                showSignatureModal.value = true
-                showAttention('Atenção', 'Limite de transcrições atingido. Faça upgrade para continuar.', 5000);
-            } else {
-                showError('Erro', 'Erro ao transcrever o áudio.', 3000);
-            }
-        })
-        .finally(() => {
-            isTranscribing.value = false;
-        });
+        const transcript = response.data.transcript
+        transcriptId.value = transcript.id
+
+        const processedTranscription = processDeepgramResultAndCreateChatDesign(transcript.conversation, fileName);
+
+        chatTranscription.value = processedTranscription.utterances;
+        transcriptions.value.unshift(processedTranscription);
+
+        setUsageOnStorage(response.data.remaining)
+        triggerUpgradeToastIfNeeded(response.data.remaining)
+
+        selectedFile.value = null;
+        uploader.value?.clear();
+
+        showSuccess(t('notifications.titles.success'), t('notifications.messages.transcriptionGeneratedSuccessfully'), 3000);
+    } catch (error) {
+        disableUnloadWarning()
+        handleTranscriptRequestError(error);
+    } finally {
+        isTranscribing.value = false;
+    }
 };
 
 const setUsageOnStorage = (remaining) => {
@@ -500,8 +536,19 @@ onBeforeRouteLeave(() => {
 })
 onBeforeUnmount(disableUnloadWarning)
 
-const handleAsyncCompleted = (data) => {
+// FE-R20-01 (ai-vitalfy/action-plans/frontend/R20.md): a cota só é debitada
+// quando o processamento assíncrono chega a `completed` — o corpo do 202
+// nunca traz `remaining` atualizado (ver TranscriptService::enqueueGenerateDocument()),
+// então é aqui, no estado terminal, que o valor precisa ser buscado de novo.
+const handleAsyncCompleted = async (data) => {
+    // Mantém o card de progresso na tela até o redirecionamento acontecer de
+    // fato — sem isso, a conversa antiga (nunca limpa por este fluxo) volta a
+    // aparecer por um instante assim que `status` chega a 'completed'. Não
+    // precisa voltar a `false`: a navegação abaixo desmonta o componente.
+    finalizing.value = true
     if (userStore.userId) clearInFlightTranscript(userStore.userId)
+    await userStore.getUserInfo()
+    triggerUpgradeToastIfNeeded(userStore.remaining)
     showSuccess(t('notifications.titles.success'), t('notifications.messages.documentGeneratedSuccessfully'), 3000);
     redirectTo(data.transcript_id);
 }
@@ -520,9 +567,19 @@ const handleAsyncTimeout = () => {
     showAttention(t('notifications.titles.warning'), t('notifications.messages.processingDelayedResumed'), 8000);
 }
 
-const startAsyncTracking = (transcriptId) => {
-    if (userStore.userId) persistInFlightTranscript(userStore.userId, transcriptId)
-    startPolling(transcriptId, {
+// FE-R19-03: usado pelos dois pontos de entrada de "Finalizar e gerar
+// insights" (finishConversation() aqui embaixo) — ao concluir, redireciona
+// para o documento, igual ao fluxo irmão de R1.
+//
+// FE-R20-04: `kind` diz ao card de progresso quais etapas mostrar —
+// 'transcribe-and-generate' (default, pipeline completo de R1: pending →
+// transcribing → generating) para transcribeAndGenerateDocument(), ou
+// 'generate-only' (só a etapa de documento, a conversa já existe) para
+// finishConversation().
+const startAsyncTracking = (id, kind = 'transcribe-and-generate') => {
+    if (userStore.userId) persistInFlightTranscript(userStore.userId, id, 'generate-document')
+    processingKind.value = kind
+    startPolling(id, {
         onCompleted: handleAsyncCompleted,
         onFailed: handleAsyncFailed,
         onNotFound: handleAsyncNotFound,
@@ -530,18 +587,86 @@ const startAsyncTracking = (transcriptId) => {
     })
 }
 
+// FE-R19-02: ao contrário de startAsyncTracking() acima, aqui não há
+// documento — ao concluir, busca a conversa e a renderiza inline, sem
+// navegação. `fileName` é só para exibição (mesmo campo que o caminho
+// síncrono já usa); depois de um reload não temos mais o nome do arquivo
+// original (não faz parte da dica persistida), então a retomada passa ''.
+const handleTranscribeCompleted = async (data, fileName) => {
+    // Mesmo raciocínio de handleAsyncCompleted(): mantém o card de progresso
+    // até a conversa estar de fato pronta para renderizar — sem isso,
+    // `isAsyncProcessing` cai assim que `status` chega a 'completed' e, como
+    // `transcriptions` ainda está vazio nesse instante, a mensagem padrão de
+    // "clique para transcrever" pisca antes da conversa aparecer. Aqui
+    // *precisa* voltar a `false` (no `finally`) — ao contrário do fluxo que
+    // redireciona, este fica na mesma tela.
+    finalizing.value = true
+    if (userStore.userId) clearInFlightTranscript(userStore.userId)
+
+    try {
+        const result = await TranscriptsService.getConversations(data.transcript_id)
+        transcriptId.value = data.transcript_id
+
+        const processedTranscription = processDeepgramResultAndCreateChatDesign(result.conversation, fileName ?? '');
+        chatTranscription.value = processedTranscription.utterances;
+        transcriptions.value.unshift(processedTranscription);
+
+        // FE-R20-01: a cota só é debitada quando o status chega a
+        // `completed` — é aqui, não no 202, que `remaining` precisa ser
+        // buscado de novo.
+        await userStore.getUserInfo()
+        triggerUpgradeToastIfNeeded(userStore.remaining)
+
+        showSuccess(t('notifications.titles.success'), t('notifications.messages.transcriptionGeneratedSuccessfully'), 3000);
+    } catch (error) {
+        showError(t('notifications.titles.error'), t('notifications.messages.transcriptConversationLoadError'), 8000);
+    } finally {
+        finalizing.value = false
+    }
+}
+
+const startAsyncTranscribeTracking = (id, fileName) => {
+    if (userStore.userId) persistInFlightTranscript(userStore.userId, id, 'transcribe-only')
+    processingKind.value = 'transcribe-only'
+    startPolling(id, {
+        onCompleted: (data) => handleTranscribeCompleted(data, fileName),
+        onFailed: handleAsyncFailed,
+        onNotFound: handleAsyncNotFound,
+        onTimeout: handleAsyncTimeout,
+    })
+}
+
+// SH-R19-01 (decisão 4): a dica de retomada agora carrega `kind` — escolhe
+// aqui o onCompleted certo (renderizar inline vs. redirecionar) em vez de
+// assumir sempre 'generate-document' como antes de R19.
 const resumeAsyncTrackingIfNeeded = async () => {
     if (!userStore.userId) return
     const hint = readInFlightTranscript(userStore.userId)
     if (!hint) return
 
     try {
-        const data = await TranscriptsService.getTranscriptStatus(hint)
+        const data = await TranscriptsService.getTranscriptStatus(hint.transcriptId)
         if (data.status === 'completed' || data.status === 'failed') {
             clearInFlightTranscript(userStore.userId)
             return
         }
-        startAsyncTracking(hint)
+
+        if (hint.kind === 'transcribe-only') {
+            startAsyncTranscribeTracking(hint.transcriptId, '')
+        } else {
+            // FE-R20-04: a dica persistida só distingue 'transcribe-only' de
+            // 'generate-document' (SH-R19-01) — não sabe dizer, depois de um
+            // reload, se era transcribeAndGenerateDocument() (pipeline
+            // completo) ou finishConversation() (só documento). Assume o
+            // default 'transcribe-and-generate' (superset de etapas): se a
+            // retomada era na verdade 'generate-only', o efeito colateral é
+            // as etapas de recebimento/transcrição do áudio aparecerem
+            // riscadas como "já concluídas" (nunca como etapa atual) do
+            // primeiro poll até o fim, em vez de simplesmente não existir —
+            // cosmético, não afeta o resultado; limitação conhecida, não
+            // resolvida por este plano.
+            startAsyncTracking(hint.transcriptId)
+        }
     } catch (error) {
         if (error.response?.status === 404) {
             clearInFlightTranscript(userStore.userId)
@@ -549,12 +674,15 @@ const resumeAsyncTrackingIfNeeded = async () => {
     }
 }
 
-// FE-R1-01: distingue os modos de falha característicos do R1
+// FE-R1-01/FE-R19-01: distingue os modos de falha característicos do R1
 // (timeout/504/524) de cota, concorrência, arquivo inválido e erro
 // genérico — antes, tudo virava "Erro ao transcrever o áudio.", inclusive
 // quando o processamento continuava no servidor e o usuário só precisava
-// esperar.
-const handleGenerateDocumentError = (error) => {
+// esperar. Compartilhado entre transcribeAudio() ("Transcrever") e
+// transcribeAndGenerateDocument() ("Transcrever e gerar documento") — os
+// dois fluxos batem em /transcripts (com ou sem geração de documento) e
+// tratam os mesmos códigos de status, então a lógica não é duplicada.
+const handleTranscriptRequestError = (error) => {
     const status = error.response?.status
 
     if (status === 429) {
@@ -611,7 +739,7 @@ const transcribeAndGenerateDocument = async () => {
             loadingTranscribeAndGenerate.value = false
             selectedFile.value = null
             uploader.value?.clear()
-            startAsyncTracking(response.data.transcript_id)
+            startAsyncTracking(response.data.transcript_id, 'transcribe-and-generate')
             return
         }
 
@@ -627,7 +755,7 @@ const transcribeAndGenerateDocument = async () => {
     } catch (error) {
         disableUnloadWarning()
         loadingTranscribeAndGenerate.value = false
-        handleGenerateDocumentError(error)
+        handleTranscriptRequestError(error)
     }
 };
 
@@ -643,16 +771,31 @@ const processDeepgramResultAndCreateChatDesign = (conversation, fileName) => {
     };
 };
 
+// FE-R19-03: com a flag ligada, a resposta é 202 e o acompanhamento
+// (startAsyncTracking) redireciona ao concluir — mesmo destino de hoje,
+// mesmo onCompleted que o fluxo irmão de R1 já usa. Com a flag desligada,
+// 201 mantém o redirecionamento imediato de sempre.
 const finishConversation = async () => {
     loadingFinish.value = true;
+    enableUnloadWarning()
 
     try {
         const payload = buildPayload();
         const response = await AnamneseService.generator(payload);
+        disableUnloadWarning()
 
-        redirectTo(response.transcript_id);
+        if (response.status === 202) {
+            startAsyncTracking(response.data.transcript_id, 'generate-only');
+            return;
+        }
+
+        redirectTo(response.data.transcript_id);
     } catch (error) {
-        showError(t('notifications.titles.error'), t('notifications.messages.anamnesisGeneratingError'), 3000);
+        disableUnloadWarning()
+        // FE-R19-01: AnamneseService.generator() agora relança de verdade —
+        // uma falha do Groq chega aqui em vez de terminar em toast de
+        // sucesso falso.
+        showError(t('notifications.titles.error'), t('notifications.messages.anamnesisGeneratingError'), 8000);
     } finally {
         loadingFinish.value = false;
     }

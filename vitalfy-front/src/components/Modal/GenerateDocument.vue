@@ -102,15 +102,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { ScrollText, FileText, Loader2 } from 'lucide-vue-next'
 import { TranscriptsService } from '@/service/TranscriptsService';
 import { AnamneseService } from '@/service/AnamneseService';
 import { SelectOptionsService } from '@/service/SelectOptionsService';
 import { useShowToast } from '@/utils/useShowToast';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from "vue-router";
 
 const { showSuccess, showError } = useShowToast();
+const { t } = useI18n();
 const router = useRouter();
 
 const props = defineProps({
@@ -118,7 +120,15 @@ const props = defineProps({
     template: Object,
 })
 
-const emit = defineEmits(["update:visible"])
+// FE-R19-03: 'generation-started' é emitido quando o back responde 202 —
+// o modal fecha (mesmo comportamento de sempre, no `finally`), mas o
+// acompanhamento não pode morrer junto. Este componente não compartilha
+// escopo com upload.vue (é usado a partir de History.vue), então delega o
+// acompanhamento para quem o renderiza, em vez de instanciar um segundo
+// useTranscriptProcessing() aqui (ver decisão registrada no relatório da
+// tarefa: History.vue já tem NON_TERMINAL_STATUSES/isProcessing e assume o
+// polling a partir deste evento).
+const emit = defineEmits(["update:visible", "generation-started"])
 
 const conversations = ref(null)
 const loadingConversations = ref(true)
@@ -141,6 +151,27 @@ const getConversationDetails = async () => {
     }
 }
 
+// FE-R1-02/FE-R19-02 (mesmo recorte): o aviso de saída cobre só a janela
+// em que a requisição HTTP de generator() está em voo — não faz sentido
+// aqui manter aviso durante o acompanhamento assíncrono, já que o modal
+// fecha e quem assume a UI de progresso é a tela-mãe.
+let unloadWarningActive = false
+const beforeUnloadHandler = (event) => {
+    event.preventDefault()
+    event.returnValue = ''
+}
+const enableUnloadWarning = () => {
+    if (unloadWarningActive) return
+    unloadWarningActive = true
+    window.addEventListener('beforeunload', beforeUnloadHandler)
+}
+const disableUnloadWarning = () => {
+    if (!unloadWarningActive) return
+    unloadWarningActive = false
+    window.removeEventListener('beforeunload', beforeUnloadHandler)
+}
+onBeforeUnmount(disableUnloadWarning)
+
 const generateClinicalDocument = async () => {
     loadingFinish.value = true;
     let transcript_id = props.template.id
@@ -153,7 +184,7 @@ const generateClinicalDocument = async () => {
     } else {
         errorMessage.value = false
     }
-    
+
     let payload = {
         transcript_id: transcript_id,
         conversation: conversations.value,
@@ -161,13 +192,29 @@ const generateClinicalDocument = async () => {
         template: template_id.value
     }
 
+    enableUnloadWarning()
+
     try {
         const response = await AnamneseService.generator(payload);
+        disableUnloadWarning()
+
+        // SH-R19-01: o front descobre o modo pelo status code da própria
+        // resposta. 202 (assíncrono) delega o acompanhamento a quem
+        // renderiza este modal (History.vue) via 'generation-started' — o
+        // `finally` abaixo já fecha o modal nos dois casos.
+        if (response.status === 202) {
+            emit('generation-started', transcript_id)
+            return
+        }
 
         showSuccess('Sucesso', 'Documento clínico gerado com sucesso', 4000)
         redirectTo(transcript_id)
     } catch (error) {
-        showError('Erro', 'Erro ao gerar documento clínico. Por favor, tente novamente.', 4000)
+        disableUnloadWarning()
+        // FE-R19-01: AnamneseService.generator() agora relança de verdade —
+        // uma falha do Groq chega aqui em vez de terminar em toast de
+        // sucesso falso (o `catch` já existia, mas nunca era alcançado).
+        showError(t('notifications.titles.error'), t('notifications.messages.generateClinicalDocumentError'), 6000)
     } finally {
         loadingFinish.value = false;
         emit('update:visible', false)
