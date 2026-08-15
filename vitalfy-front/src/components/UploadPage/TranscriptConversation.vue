@@ -231,22 +231,43 @@ const STEP_DEFINITIONS = {
 
 const steps = computed(() => STEP_DEFINITIONS[props.processingKind] || STEP_DEFINITIONS['transcribe-and-generate'])
 
-// upload.vue segura `isAsyncProcessing` em `true` um pouco além do fim real
-// do polling (`finalizing`, ver comentário em upload.vue) para cobrir o
-// trabalho que ainda falta depois de `status` chegar a 'completed' (buscar
-// conversa, redirecionar). Nessa janela, `processingStageLabel` já é
-// 'completed' — não bate com nenhuma chave de `steps`. Tratar como "todas as
-// etapas concluídas" em vez de cair no fallback de "etapa 1", que faria a
-// checklist parecer reiniciar do zero bem no instante em que tudo já
-// terminou.
+// A etapa exibida nunca pode retroceder — em vez de derivar o índice
+// diretamente de `processingStageLabel` a cada render (frágil: qualquer
+// valor que não bata com uma chave de `steps`, mesmo que só por um instante
+// — 'completed', ou qualquer outra coisa transitória — cai num fallback que
+// resetava para a etapa 1), guardamos o maior índice já visto e só andamos
+// para frente. `isAsyncProcessing` (upload.vue segura em `true` um pouco além
+// do fim real do polling via `finalizing`, para cobrir o trabalho que ainda
+// falta depois de `status` chegar a 'completed' — buscar conversa, redirecionar)
+// virar `true` de novo é o único sinal confiável de "começou um fluxo novo",
+// já que `processingKind` pode repetir entre uma execução e a próxima (ex.:
+// transcrever duas vezes seguidas).
+const lastKnownStepIndex = ref(0)
+
+watch(() => props.isAsyncProcessing, (isProcessing, wasProcessing) => {
+    if (isProcessing && !wasProcessing) lastKnownStepIndex.value = 0
+})
+
+watch(
+    () => props.processingStageLabel,
+    (label) => {
+        const index = steps.value.findIndex(step => step.key === label)
+        if (index !== -1) lastKnownStepIndex.value = Math.max(lastKnownStepIndex.value, index)
+    },
+    { immediate: true }
+)
+
+const currentStepIndex = computed(() => {
+    // 'completed' nunca bate com uma chave de `steps` — força "tudo
+    // concluído" mesmo se a etapa anterior real nunca tiver sido vista (ex.:
+    // conclusão rápida o bastante para pular direto para 'completed' no
+    // primeiro poll).
+    if (props.processingStageLabel === 'completed') return steps.value.length
+    return lastKnownStepIndex.value
+})
 const currentStep = computed(() => {
     if (props.processingStageLabel === 'completed') return steps.value[steps.value.length - 1]
-    return steps.value.find(step => step.key === props.processingStageLabel) || steps.value[0]
-})
-const currentStepIndex = computed(() => {
-    if (props.processingStageLabel === 'completed') return steps.value.length
-    const index = steps.value.findIndex(step => step.key === props.processingStageLabel)
-    return index === -1 ? 0 : index
+    return steps.value[lastKnownStepIndex.value] ?? steps.value[0]
 })
 </script>
 
