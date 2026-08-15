@@ -231,8 +231,20 @@ const STEP_DEFINITIONS = {
 
 const steps = computed(() => STEP_DEFINITIONS[props.processingKind] || STEP_DEFINITIONS['transcribe-and-generate'])
 
-const currentStep = computed(() => steps.value.find(step => step.key === props.processingStageLabel) || steps.value[0])
+// upload.vue segura `isAsyncProcessing` em `true` um pouco além do fim real
+// do polling (`finalizing`, ver comentário em upload.vue) para cobrir o
+// trabalho que ainda falta depois de `status` chegar a 'completed' (buscar
+// conversa, redirecionar). Nessa janela, `processingStageLabel` já é
+// 'completed' — não bate com nenhuma chave de `steps`. Tratar como "todas as
+// etapas concluídas" em vez de cair no fallback de "etapa 1", que faria a
+// checklist parecer reiniciar do zero bem no instante em que tudo já
+// terminou.
+const currentStep = computed(() => {
+    if (props.processingStageLabel === 'completed') return steps.value[steps.value.length - 1]
+    return steps.value.find(step => step.key === props.processingStageLabel) || steps.value[0]
+})
 const currentStepIndex = computed(() => {
+    if (props.processingStageLabel === 'completed') return steps.value.length
     const index = steps.value.findIndex(step => step.key === props.processingStageLabel)
     return index === -1 ? 0 : index
 })

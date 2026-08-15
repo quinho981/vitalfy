@@ -276,7 +276,19 @@ const userStore = useUserStore()
 // FE-R1-03/04 (ai-vitalfy/action-plans/frontend/R1.md)
 const { status: asyncStatus, failureReason: asyncFailureReason, recoverable: asyncRecoverable, timedOut: asyncTimedOut, startPolling, stopPolling } = useTranscriptProcessing()
 const ASYNC_TERMINAL_STATUSES = ['completed', 'failed']
-const isAsyncProcessing = computed(() => asyncStatus.value !== null && !ASYNC_TERMINAL_STATUSES.includes(asyncStatus.value))
+
+// `status` vira 'completed' assim que o poll enxerga o estado terminal —
+// antes de handleAsyncCompleted()/handleTranscribeCompleted() terminarem o
+// trabalho que ainda depende disso (buscar a conversa, atualizar `remaining`,
+// redirecionar). Sem `finalizing`, `isAsyncProcessing` cai para `false` nesse
+// meio-tempo e o card de progresso some um frame antes do conteúdo final
+// estar pronto — a tela mostra a mensagem padrão de "clique para transcrever"
+// (ou a conversa antiga, no fluxo que redireciona) por um instante. Os dois
+// handlers ligam `finalizing` como primeira linha, na mesma volta síncrona em
+// que `status` muda — sem `await` entre as duas, o Vue nunca chega a
+// renderizar o estado intermediário.
+const finalizing = ref(false)
+const isAsyncProcessing = computed(() => (asyncStatus.value !== null && !ASYNC_TERMINAL_STATUSES.includes(asyncStatus.value)) || finalizing.value)
 
 // FE-R20-04 (ai-vitalfy/action-plans/frontend/R20.md): qual dos três
 // disparadores de processamento assíncrono está em curso agora — usado só
@@ -529,6 +541,11 @@ onBeforeUnmount(disableUnloadWarning)
 // nunca traz `remaining` atualizado (ver TranscriptService::enqueueGenerateDocument()),
 // então é aqui, no estado terminal, que o valor precisa ser buscado de novo.
 const handleAsyncCompleted = async (data) => {
+    // Mantém o card de progresso na tela até o redirecionamento acontecer de
+    // fato — sem isso, a conversa antiga (nunca limpa por este fluxo) volta a
+    // aparecer por um instante assim que `status` chega a 'completed'. Não
+    // precisa voltar a `false`: a navegação abaixo desmonta o componente.
+    finalizing.value = true
     if (userStore.userId) clearInFlightTranscript(userStore.userId)
     await userStore.getUserInfo()
     triggerUpgradeToastIfNeeded(userStore.remaining)
@@ -576,6 +593,14 @@ const startAsyncTracking = (id, kind = 'transcribe-and-generate') => {
 // síncrono já usa); depois de um reload não temos mais o nome do arquivo
 // original (não faz parte da dica persistida), então a retomada passa ''.
 const handleTranscribeCompleted = async (data, fileName) => {
+    // Mesmo raciocínio de handleAsyncCompleted(): mantém o card de progresso
+    // até a conversa estar de fato pronta para renderizar — sem isso,
+    // `isAsyncProcessing` cai assim que `status` chega a 'completed' e, como
+    // `transcriptions` ainda está vazio nesse instante, a mensagem padrão de
+    // "clique para transcrever" pisca antes da conversa aparecer. Aqui
+    // *precisa* voltar a `false` (no `finally`) — ao contrário do fluxo que
+    // redireciona, este fica na mesma tela.
+    finalizing.value = true
     if (userStore.userId) clearInFlightTranscript(userStore.userId)
 
     try {
@@ -595,6 +620,8 @@ const handleTranscribeCompleted = async (data, fileName) => {
         showSuccess(t('notifications.titles.success'), t('notifications.messages.transcriptionGeneratedSuccessfully'), 3000);
     } catch (error) {
         showError(t('notifications.titles.error'), t('notifications.messages.transcriptConversationLoadError'), 8000);
+    } finally {
+        finalizing.value = false
     }
 }
 
