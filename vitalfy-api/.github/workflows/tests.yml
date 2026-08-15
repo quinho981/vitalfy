@@ -23,6 +23,34 @@ jobs:
 
     name: PHP ${{ matrix.php }}
 
+    # BE-R4-01 (ai-vitalfy/action-plans/backend/R4.md): a suíte roda contra o
+    # mesmo dialeto SQL da produção. Boa parte do código (ILIKE, EXTRACT(DOW
+    # FROM ...), LEFT(...)) é sintaxe exclusiva de PostgreSQL — um CI verde
+    # contra SQLite não prova que esse código roda. Ver R6/R4 em
+    # ai-vitalfy/risks.md.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: vitalfy_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: vitalfy_test
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,7 +59,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pgsql, pdo_pgsql
           coverage: none
 
       - name: Install Composer dependencies
@@ -42,6 +70,9 @@ jobs:
 
       - name: Generate app key
         run: php artisan key:generate
+
+      - name: Run migrations
+        run: php artisan migrate --force
 
       - name: Execute tests
         run: vendor/bin/phpunit
