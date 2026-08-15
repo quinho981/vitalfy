@@ -258,7 +258,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useTranscriptProcessing, persistInFlightTranscript, clearInFlightTranscript } from '@/composables/useTranscriptProcessing';
 
 const { t } = useI18n();
-const { showSuccess, showError } = useShowToast();
+const { showSuccess, showError, showAttention } = useShowToast();
 const { formatDate, formatSize, convertSecondsToMinutes, getInitials, getPatientAvatar } = useHelpers();
 const router = useRouter();
 const userStore = useUserStore();
@@ -368,16 +368,41 @@ const openGenerateModal = (template) => {
     showGenerate.value = true
 }
 
+// FE-R20-02 (ai-vitalfy/action-plans/frontend/R20.md): patch otimista do item
+// local — sem isso, `isProcessing`/`documentNotGenerated` (calculados por
+// mapperTranscript() na última busca) continuam achando que não há geração em
+// curso, o botão "Gerar documento clínico" fica visível e permite reabrir o
+// modal e reenviar antes do primeiro processamento terminar.
+const updateLocalTranscriptStatus = (transcriptId, status) => {
+    const index = transcripts.value.findIndex((t) => t.id === transcriptId)
+    if (index === -1) return
+    transcripts.value[index] = {
+        ...transcripts.value[index],
+        status,
+        isProcessing: NON_TERMINAL_STATUSES.includes(status),
+        hasFailed: status === 'failed',
+    }
+}
+
 const handleGenerationCompleted = (data) => {
     if (userStore.userId) clearInFlightTranscript(userStore.userId)
     showSuccess(t('notifications.titles.success'), t('notifications.messages.documentGeneratedSuccessfully'), 3000)
     router.push({ name: 'transcriptsShow', params: { id: data.transcript_id }, query: { type: 'new' } })
 }
 
-const handleGenerationFailed = (data) => {
+const handleGenerationFailed = (data, transcriptId) => {
     if (userStore.userId) clearInFlightTranscript(userStore.userId)
+    updateLocalTranscriptStatus(transcriptId, 'failed')
     const message = data.failure_reason || t('notifications.messages.generateDocumentFailedDefault')
     showError(t('notifications.titles.error'), message, 10000)
+}
+
+// FE-R20-02: o polling pode parar por timeout (BE-R1-07/useTranscriptProcessing,
+// MAX_ATTEMPTS) sem nunca chamar onFailed — o processamento pode continuar no
+// servidor, então a linha não deve virar "Falha", só avisar que o
+// acompanhamento local parou (mesmo aviso que upload.vue já usa).
+const handleGenerationTimeout = () => {
+    showAttention(t('notifications.titles.warning'), t('notifications.messages.processingDelayedResumed'), 8000)
 }
 
 // FE-R19-03: acionado pelo evento 'generation-started' de GenerateDocument.vue
@@ -386,9 +411,11 @@ const handleGenerationFailed = (data) => {
 // sempre; mostra a causa legível ao falhar).
 const handleGenerationStarted = (transcriptId) => {
     if (userStore.userId) persistInFlightTranscript(userStore.userId, transcriptId, 'generate-document')
+    updateLocalTranscriptStatus(transcriptId, 'generating')
     startGenerationPolling(transcriptId, {
         onCompleted: handleGenerationCompleted,
-        onFailed: handleGenerationFailed,
+        onFailed: (data) => handleGenerationFailed(data, transcriptId),
+        onTimeout: handleGenerationTimeout,
     })
 }
 
