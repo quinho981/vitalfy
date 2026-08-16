@@ -9,15 +9,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * BE-R4-04 (ai-vitalfy/action-plans/backend/R4.md): R2/R19 já cobriram
- * `TranscriptPolicy::viewStatus`/`generateDocument` (404 uniforme). Esta
- * tarefa cobre o restante da policy — `view`/`update`/`delete`/
- * `getConversations` — que devolve `bool` simples, não
- * `Response::denyAsNotFound()`, então hoje responde 403 para não-dono, não
- * 404. O teste fixa esse comportamento atual, não o corrige — se um dia isso
- * mudar por decisão de produto, este teste é quem vai acusar a mudança.
- */
 class TranscriptOwnershipTest extends TestCase
 {
     use RefreshDatabase;

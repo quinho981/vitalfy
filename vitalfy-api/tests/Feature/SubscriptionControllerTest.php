@@ -8,14 +8,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * BE-R4-06 (ai-vitalfy/action-plans/backend/R4.md): `GET /subscription` e
- * `POST /subscription/cancel` só leem/escrevem a tabela local `subscriptions`
- * — testáveis sem chamada de rede ao Stripe. `checkout()`/`verify-checkout()`
- * fazem chamada real à API do Stripe fora do trecho de validação de entrada;
- * só a validação de entrada (antes de qualquer rede) é coberta aqui — o
- * restante fica para BE-R4-08 (Faixa 2, ai-vitalfy/action-plans/R4.md).
- */
 class SubscriptionControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -77,9 +69,7 @@ class SubscriptionControllerTest extends TestCase
         $user = User::factory()->create();
 
         Sanctum::actingAs($user);
-        // PriceIdsEnum::from() lança \ValueError antes de qualquer chamada ao
-        // Stripe — documentando o comportamento atual (não tratado, 500), sem
-        // alterá-lo; ver nota em action-plans/backend/R4.md#be-r4-06.
+        
         $response = $this->postJson('/api/subscription/checkout', ['plan' => 'plano-que-nao-existe']);
 
         $response->assertStatus(500);

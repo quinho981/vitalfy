@@ -9,10 +9,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * BE-R4-05 (ai-vitalfy/action-plans/backend/R4.md): `CheckSubscription`
- * (usada por `POST /documents/refine`) sem nenhuma cobertura até esta tarefa.
- */
 class CheckSubscriptionTest extends TestCase
 {
     use RefreshDatabase;

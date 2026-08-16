@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
-/**
- * BE-R4-03 (ai-vitalfy/action-plans/backend/R4.md): fluxo de reset de senha
- * sem nenhuma cobertura até esta tarefa.
- */
 class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;

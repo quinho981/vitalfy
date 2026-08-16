@@ -141,10 +141,6 @@ class DashboardService
             Cache::forget("dashboard:summary:{$period}:{$userId}:urgent");
         }
 
-        // BE-R4-02 (ai-vitalfy/action-plans/backend/R4.md): currentWeekTranscripts()
-        // e countWeekTranscriptByType() gravam sem período na chave (linhas
-        // ~106 e ~123) — o loop acima, que apaga por período, nunca as
-        // atingia de verdade. Chave própria, apagada uma única vez.
         Cache::forget("dashboard:charts:week:{$userId}");
         Cache::forget("dashboard:charts:type:{$userId}");
     }

@@ -12,16 +12,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * BE-R4-05 (ai-vitalfy/action-plans/backend/R4.md): `CheckTranscriptLimit`
- * já tinha cobertura indireta do cálculo (`TranscriptQuotaCompletedOnlyTest`,
- * via `TranscriptService`) mas nenhuma do middleware aplicado à rota HTTP.
- *
- * Corpo da requisição vazio (`[]`) é proposital: sem áudio, a FormRequest
- * sempre rejeita com 422 — o mesmo truque de `TranscriptConcurrencyLockTest`.
- * Isso isola exatamente o que o middleware decide (barrar com 429 antes de
- * qualquer outra coisa, ou deixar passar) sem precisar simular Deepgram.
- */
 class CheckTranscriptLimitTest extends TestCase
 {
     use RefreshDatabase;

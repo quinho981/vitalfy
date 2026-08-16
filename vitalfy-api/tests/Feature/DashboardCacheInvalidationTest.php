@@ -9,14 +9,6 @@ use App\Services\DashboardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/**
- * BE-R4-02 (ai-vitalfy/action-plans/backend/R4.md): DashboardService::clear()
- * apagava chaves de cache que `charts()` nunca gravou (período embutido na
- * chave, quando `currentWeekTranscripts()`/`countWeekTranscriptByType()`
- * gravam sem período) — o cache de "transcrições por tipo na semana" nunca
- * era invalidado ao criar/apagar uma transcrição, ficando até 10 minutos
- * (TTL de `countWeekTranscriptByType`) desatualizado.
- */
 class DashboardCacheInvalidationTest extends TestCase
 {
     use RefreshDatabase;

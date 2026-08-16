@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * BE-R4-03 (ai-vitalfy/action-plans/backend/R4.md): verificação de e-mail
- * (link assinado) e reenvio sem nenhuma cobertura até esta tarefa.
- */
 class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;

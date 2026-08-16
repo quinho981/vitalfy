@@ -23,11 +23,6 @@ jobs:
 
     name: PHP ${{ matrix.php }}
 
-    # BE-R4-01 (ai-vitalfy/action-plans/backend/R4.md): a suíte roda contra o
-    # mesmo dialeto SQL da produção. Boa parte do código (ILIKE, EXTRACT(DOW
-    # FROM ...), LEFT(...)) é sintaxe exclusiva de PostgreSQL — um CI verde
-    # contra SQLite não prova que esse código roda. Ver R6/R4 em
-    # ai-vitalfy/risks.md.
     services:
       postgres:
         image: postgres:16-alpine

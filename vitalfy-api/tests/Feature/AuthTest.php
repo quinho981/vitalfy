@@ -8,11 +8,6 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-/**
- * BE-R4-03 (ai-vitalfy/action-plans/backend/R4.md): fluxo de autenticação por
- * cookie sem nenhuma cobertura até esta tarefa (ver "sem cobertura em" em
- * ai-vitalfy/risks.md#r4).
- */
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
@@ -21,10 +16,6 @@ class AuthTest extends TestCase
     {
         parent::setUp();
 
-        // throttle:auth é 5/min por IP (AppServiceProvider::boot()) com cache
-        // em memória compartilhado entre testes no mesmo processo — não é o
-        // que esta tarefa testa, então fica desligado para não travar testes
-        // que fazem mais de uma tentativa.
         $this->withoutMiddleware(ThrottleRequests::class);
     }
 
@@ -112,10 +103,6 @@ class AuthTest extends TestCase
             'remember' => true,
         ]);
 
-        // decrypt=false: rotas de API não passam pelo middleware
-        // EncryptCookies (só o grupo 'web' o inclui por padrão no Laravel
-        // 11) — o valor do cookie aqui é o token em texto puro, não algo
-        // que app('encrypter') saiba decifrar.
         $minutosSemRemember = $semRemember->getCookie('api_token', false)->getExpiresTime();
         $minutosComRemember = $comRemember->getCookie('api_token', false)->getExpiresTime();
 
@@ -157,10 +144,7 @@ class AuthTest extends TestCase
     public function test_troca_de_senha_com_senha_atual_correta_atualiza_a_senha(): void
     {
         $user = User::factory()->create(['password' => Hash::make('senha-original')]);
-        // Bearer token, não Sanctum::actingAs(): este teste faz login HTTP de
-        // verdade depois, e actingAs() substitui o guard padrão para toda a
-        // vida do teste, quebrando Auth::attempt() (RequestGuard não tem
-        // esse método) na chamada real a /api/login mais abaixo.
+        
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
@@ -173,12 +157,6 @@ class AuthTest extends TestCase
         $response->assertStatus(200);
         $this->assertTrue(Hash::check('senha-nova-123', $user->fresh()->password));
 
-        // A chamada acima passou pelo middleware auth:sanctum, que chama
-        // Auth::shouldUse('sanctum') ao autenticar — isso troca o guard
-        // *padrão* da aplicação (o app é reaproveitado entre requests dentro
-        // do mesmo teste). Sem isso, Auth::attempt() abaixo (usado por
-        // AuthController::login) resolve para o guard sanctum (RequestGuard,
-        // sem método attempt()) em vez do guard web/session esperado.
         \Illuminate\Support\Facades\Auth::shouldUse('web');
 
         $loginComSenhaAntiga = $this->postJson('/api/login', [

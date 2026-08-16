@@ -12,16 +12,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * BE-R4-04 (ai-vitalfy/action-plans/backend/R4.md): `DocumentPolicy::view`
- * (usada por `GET /documents/{id}/insights`) já tem 404 uniforme testado por
- * R2. `DocumentPolicy::update` (usada por `PUT /documents/{id}`,
- * `POST /documents/{id}/regenerate-insights` e `GET /documents/{id}/pdf`)
- * devolve `bool` simples → 403 padrão do Laravel para não-dono — o
- * vazamento de existência residual que R2 já registrou como aceito
- * (ai-vitalfy/risks.md#r2), nunca testado até agora. Este teste documenta
- * esse comportamento atual, não o corrige.
- */
 class DocumentOwnershipTest extends TestCase
 {
     use RefreshDatabase;
