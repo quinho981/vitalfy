@@ -36,7 +36,7 @@ Route::middleware([
 ])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/email/resend-verification', [EmailVerificationController::class, 'resend'])
-        ->middleware('throttle:6,1');
+        ->middleware('throttle:1,1');
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
     Route::get('/tokens', [AuthController::class, 'tokens']);

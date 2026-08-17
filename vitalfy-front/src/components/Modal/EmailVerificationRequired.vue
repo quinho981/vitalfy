@@ -37,13 +37,12 @@
                 </button>
                 <button
                     @click="emailVerificationStore.resend()"
-                    :disabled="emailVerificationStore.sending"
+                    :disabled="emailVerificationStore.sending || emailVerificationStore.cooldownRemaining > 0"
                     class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-60
                            bg-blue-500 text-white hover:bg-blue-600
                            dark:bg-blue-600 dark:hover:bg-blue-700"
                 >
-                    <span v-if="emailVerificationStore.sent">{{ $t('auth.emailVerification.resendSuccess') }}</span>
-                    <span v-else>{{ $t('auth.emailVerification.resendButton') }}</span>
+                    {{ resendLabel }}
                 </button>
             </div>
         </template>
@@ -51,6 +50,8 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { MailWarning } from 'lucide-vue-next';
 import { useEmailVerificationStore } from '@/stores/emailVerificationStore';
 
@@ -58,5 +59,15 @@ import { useEmailVerificationStore } from '@/stores/emailVerificationStore';
 // interceptor do axios (services/axios.js) quando uma das cinco rotas de
 // custo responde 409 com email_verification_required. Fechar sem verificar
 // não bloqueia nada — o usuário volta a navegar normalmente.
+const { t } = useI18n();
 const emailVerificationStore = useEmailVerificationStore();
+
+const resendLabel = computed(() => {
+    if (emailVerificationStore.cooldownRemaining > 0) {
+        const key = emailVerificationStore.sent ? 'resendSuccessCooldown' : 'resendCooldown';
+        return t(`auth.emailVerification.${key}`, { seconds: emailVerificationStore.cooldownRemaining });
+    }
+
+    return t('auth.emailVerification.resendButton');
+});
 </script>

@@ -113,6 +113,8 @@
             "bannerMessage": "Confirme seu e-mail para transcrever, gerar documentos e refinar anamneses. Você pode continuar navegando normalmente.",
             "resendButton": "Reenviar e-mail de verificação",
             "resendSuccess": "E-mail reenviado! Confira sua caixa de entrada.",
+            "resendCooldown": "Aguarde {seconds}s para reenviar",
+            "resendSuccessCooldown": "E-mail reenviado! Você poderá solicitar novamente em {seconds}s",
             "modalTitle": "Confirme seu e-mail para continuar",
             "modalDescription": "Esta ação exige e-mail verificado. Reenvie o link de confirmação se não encontrar o e-mail que enviamos no cadastro."
         }
