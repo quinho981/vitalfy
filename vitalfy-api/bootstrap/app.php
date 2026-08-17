@@ -34,6 +34,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.subscription'      => \App\Http\Middleware\CheckSubscription::class,
             'free.transcript.limit'   => \App\Http\Middleware\CheckTranscriptLimit::class,
             'no.concurrent.transcript' => \App\Http\Middleware\PreventConcurrentTranscription::class,
+            // R5 (ai-vitalfy/action-plans/backend/R5.md): substitui o
+            // EnsureEmailIsVerified nativo do Laravel por um que devolve
+            // `email_verification_required` no corpo — o 409 nativo seria
+            // indistinguível dos outros 409 que o app já usa (documento
+            // duplicado, transcrição concorrente).
+            'verified'                => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

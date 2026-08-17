@@ -4,6 +4,8 @@ import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTopbar from './AppTopbar.vue';
+import EmailVerificationBanner from '@/components/EmailVerificationBanner.vue';
+import EmailVerificationRequiredModal from '@/components/Modal/EmailVerificationRequired.vue';
 
 const Toast = defineAsyncComponent(() => import('primevue/toast'));
 
@@ -60,6 +62,7 @@ function isOutsideClicked(event) {
         <app-topbar></app-topbar>
         <app-sidebar></app-sidebar>
         <div class="layout-main-container">
+            <email-verification-banner></email-verification-banner>
             <div class="layout-main">
                 <router-view></router-view>
             </div>
@@ -68,4 +71,5 @@ function isOutsideClicked(event) {
         <div class="layout-mask animate-fadein"></div>
     </div>
     <Toast />
+    <email-verification-required-modal></email-verification-required-modal>
 </template>

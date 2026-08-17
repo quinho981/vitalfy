@@ -692,6 +692,15 @@ const handleTranscriptRequestError = (error) => {
     }
 
     if (status === 409) {
+        // R5 (ai-vitalfy/action-plans/frontend/R5.md, FE-R5-02): este 409
+        // também acontece quando o e-mail não está verificado — nesse caso
+        // o interceptor global (services/axios.js) já abriu o modal de
+        // verificação; mostrar também o toast de "processamento em
+        // andamento" aqui seria uma mensagem errada por cima da certa.
+        if (error.response?.data?.email_verification_required) {
+            return
+        }
+
         showAttention(t('notifications.titles.warning'), t('notifications.messages.concurrentProcessing'), 6000);
         return
     }
@@ -795,7 +804,11 @@ const finishConversation = async () => {
         // FE-R19-01: AnamneseService.generator() agora relança de verdade —
         // uma falha do Groq chega aqui em vez de terminar em toast de
         // sucesso falso.
-        showError(t('notifications.titles.error'), t('notifications.messages.anamnesisGeneratingError'), 8000);
+        // R5: e-mail não verificado já vira modal pelo interceptor global —
+        // não duplicar com este toast genérico.
+        if (!error.response?.data?.email_verification_required) {
+            showError(t('notifications.titles.error'), t('notifications.messages.anamnesisGeneratingError'), 8000);
+        }
     } finally {
         loadingFinish.value = false;
     }

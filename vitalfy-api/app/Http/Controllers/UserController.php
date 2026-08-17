@@ -33,6 +33,7 @@ class UserController extends Controller
                 'email' => $user->email,
                 'phone' => $user->phone,
                 'recording_tour_completed' => $user->recording_tour_completed,
+                'email_verified' => $user->hasVerifiedEmail(),
             ],
             'plan' => $plan,
             'remaining' => $remainingTranscripts

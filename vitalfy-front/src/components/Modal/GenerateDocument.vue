@@ -214,7 +214,11 @@ const generateClinicalDocument = async () => {
         // FE-R19-01: AnamneseService.generator() agora relança de verdade —
         // uma falha do Groq chega aqui em vez de terminar em toast de
         // sucesso falso (o `catch` já existia, mas nunca era alcançado).
-        showError(t('notifications.titles.error'), t('notifications.messages.generateClinicalDocumentError'), 6000)
+        // R5: e-mail não verificado já vira modal pelo interceptor global —
+        // não duplicar com este toast genérico.
+        if (!error.response?.data?.email_verification_required) {
+            showError(t('notifications.titles.error'), t('notifications.messages.generateClinicalDocumentError'), 6000)
+        }
     } finally {
         loadingFinish.value = false;
         emit('update:visible', false)

@@ -48,10 +48,15 @@ Route::middleware([
     });
     
     Route::prefix('documents')->group(function () {
-        Route::post('/generate', [DocumentController::class, 'generate']);
+        // R5 (ai-vitalfy/action-plans/backend/R5.md, BE-R5-04): estas três
+        // rotas chamam o Groq — custo real — e exigem e-mail verificado.
+        // Navegação/edição do que já existe (abaixo) continua livre.
+        Route::post('/generate', [DocumentController::class, 'generate'])
+            ->middleware('verified');
         Route::post('/refine', [DocumentController::class, 'refine'])
-            ->middleware('check.subscription');
-        Route::post('/{document}/regenerate-insights', [DocumentController::class, 'regenerateInsights']);
+            ->middleware(['check.subscription', 'verified']);
+        Route::post('/{document}/regenerate-insights', [DocumentController::class, 'regenerateInsights'])
+            ->middleware('verified');
         Route::put('/{document}', [DocumentController::class, 'update']);
         Route::get('/{document}/pdf', [DocumentController::class, 'generatePdf']);
         Route::get('/{document}/insights', [DocumentController::class, 'insights']);
@@ -66,6 +71,9 @@ Route::middleware([
             // não taxa — impede o mesmo usuário de empilhar processamentos e
             // esgotar o pool php-fpm compartilhado.
             'no.concurrent.transcript',
+            // BE-R5-04 (ai-vitalfy/action-plans/backend/R5.md): chama o
+            // Deepgram — custo real — exige e-mail verificado.
+            'verified',
         ])->group(function () {
             Route::post('/', [TranscriptController::class, 'store']);
             Route::post('/generate-document', [TranscriptController::class, 'storeAndGenerateDocument']);
