@@ -1,0 +1,3 @@
+[submodule "ai-vitalfy"]
+	path = ai-vitalfy
+	url = git@github.com:quinho981/ai-vitalfy.git
