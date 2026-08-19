@@ -508,12 +508,6 @@ const handleToastUpgrade = () => {
     showSignatureModal.value = true
 }
 
-// FE-R1-02 (ai-vitalfy/action-plans/frontend/R1.md): cobre só a janela em
-// que a requisição HTTP ainda está em voo. Se a resposta for 202
-// (assíncrono), o trabalho já está seguro no servidor e a navegação é
-// liberada — FE-R1-03 assume o acompanhamento a partir daí. Se for 200
-// (síncrono), a resposta só chega depois de tudo pronto, então o aviso já
-// não faz mais sentido nesse ponto.
 let unloadWarningActive = false
 const beforeUnloadHandler = (event) => {
     event.preventDefault()
@@ -536,15 +530,7 @@ onBeforeRouteLeave(() => {
 })
 onBeforeUnmount(disableUnloadWarning)
 
-// FE-R20-01 (ai-vitalfy/action-plans/frontend/R20.md): a cota só é debitada
-// quando o processamento assíncrono chega a `completed` — o corpo do 202
-// nunca traz `remaining` atualizado (ver TranscriptService::enqueueGenerateDocument()),
-// então é aqui, no estado terminal, que o valor precisa ser buscado de novo.
 const handleAsyncCompleted = async (data) => {
-    // Mantém o card de progresso na tela até o redirecionamento acontecer de
-    // fato — sem isso, a conversa antiga (nunca limpa por este fluxo) volta a
-    // aparecer por um instante assim que `status` chega a 'completed'. Não
-    // precisa voltar a `false`: a navegação abaixo desmonta o componente.
     finalizing.value = true
     if (userStore.userId) clearInFlightTranscript(userStore.userId)
     await userStore.getUserInfo()
@@ -567,15 +553,6 @@ const handleAsyncTimeout = () => {
     showAttention(t('notifications.titles.warning'), t('notifications.messages.processingDelayedResumed'), 8000);
 }
 
-// FE-R19-03: usado pelos dois pontos de entrada de "Finalizar e gerar
-// insights" (finishConversation() aqui embaixo) — ao concluir, redireciona
-// para o documento, igual ao fluxo irmão de R1.
-//
-// FE-R20-04: `kind` diz ao card de progresso quais etapas mostrar —
-// 'transcribe-and-generate' (default, pipeline completo de R1: pending →
-// transcribing → generating) para transcribeAndGenerateDocument(), ou
-// 'generate-only' (só a etapa de documento, a conversa já existe) para
-// finishConversation().
 const startAsyncTracking = (id, kind = 'transcribe-and-generate') => {
     if (userStore.userId) persistInFlightTranscript(userStore.userId, id, 'generate-document')
     processingKind.value = kind
@@ -674,14 +651,6 @@ const resumeAsyncTrackingIfNeeded = async () => {
     }
 }
 
-// FE-R1-01/FE-R19-01: distingue os modos de falha característicos do R1
-// (timeout/504/524) de cota, concorrência, arquivo inválido e erro
-// genérico — antes, tudo virava "Erro ao transcrever o áudio.", inclusive
-// quando o processamento continuava no servidor e o usuário só precisava
-// esperar. Compartilhado entre transcribeAudio() ("Transcrever") e
-// transcribeAndGenerateDocument() ("Transcrever e gerar documento") — os
-// dois fluxos batem em /transcripts (com ou sem geração de documento) e
-// tratam os mesmos códigos de status, então a lógica não é duplicada.
 const handleTranscriptRequestError = (error) => {
     const status = error.response?.status
 
@@ -692,11 +661,6 @@ const handleTranscriptRequestError = (error) => {
     }
 
     if (status === 409) {
-        // R5 (ai-vitalfy/action-plans/frontend/R5.md, FE-R5-02): este 409
-        // também acontece quando o e-mail não está verificado — nesse caso
-        // o interceptor global (services/axios.js) já abriu o modal de
-        // verificação; mostrar também o toast de "processamento em
-        // andamento" aqui seria uma mensagem errada por cima da certa.
         if (error.response?.data?.email_verification_required) {
             return
         }

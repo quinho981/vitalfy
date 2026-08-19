@@ -10,7 +10,7 @@ use LucianoTonet\GroqLaravel\Facades\Groq;
 
 class DocumentService
 {
-    protected const MODEL_NAME = 'llama-3.3-70b-versatile';
+    protected const MODEL_NAME = 'openai/gpt-oss-120b';
 
     public function createDocumentAndDispatchInsights(array $request): Document
     {
@@ -48,7 +48,7 @@ class DocumentService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => 'Utilize terminologia médica formal.'
+                    'content' => 'Utilize terminologia médica formal. Não invente informações. Limite-se a analise assistiva com base no contexto fornecido. Se não houver informações suficientes, indique que não é possível gerar uma resposta precisa.'
                 ],
                 [
                     'role' => 'user',

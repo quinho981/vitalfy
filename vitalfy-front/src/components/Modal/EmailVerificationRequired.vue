@@ -4,55 +4,56 @@
         @update:visible="(value) => !value && emailVerificationStore.closeModal()"
         modal
         :draggable="false"
-        :style="{ width: '420px', maxWidth: '95vw' }"
-        :pt="{
-            header: { class: 'pb-3 border-b border-surface-100 dark:border-surface-700' },
-            footer: { class: '!pt-3 border-t border-surface-100 dark:border-surface-700' },
-        }"
+        :closable="false"
+        :style="{ width: '29rem' }"
     >
-        <template #header>
-            <div class="flex items-center gap-x-3">
-                <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-amber-50 dark:bg-amber-500/10">
-                    <MailWarning :size="18" class="text-amber-600 dark:text-amber-400" />
+        <div class="p-3">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-900">
+                        <i class="pi pi-envelope text-amber-600 text-lg dark:text-amber-400"></i>
+                    </div>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                        {{ $t('auth.emailVerification.modalTitle') }}
+                    </h2>
                 </div>
-                <p class="text-sm font-semibold text-surface-800 dark:text-surface-200 leading-tight">
-                    {{ $t('auth.emailVerification.modalTitle') }}
-                </p>
-            </div>
-        </template>
 
-        <p class="text-sm text-surface-600 dark:text-surface-300 leading-relaxed py-2">
-            {{ $t('auth.emailVerification.modalDescription') }}
-        </p>
-
-        <template #footer>
-            <div class="flex justify-end gap-x-2">
                 <button
                     @click="emailVerificationStore.closeModal()"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                           text-surface-600 hover:bg-surface-100
-                           dark:text-surface-300 dark:hover:bg-surface-700"
+                    class="text-gray-400 hover:text-gray-600 transition dark:hover:text-white dark:text-gray-200"
+                >
+                    ✕
+                </button>
+            </div>
+
+            <p class="text-[13px] text-gray-600 leading-relaxed dark:text-gray-300">
+                {{ $t('auth.emailVerification.modalDescription') }}
+            </p>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button
+                    @click="emailVerificationStore.closeModal()"
+                    class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition dark:hover:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
                 >
                     {{ $t('button.close') }}
                 </button>
+
                 <button
                     @click="emailVerificationStore.resend()"
                     :disabled="emailVerificationStore.sending || emailVerificationStore.cooldownRemaining > 0"
-                    class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-60
-                           bg-blue-500 text-white hover:bg-blue-600
-                           dark:bg-blue-600 dark:hover:bg-blue-700"
+                    class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
                 >
+                    <i v-if="emailVerificationStore.sending" class="pi pi-spin pi-spinner text-sm"></i>
                     {{ resendLabel }}
                 </button>
             </div>
-        </template>
+        </div>
     </Dialog>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { MailWarning } from 'lucide-vue-next';
 import { useEmailVerificationStore } from '@/stores/emailVerificationStore';
 
 // R5 (ai-vitalfy/action-plans/frontend/R5.md, FE-R5-02): aberto pelo

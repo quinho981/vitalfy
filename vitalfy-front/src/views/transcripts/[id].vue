@@ -483,8 +483,6 @@ const regenerateInsights = async () => {
         showSuccess(t('notifications.titles.success'), 'Geração de insights iniciada!', 3000);
         startPolling(documentId.value);
     } catch (error) {
-        // R5: e-mail não verificado já vira modal pelo interceptor global —
-        // não duplicar com este toast genérico.
         if (!error.response?.data?.email_verification_required) {
             showError(t('notifications.titles.error'), 'Erro ao regerar insights', 3000);
         }
