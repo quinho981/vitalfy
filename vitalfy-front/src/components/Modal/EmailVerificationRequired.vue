@@ -56,10 +56,6 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useEmailVerificationStore } from '@/stores/emailVerificationStore';
 
-// R5 (ai-vitalfy/action-plans/frontend/R5.md, FE-R5-02): aberto pelo
-// interceptor do axios (services/axios.js) quando uma das cinco rotas de
-// custo responde 409 com email_verification_required. Fechar sem verificar
-// não bloqueia nada — o usuário volta a navegar normalmente.
 const { t } = useI18n();
 const emailVerificationStore = useEmailVerificationStore();
 

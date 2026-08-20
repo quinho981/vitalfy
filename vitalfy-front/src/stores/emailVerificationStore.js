@@ -2,10 +2,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import api from '@/services/axios'
 
-// R5 (ai-vitalfy/action-plans/R5.md): estado compartilhado pelo banner
-// (FE-R5-01, sempre visível para conta não verificada) e pelo modal
-// (FE-R5-02, aberto pelo interceptor do axios quando uma das cinco rotas de
-// custo responde 409 com email_verification_required).
 const COOLDOWN_MS = 60_000
 const COOLDOWN_STORAGE_KEY = 'email_verification_resend_available_at'
 
@@ -67,10 +63,6 @@ export const useEmailVerificationStore = defineStore('emailVerification', () => 
             sent.value = true
             startCooldown(Date.now() + COOLDOWN_MS)
         } catch (error) {
-            // 429 vem do throttle do backend (defesa em profundidade caso o
-            // cronômetro do front seja contornado, ex.: chamada direta à API
-            // ou múltiplas abas). Honra o Retry-After em vez de deixar o
-            // botão liberado sem efeito.
             const retryAfterSeconds = Number(error?.response?.headers?.['retry-after'])
             if (error?.response?.status === 429) {
                 startCooldown(Date.now() + (retryAfterSeconds > 0 ? retryAfterSeconds * 1000 : COOLDOWN_MS))

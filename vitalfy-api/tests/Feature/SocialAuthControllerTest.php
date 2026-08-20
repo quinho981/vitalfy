@@ -14,12 +14,6 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Tests\TestCase;
 
-/**
- * R5 (ai-vitalfy/action-plans/backend/R5.md, BE-R5-02): o Google já verifica
- * a posse do e-mail antes de devolver o callback — pedir para o usuário
- * verificar de novo é atrito redundante, e sem esta correção o corte de
- * BE-R5-04 criaria uma barreira nova para todo cadastro social.
- */
 class SocialAuthControllerTest extends TestCase
 {
     use RefreshDatabase;

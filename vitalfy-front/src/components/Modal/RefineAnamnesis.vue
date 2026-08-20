@@ -221,9 +221,6 @@ const applyRefinement = async () => {
         step.value = 'review'
     } catch (error) {
         const REQUIRES_PRO = error.response?.data?.requires_pro
-        // R5 (ai-vitalfy/action-plans/frontend/R5.md, FE-R5-02): o
-        // interceptor global já abriu o modal de verificação de e-mail —
-        // não duplicar com um toast genérico de "tente novamente".
         const REQUIRES_EMAIL_VERIFICATION = error.response?.data?.email_verification_required
 
         if (REQUIRES_PRO) {

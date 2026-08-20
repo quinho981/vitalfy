@@ -10,7 +10,7 @@ use LucianoTonet\GroqLaravel\Facades\Groq;
 
 class DocumentService
 {
-    protected const MODEL_NAME = 'openai/gpt-oss-120b';
+    protected const MODEL_NAME = 'openai/gpt-oss-20b';
 
     public function createDocumentAndDispatchInsights(array $request): Document
     {
@@ -48,7 +48,13 @@ class DocumentService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => 'Utilize terminologia médica formal. Não invente informações. Limite-se a analise assistiva com base no contexto fornecido. Se não houver informações suficientes, indique que não é possível gerar uma resposta precisa.'
+                    'content' => 'Utilize terminologia médica formal. Limite-se a analise assistiva com base no contexto fornecido. 
+                    Se não houver informações suficientes, indique que não é possível gerar uma resposta precisa.
+                    Não invete informações. Não forneça informações que não estejam no contexto fornecido.
+                    Não dê conselhos médicos. Não forneça diagnósticos. Não forneça recomendações de tratamento.
+                    Não dê orientações de saúde. Não forneça conduta e plano de terapêutico que não estejam no contexto fornecido.
+                    Não invente resposta com base em conhecimento implicito. Não use emojis. Não use simbolos como (•) e etc, somente em lista, se necessário.
+                    Evite o uso de latim, somente em casso de termos médicos.'
                 ],
                 [
                     'role' => 'user',

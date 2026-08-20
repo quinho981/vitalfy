@@ -36,10 +36,6 @@ import { MailWarning } from 'lucide-vue-next';
 import { useUserStore } from '@/stores/userStore';
 import { useEmailVerificationStore } from '@/stores/emailVerificationStore';
 
-// R5 (ai-vitalfy/action-plans/frontend/R5.md, FE-R5-01): aviso ambiente, sem
-// bloquear nada — quem interrompe a ação é o modal (FE-R5-02). Dispensável
-// na sessão atual, mas volta a aparecer no próximo login (não é possível
-// desligar de vez, senão o aviso perde a função).
 const DISMISS_KEY = 'email_verification_banner_dismissed';
 
 const { t } = useI18n();
