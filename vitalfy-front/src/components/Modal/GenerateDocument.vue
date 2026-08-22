@@ -198,10 +198,6 @@ const generateClinicalDocument = async () => {
         const response = await AnamneseService.generator(payload);
         disableUnloadWarning()
 
-        // SH-R19-01: o front descobre o modo pelo status code da própria
-        // resposta. 202 (assíncrono) delega o acompanhamento a quem
-        // renderiza este modal (History.vue) via 'generation-started' — o
-        // `finally` abaixo já fecha o modal nos dois casos.
         if (response.status === 202) {
             emit('generation-started', transcript_id)
             return
@@ -211,10 +207,10 @@ const generateClinicalDocument = async () => {
         redirectTo(transcript_id)
     } catch (error) {
         disableUnloadWarning()
-        // FE-R19-01: AnamneseService.generator() agora relança de verdade —
-        // uma falha do Groq chega aqui em vez de terminar em toast de
-        // sucesso falso (o `catch` já existia, mas nunca era alcançado).
-        showError(t('notifications.titles.error'), t('notifications.messages.generateClinicalDocumentError'), 6000)
+        
+        if (!error.response?.data?.email_verification_required) {
+            showError(t('notifications.titles.error'), t('notifications.messages.generateClinicalDocumentError'), 6000)
+        }
     } finally {
         loadingFinish.value = false;
         emit('update:visible', false)

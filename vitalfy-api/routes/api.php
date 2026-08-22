@@ -36,7 +36,7 @@ Route::middleware([
 ])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/email/resend-verification', [EmailVerificationController::class, 'resend'])
-        ->middleware('throttle:6,1');
+        ->middleware('throttle:1,1');
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
     Route::get('/tokens', [AuthController::class, 'tokens']);
@@ -48,10 +48,12 @@ Route::middleware([
     });
     
     Route::prefix('documents')->group(function () {
-        Route::post('/generate', [DocumentController::class, 'generate']);
+        Route::post('/generate', [DocumentController::class, 'generate'])
+            ->middleware('verified');
         Route::post('/refine', [DocumentController::class, 'refine'])
-            ->middleware('check.subscription');
-        Route::post('/{document}/regenerate-insights', [DocumentController::class, 'regenerateInsights']);
+            ->middleware(['check.subscription', 'verified']);
+        Route::post('/{document}/regenerate-insights', [DocumentController::class, 'regenerateInsights'])
+            ->middleware('verified');
         Route::put('/{document}', [DocumentController::class, 'update']);
         Route::get('/{document}/pdf', [DocumentController::class, 'generatePdf']);
         Route::get('/{document}/insights', [DocumentController::class, 'insights']);
@@ -62,16 +64,12 @@ Route::middleware([
         Route::middleware([
             'free.transcript.limit',
             'throttle:transcripts',
-            // BE-R1-04 (ai-vitalfy/action-plans/backend/R1.md): concorrência,
-            // não taxa — impede o mesmo usuário de empilhar processamentos e
-            // esgotar o pool php-fpm compartilhado.
             'no.concurrent.transcript',
+            'verified',
         ])->group(function () {
             Route::post('/', [TranscriptController::class, 'store']);
             Route::post('/generate-document', [TranscriptController::class, 'storeAndGenerateDocument']);
         });
-        // BE-R1-07: fora do grupo de lock acima — consultar status não deve
-        // esperar nem disputar o lock de um processamento em andamento.
         Route::get('/{transcript}/status', [TranscriptController::class, 'status']);
         Route::get('/user/filter', [TranscriptController::class, 'filterUserTranscripts']);
         Route::put('/{transcript}', [TranscriptController::class, 'update']);

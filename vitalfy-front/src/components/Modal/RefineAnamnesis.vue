@@ -221,10 +221,11 @@ const applyRefinement = async () => {
         step.value = 'review'
     } catch (error) {
         const REQUIRES_PRO = error.response?.data?.requires_pro
+        const REQUIRES_EMAIL_VERIFICATION = error.response?.data?.email_verification_required
 
         if (REQUIRES_PRO) {
             showSignatureModal.value = true
-        } else {
+        } else if (!REQUIRES_EMAIL_VERIFICATION) {
             showError(t('notifications.titles.error'), 'Problema ao refinar anamnese. Tente novamente!', 3000)
         }
     } finally {

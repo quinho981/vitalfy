@@ -37,6 +37,13 @@ class SocialAuthController extends Controller
                     'avatar'    => $googleUser->getAvatar(),
                 ]);
             }
+
+            // O Google já confirmou a posse deste e-mail — conta que existia
+            // sem verificar (cadastro por senha) não precisa mais verificar.
+            if (! $user->hasVerifiedEmail()) {
+                $user->email_verified_at = now();
+                $user->save();
+            }
         } else {
             $user = User::create([
                 'name'      => $googleUser->getName(),
@@ -45,6 +52,10 @@ class SocialAuthController extends Controller
                 'avatar'    => $googleUser->getAvatar(),
                 'password'  => Hash::make(Str::random(32)),
             ]);
+
+            // O Google já verificou este e-mail — não faz sentido pedir de novo.
+            $user->email_verified_at = now();
+            $user->save();
 
             $verificationUrl = URL::temporarySignedRoute(
                 'verification.verify',

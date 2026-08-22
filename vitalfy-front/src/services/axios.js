@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import router from '@/router';
+import { useEmailVerificationStore } from '@/stores/emailVerificationStore';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
@@ -22,6 +23,7 @@ api.interceptors.response.use(
     (error) => {
         const STATUS = error?.response?.status;
         const REQUIRES_PRO = error.response?.data?.requires_pro;
+        const REQUIRES_EMAIL_VERIFICATION = error.response?.data?.email_verification_required;
 
         if (STATUS === 401) {
             Cookies.remove('logged_in');
@@ -31,6 +33,10 @@ api.interceptors.response.use(
 
         if (STATUS === 403 && !REQUIRES_PRO) {
             router.push({ name: 'error' });
+        }
+
+        if (STATUS === 409 && REQUIRES_EMAIL_VERIFICATION) {
+            useEmailVerificationStore().openModal();
         }
 
         return Promise.reject(error);

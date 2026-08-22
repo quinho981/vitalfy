@@ -19,6 +19,11 @@ export const useUserStore = defineStore('user', () => {
     const remaining = ref(null)
     const recordingTourCompleted = ref(localStorage.getItem('recording_tour_completed') === 'true')
 
+    // R5 (ai-vitalfy/action-plans/R5.md): estado em memória, sempre vindo do
+    // servidor via getUserInfo() — não persiste entre reloads por design, o
+    // mesmo padrão de plan/active acima, para nunca confiar num valor velho.
+    const emailVerified = ref(null)
+
     const getUserInfo = async () => {
         const rememberMe = Cookies.get('remember') === 'true'
         const cookieOpts = rememberMe ? { expires: 30 } : {}
@@ -34,6 +39,7 @@ export const useUserStore = defineStore('user', () => {
             active.value               = response.data.plan.name !== 'Free'
             remaining.value            = response.data.remaining
             recordingTourCompleted.value = response.data.user.recording_tour_completed || false
+            emailVerified.value        = response.data.user.email_verified
 
             Cookies.set('username',   username.value,  cookieOpts)
             Cookies.set('user_email', userEmail.value, cookieOpts)
@@ -66,6 +72,7 @@ export const useUserStore = defineStore('user', () => {
         active.value               = null
         remaining.value            = null
         recordingTourCompleted.value = false
+        emailVerified.value        = null
 
         Cookies.remove('username')
         Cookies.remove('user_email')
@@ -82,6 +89,7 @@ export const useUserStore = defineStore('user', () => {
         active,
         remaining,
         recordingTourCompleted,
+        emailVerified,
         getUserInfo,
         initRemainingFromCache,
         reset,

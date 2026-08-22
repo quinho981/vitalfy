@@ -16,8 +16,13 @@ class SendWelcomeEmailSequence implements ShouldQueue
     {
         $user = $event->user;
 
-        // Email 1: boas-vindas + verificação — URL já gerada no contexto da request
-        Mail::to($user->email)->send(new WelcomeVerificationMail($user->name, $event->verificationUrl));
+        // Email 1: boas-vindas + verificação — só faz sentido para quem ainda
+        // não está verificado. Conta Google já chega verificada (ver
+        // SocialAuthController) e não deve receber um pedido de verificação
+        // redundante do e-mail que o Google já confirmou.
+        if (! $user->hasVerifiedEmail()) {
+            Mail::to($user->email)->send(new WelcomeVerificationMail($user->name, $event->verificationUrl));
+        }
 
         // Email 2: ativação — 24h após o registro
         SendOnboardingDayOneEmail::dispatch($user)
