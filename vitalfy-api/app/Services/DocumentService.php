@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidMedicalAnalysisException;
 use App\Jobs\ProcessGenerateInsightsAI;
 use App\Models\Document;
 use App\Models\DocumentTemplate;
@@ -121,7 +122,45 @@ class DocumentService
     {
         $promptTemplate = config("prompts.ai_insights");
         $insights = $this->llmResponseByTemplate($context, $promptTemplate, true, 'medium');
-        return json_decode($insights, true);
+        $decoded = json_decode($insights, true);
+
+        $this->assertValidMedicalAnalysis($decoded['medical_analysis'] ?? null);
+
+        return $decoded;
+    }
+
+    public function assertValidMedicalAnalysis(mixed $medicalAnalysis): void
+    {
+        if (!is_array($medicalAnalysis)) {
+            throw new InvalidMedicalAnalysisException('medical_analysis ausente ou malformado.');
+        }
+
+        $expectedKeys = [
+            'red_flags',
+            'case_severity',
+            'brief_description',
+            'possible_diagnoses',
+            'suggested_cid_codes',
+            'suggested_exams',
+            'suggested_conducts',
+            'missing_clinical_information',
+        ];
+
+        foreach ($expectedKeys as $key) {
+            if (!array_key_exists($key, $medicalAnalysis) || !is_array($medicalAnalysis[$key])) {
+                throw new InvalidMedicalAnalysisException("Campo \"{$key}\" ausente ou não é um array.");
+            }
+        }
+
+        $allowedSeverities = ['vermelho', 'laranja', 'amarelo', 'verde', 'azul'];
+        $severity = $medicalAnalysis['case_severity'][0] ?? null;
+        $normalizedSeverity = is_string($severity) ? mb_strtolower(trim($severity)) : null;
+
+        if (!in_array($normalizedSeverity, $allowedSeverities, true)) {
+            throw new InvalidMedicalAnalysisException(
+                'case_severity fora do enum esperado: ' . json_encode($severity)
+            );
+        }
     }
 
     public function refineDocument(array $data): string
