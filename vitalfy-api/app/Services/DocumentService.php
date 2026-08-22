@@ -133,11 +133,7 @@ class DocumentService
 
         $promptTemplate = config("prompts.anamnesis_dynamic_refine");
 
-        $prompt = str_replace(
-            ['{instructions}', '{context}'],
-            [$instructions, $data['conversation']],
-            $promptTemplate
-        );
+        $prompt = $this->buildRefinePrompt($data['conversation'], $instructions, $promptTemplate);
 
         $payload = [
             'model' => self::MODEL_NAME,
@@ -158,6 +154,15 @@ class DocumentService
         $response = Groq::chat()->completions()->create($payload);
 
         return $response['choices'][0]['message']['content'];
+    }
+
+    public function buildRefinePrompt(string $conversation, string $instructions, string $template): string
+    {
+        return str_replace(
+            ['{instructions}', '{context}'],
+            [$instructions, $this->delimitUntrustedContext($conversation)],
+            $template
+        );
     }
 
     private function buildRefinementInstructions(array $refinements, ?string $custom): string
