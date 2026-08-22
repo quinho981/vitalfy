@@ -37,32 +37,32 @@ class DocumentService
         return $response;
     }
 
-    public function llmResponseByTemplate(array $context, string $template, bool $forceJsonFormat = false): string
+    public function llmResponseByTemplate(array $context, string $template, bool $forceJsonFormat = false, string $reasoningEffort = 'low'): string
     {
         $context = $this->mergeContextChunks($context);
 
         $prompt = str_replace('{context}', $context, $template);
 
+        if (!$forceJsonFormat) {
+            $prompt = $this->antiHallucinationGuardrails() . "\n\n" . $prompt
+                . "\n\nLembre-se: utilize apenas o que está explícito na transcrição acima. Não invente informações.";
+        }
+
         $payload = [
             'model' => self::MODEL_NAME,
+            'temperature' => 0.2,
+            'top_p' => 0.9,
             'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => 'Utilize terminologia médica formal. Limite-se a analise assistiva com base no contexto fornecido. 
-                    Se não houver informações suficientes, indique que não é possível gerar uma resposta precisa.
-                    Não invete informações. Não forneça informações que não estejam no contexto fornecido.
-                    Não dê conselhos médicos. Não forneça diagnósticos. Não forneça recomendações de tratamento.
-                    Não dê orientações de saúde. Não forneça conduta e plano de terapêutico que não estejam no contexto fornecido.
-                    Não invente resposta com base em conhecimento implicito. Não use emojis. Não use simbolos como (•) e etc.
-                    Evite o uso de latim, somente em casso de termos médicos. Escreva em texto corrido, sem tópicos, se não houver instruções contrarias.
-                    Não invente informações.'
-                ],
                 [
                     'role' => 'user',
                     'content' => $prompt
                 ],
             ],
         ];
+
+        if (str_starts_with(self::MODEL_NAME, 'openai/gpt-oss')) {
+            $payload['reasoning_effort'] = $reasoningEffort;
+        }
 
         if ($forceJsonFormat) {
             $payload['response_format'] = [ 'type' => 'json_object' ];
@@ -78,6 +78,20 @@ class DocumentService
         return $response['choices'][0]['message']['content'];
     }
 
+    private function antiHallucinationGuardrails(): string
+    {
+        return <<<TEXT
+        INSTRUÇÕES OBRIGATÓRIAS — leia com atenção antes de gerar o documento:
+        - Reproduza SOMENTE o que foi dito explicitamente pelo médico e pelo paciente na transcrição abaixo. Você não tem acesso a nenhuma informação além do texto fornecido.
+        - Não invente, complete ou infira exames, medicações, diagnósticos, CIDs, condutas ou orientações que não tenham sido citados literalmente na transcrição.
+        - Se o médico mencionar a necessidade de um exame, procedimento ou encaminhamento SEM citar qual (ex: "vou pedir um exame"), registre apenas que essa necessidade foi mencionada, sem citar nome, tipo ou categoria do exame.
+        - Não utilize conhecimento médico geral para enriquecer, corrigir ou complementar informações ausentes na transcrição.
+        - Não elabore hipóteses diagnósticas, raciocínio clínico próprio ou conclusões que vão além do que foi dito.
+        - Utilize terminologia médica formal, em texto corrido, sem tópicos, símbolos (•) ou emojis, salvo instrução em contrário no modelo abaixo.
+        - Evite o uso de latim, exceto em termos médicos consagrados.
+        TEXT;
+    }
+
     public function mergeContextChunks(array $contextChunks): string
     {
         $mergedContext = '';
@@ -90,7 +104,7 @@ class DocumentService
     public function generateInsightsAI(array $context): array
     {
         $promptTemplate = config("prompts.ai_insights");
-        $insights = $this->llmResponseByTemplate($context, $promptTemplate, true);
+        $insights = $this->llmResponseByTemplate($context, $promptTemplate, true, 'medium');
         return json_decode($insights, true);
     }
 
@@ -109,16 +123,23 @@ class DocumentService
             $promptTemplate
         );
 
-        $response = Groq::chat()->completions()->create([
+        $payload = [
             'model' => self::MODEL_NAME,
             'temperature' => 0.2,
+            'top_p' => 0.9,
             'messages' => [
                 [
                     'role' => 'user',
                     'content' => $prompt
                 ],
             ],
-        ]);
+        ];
+
+        if (str_starts_with(self::MODEL_NAME, 'openai/gpt-oss')) {
+            $payload['reasoning_effort'] = 'low';
+        }
+
+        $response = Groq::chat()->completions()->create($payload);
 
         return $response['choices'][0]['message']['content'];
     }
