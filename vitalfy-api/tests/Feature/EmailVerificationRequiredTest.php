@@ -16,12 +16,6 @@ use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/**
- * R5 (ai-vitalfy/action-plans/backend/R5.md, BE-R5-04): conta não verificada
- * continua navegando o sistema inteiro — só as cinco rotas que geram custo
- * real (Deepgram/Groq) ficam bloqueadas. Ver decisão de escopo em
- * ai-vitalfy/action-plans/R5.md#estratégia.
- */
 class EmailVerificationRequiredTest extends TestCase
 {
     use RefreshDatabase;
@@ -122,8 +116,6 @@ class EmailVerificationRequiredTest extends TestCase
         $this->assertRequiresVerification($this->postJson("/api/documents/{$document->id}/regenerate-insights"));
     }
 
-    // --- navegação e edição do que já existe continuam abertas ---
-
     public function test_usuario_nao_verificado_continua_navegando_o_resto_do_sistema(): void
     {
         $user = User::factory()->unverified()->create();
@@ -136,8 +128,6 @@ class EmailVerificationRequiredTest extends TestCase
         $this->getJson('/api/dashboard/summary')->assertStatus(200);
         $this->getJson('/api/subscription')->assertStatus(200);
     }
-
-    // --- usuário verificado não é afetado por nenhuma das cinco rotas ---
 
     public function test_usuario_verificado_nao_e_bloqueado_em_transcripts(): void
     {
@@ -163,8 +153,6 @@ class EmailVerificationRequiredTest extends TestCase
         $response->assertStatus(200);
         Queue::assertPushed(ProcessGenerateInsightsAI::class);
     }
-
-    // --- GET /user expõe o estado de verificação ---
 
     public function test_get_user_expoe_email_verified_true_para_conta_verificada(): void
     {

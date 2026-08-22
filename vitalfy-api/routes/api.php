@@ -48,9 +48,6 @@ Route::middleware([
     });
     
     Route::prefix('documents')->group(function () {
-        // R5 (ai-vitalfy/action-plans/backend/R5.md, BE-R5-04): estas três
-        // rotas chamam o Groq — custo real — e exigem e-mail verificado.
-        // Navegação/edição do que já existe (abaixo) continua livre.
         Route::post('/generate', [DocumentController::class, 'generate'])
             ->middleware('verified');
         Route::post('/refine', [DocumentController::class, 'refine'])
@@ -67,19 +64,12 @@ Route::middleware([
         Route::middleware([
             'free.transcript.limit',
             'throttle:transcripts',
-            // BE-R1-04 (ai-vitalfy/action-plans/backend/R1.md): concorrência,
-            // não taxa — impede o mesmo usuário de empilhar processamentos e
-            // esgotar o pool php-fpm compartilhado.
             'no.concurrent.transcript',
-            // BE-R5-04 (ai-vitalfy/action-plans/backend/R5.md): chama o
-            // Deepgram — custo real — exige e-mail verificado.
             'verified',
         ])->group(function () {
             Route::post('/', [TranscriptController::class, 'store']);
             Route::post('/generate-document', [TranscriptController::class, 'storeAndGenerateDocument']);
         });
-        // BE-R1-07: fora do grupo de lock acima — consultar status não deve
-        // esperar nem disputar o lock de um processamento em andamento.
         Route::get('/{transcript}/status', [TranscriptController::class, 'status']);
         Route::get('/user/filter', [TranscriptController::class, 'filterUserTranscripts']);
         Route::put('/{transcript}', [TranscriptController::class, 'update']);

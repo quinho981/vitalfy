@@ -53,8 +53,9 @@ class DocumentService
                     Não invete informações. Não forneça informações que não estejam no contexto fornecido.
                     Não dê conselhos médicos. Não forneça diagnósticos. Não forneça recomendações de tratamento.
                     Não dê orientações de saúde. Não forneça conduta e plano de terapêutico que não estejam no contexto fornecido.
-                    Não invente resposta com base em conhecimento implicito. Não use emojis. Não use simbolos como (•) e etc, somente em lista, se necessário.
-                    Evite o uso de latim, somente em casso de termos médicos.'
+                    Não invente resposta com base em conhecimento implicito. Não use emojis. Não use simbolos como (•) e etc.
+                    Evite o uso de latim, somente em casso de termos médicos. Escreva em texto corrido, sem tópicos, se não houver instruções contrarias.
+                    Não invente informações.'
                 ],
                 [
                     'role' => 'user',
