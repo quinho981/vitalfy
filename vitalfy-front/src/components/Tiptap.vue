@@ -98,6 +98,15 @@
 <script setup>
 import { markRaw, onBeforeUnmount, onMounted, ref, shallowRef, watch, computed } from 'vue';
 import { Heading1, Heading2, Heading3, Bold as BoldIcon, Italic as ItalicIcon, List, ListOrdered, Undo, Redo, Sparkles, Save, Loader2, Lock } from 'lucide-vue-next';
+import DOMPurify from 'dompurify';
+
+// FE-R10-01 (ai-vitalfy/risks.md#r10): allowlist espelha
+// DocumentService::sanitizeClinicalHtml() no back-end (BE-R10-03) — mesmo
+// conjunto de tags, sem atributos. Mudar uma lista exige mudar a outra.
+const sanitizeClinicalHtml = (html) => DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'strong', 'em', 'br'],
+    ALLOWED_ATTR: []
+});
 
 const props = defineProps({
     content: {
@@ -160,7 +169,7 @@ const initEditor = async () => {
                 class: 'border border-slate-200 rounded-b-lg p-4 min-h-[21rem] max-h-[37rem] overflow-y-auto outline-none dark:border-gray-700',
             },
         },
-        content: props.content,
+        content: sanitizeClinicalHtml(props.content),
         extensions: [
             Document,
             Paragraph,
@@ -194,7 +203,7 @@ watch(
         const current = editor.value.getHTML();
 
         if (newContent !== current) {
-            editor.value.commands.setContent(newContent, false);
+            editor.value.commands.setContent(sanitizeClinicalHtml(newContent), false);
         }
     }
 );

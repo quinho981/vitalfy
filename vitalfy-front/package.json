@@ -17,6 +17,7 @@
         "@tiptap/vue-3": "^3.0.9",
         "axios": "^1.7.9",
         "chart.js": "3.3.2",
+        "dompurify": "^3.4.14",
         "html2canvas": "^1.4.1",
         "js-cookie": "^3.0.5",
         "jspdf": "^3.0.2",
