@@ -31,6 +31,15 @@ class DocumentController extends Controller
         $this->authorize('update', $document);
 
         $data = $request->all();
+
+        // BE-R10-04 (ai-vitalfy/risks.md#r10): segundo caminho que grava
+        // `result` — edição manual ("Salvar") e aceite de refinamento
+        // ("Salvar Refinamento") — mesma sanitização de BE-R10-03. Só a
+        // chave `result` é tocada; o resto do payload segue intacto.
+        if (array_key_exists('result', $data)) {
+            $data['result'] = $this->documentService->sanitizeClinicalHtml($data['result']);
+        }
+
         $document->update($data);
 
         return $document;
