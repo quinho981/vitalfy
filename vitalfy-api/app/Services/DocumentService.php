@@ -52,7 +52,7 @@ class DocumentService
 
         $payload = [
             'model' => self::MODEL_NAME,
-            'temperature' => 0.2,
+            'temperature' => 0.4,
             'top_p' => 0.9,
             'messages' => [
                 [

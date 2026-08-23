@@ -7,6 +7,7 @@ use App\Services\DocumentService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ProcessGenerateInsightsAI implements ShouldQueue
 {
@@ -54,5 +55,21 @@ class ProcessGenerateInsightsAI implements ShouldQueue
                 'description' => $medicalAnalysis['brief_description'][0] ?? null
             ]);
         }
+    }
+
+    public function failed(?Throwable $exception): void
+    {
+        $document = Document::find($this->documentId);
+
+        if (! $document || $document->ai_insights) {
+            return;
+        }
+
+        Log::error('insights.pipeline.failed', [
+            'document_id' => $this->documentId,
+            'exception' => $exception?->getMessage(),
+        ]);
+
+        $document->update(['insights_failed_at' => now()]);
     }
 }

@@ -23,6 +23,11 @@ class Document extends Model
         'patient',
         'result',
         'feedback',
+        'insights_failed_at',
+    ];
+
+    protected $casts = [
+        'insights_failed_at' => 'datetime',
     ];
 
     public function transcript(): BelongsTo 

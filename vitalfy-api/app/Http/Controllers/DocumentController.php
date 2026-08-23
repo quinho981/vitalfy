@@ -91,6 +91,8 @@ class DocumentController extends Controller
 
         $conversation = $document->transcript->conversation;
 
+        $document->update(['insights_failed_at' => null]);
+
         ProcessGenerateInsightsAI::dispatch($document->id, $conversation);
 
         return response()->json([
@@ -125,6 +127,13 @@ class DocumentController extends Controller
         // O front distingue esse estado do "pronto" para saber quando parar
         // de perguntar (ver FE-R2-03).
         if (! $insights) {
+            if ($documentModel->insights_failed_at) {
+                return response()->json([
+                    'failed' => true,
+                    'failure_reason' => 'Não foi possível gerar os insights automaticamente.',
+                ]);
+            }
+
             return response()->noContent();
         }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\ProcessGenerateInsightsAI;
 use App\Models\Document;
 use App\Models\DocumentTemplate;
 use App\Models\DocumentTemplateCategory;
@@ -9,6 +10,7 @@ use App\Models\Transcript;
 use App\Models\TranscriptType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -127,6 +129,44 @@ class DocumentInsightsTest extends TestCase
             'suggested_conducts' => ['conduta'],
             'missing_clinical_information' => ['nada'],
         ]);
+    }
+
+    public function test_dono_com_job_falho_responde_200_com_failed_true(): void
+    {
+        $owner = User::factory()->create();
+        $document = $this->createDocumentFor($owner);
+        $document->update(['insights_failed_at' => now()]);
+
+        Sanctum::actingAs($owner);
+
+        $response = $this->getJson("/api/documents/{$document->id}/insights");
+
+        $response->assertStatus(200);
+        $response->assertExactJson([
+            'failed' => true,
+            'failure_reason' => 'Não foi possível gerar os insights automaticamente.',
+        ]);
+    }
+
+    public function test_regenerate_insights_limpa_o_sinal_de_falha_anterior(): void
+    {
+        Queue::fake([ProcessGenerateInsightsAI::class]);
+
+        $owner = User::factory()->create();
+        $document = $this->createDocumentFor($owner);
+        $document->update(['insights_failed_at' => now()]);
+
+        Sanctum::actingAs($owner);
+
+        $this->postJson("/api/documents/{$document->id}/regenerate-insights")
+            ->assertStatus(200);
+
+        Queue::assertPushed(ProcessGenerateInsightsAI::class, 1);
+
+        $this->assertNull($document->fresh()->insights_failed_at);
+
+        $response = $this->getJson("/api/documents/{$document->id}/insights");
+        $response->assertStatus(204);
     }
 
     public function test_insights_continuam_disponiveis_apos_expirar_a_janela_de_cache_do_sse(): void

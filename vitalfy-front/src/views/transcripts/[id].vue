@@ -282,7 +282,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="loadingTranscript || !hasMedicalInsights">
+                        <div v-if="!loadingTranscript && insightsFailed && !hasMedicalInsights" class="flex flex-col items-center gap-2 py-4 text-center">
+                            <TriangleAlert :size="20" class="text-orange-500" />
+                            <p class="text-sm text-gray-500">Não foi possível gerar os insights automaticamente. Tente recarregar.</p>
+                        </div>
+                        <div v-else-if="loadingTranscript || !hasMedicalInsights">
                             <SkeletonLoadingInsights />
                         </div>
                         <p class="text-xs text-gray-400 mx-auto mt-2">Esta análise é assistiva e não substitui avaliação médica.</p>
@@ -309,7 +313,7 @@
 
 <script setup>
 import { defineAsyncComponent, ref, watch, onMounted } from 'vue';
-import { User, Calendar, Clock, Share2, Download, BrainCircuit, LayoutTemplate, Loader2, Copy, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-vue-next';
+import { User, Calendar, Clock, Share2, Download, BrainCircuit, LayoutTemplate, Loader2, Copy, RefreshCw, ThumbsUp, ThumbsDown, TriangleAlert } from 'lucide-vue-next';
 import { TranscriptsService } from '@/service/TranscriptsService';
 import { AnamneseService } from '@/service/AnamneseService';
 import { useDocumentInsights } from '@/composables/useDocumentInsights';

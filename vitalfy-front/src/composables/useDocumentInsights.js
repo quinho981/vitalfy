@@ -71,6 +71,12 @@ export function useDocumentInsights() {
             const response = await AnamneseService.getInsights(polledDocumentId);
 
             if (response.status === 200) {
+                if (response.data?.failed) {
+                    insightsFailed.value = true;
+                    stopPolling();
+                    return;
+                }
+
                 applyInsights(response.data);
                 stopPolling();
                 return;
