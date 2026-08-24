@@ -6,6 +6,8 @@ use App\Exceptions\InvalidMedicalAnalysisException;
 use App\Jobs\ProcessGenerateInsightsAI;
 use App\Models\Document;
 use App\Models\DocumentTemplate;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 use Illuminate\Support\Facades\Log;
 use LucianoTonet\GroqLaravel\Facades\Groq;
 
@@ -21,13 +23,29 @@ class DocumentService
         $document = Document::create([
             'document_template_id' => $request['template'],
             'patient' => $request['patient'],
-            'result' => $documentContent,
+            'result' => $this->sanitizeClinicalHtml($documentContent),
             'transcript_id' => $request['transcript_id']
         ]);
 
         ProcessGenerateInsightsAI::dispatch($document->id, $request['conversation']);
 
         return $document;
+    }
+
+    /**
+     * BE-R10-03 (ai-vitalfy/risks.md#r10): único ponto de defesa contra o
+     * caminho de PDF (Browsershot), que nunca passa pelo nginx-proxy — CSP e
+     * headers HTTP não alcançam esse caminho. Allowlist espelha o schema do
+     * Tiptap (front) e a extensão FE-R10-01 do DOMPurify — nenhum atributo
+     * permitido, então não há URI a validar.
+     */
+    public function sanitizeClinicalHtml(string $html): string
+    {
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('HTML.Allowed', 'h1,h2,h3,p,ul,ol,li,strong,em,br');
+        $config->set('Cache.SerializerPath', sys_get_temp_dir());
+
+        return (new HTMLPurifier($config))->purify($html);
     }
 
     public function generateLlmDocument(array $context, int $templateId): string
