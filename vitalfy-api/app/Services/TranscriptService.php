@@ -409,7 +409,10 @@ class TranscriptService
         $endOfMonth = now()->endOfMonth();
 
         // ->completed(): ver nota de cota em enqueueGenerateDocument().
-        $usedTranscripts = Transcript::fromUserBetweenDates($userId, $startOfMonth, $endOfMonth)->completed()->count();
+        // ->withTrashed(): apagar uma transcrição completed não devolve a
+        // cota — o trabalho já foi pago (ver mesma nota em
+        // CheckTranscriptLimit).
+        $usedTranscripts = Transcript::fromUserBetweenDates($userId, $startOfMonth, $endOfMonth)->completed()->withTrashed()->count();
 
         return PlanLimits::FREE_MONTHLY_TRANSCRIPTS - $usedTranscripts;
     }

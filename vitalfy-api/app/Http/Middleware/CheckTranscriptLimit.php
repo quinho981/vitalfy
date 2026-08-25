@@ -28,7 +28,9 @@ class CheckTranscriptLimit
         // ->completed(): cota é debitada na conclusão, não no envio — ver
         // decisão de cota em ai-vitalfy/action-plans/shared/R1.md#sh-r1-01.
         // Processamento em curso ou que falhou não consome a cota do usuário.
-        $monthlyTranscriptCount = Transcript::fromUserBetweenDates($user->id, $currentMonthStart, $currentMonthEnd)->completed()->count();
+        // ->withTrashed(): o trabalho (Deepgram/Groq) já foi pago quando a
+        // transcrição chegou a completed — apagar depois não devolve cota.
+        $monthlyTranscriptCount = Transcript::fromUserBetweenDates($user->id, $currentMonthStart, $currentMonthEnd)->completed()->withTrashed()->count();
 
         if ($monthlyTranscriptCount >= PlanLimits::FREE_MONTHLY_TRANSCRIPTS) {
             return response()->json([

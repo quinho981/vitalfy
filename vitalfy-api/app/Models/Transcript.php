@@ -66,6 +66,10 @@ class Transcript extends Model
      * aplicado a `fromUserBetweenDates` diretamente: esse scope também
      * alimenta dashboard e e-mail de lembrete, que devem contar toda a
      * atividade, não só o que terminou com sucesso.
+     *
+     * Nos dois pontos que decidem/calculam cota, sempre combinado com
+     * `withTrashed()` (R11, ai-vitalfy/risks.md): apagar uma transcrição
+     * completed não devolve a cota — o trabalho (Deepgram/Groq) já foi pago.
      */
     public function scopeCompleted(Builder $query): Builder
     {

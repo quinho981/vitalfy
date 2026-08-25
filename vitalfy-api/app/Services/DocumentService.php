@@ -103,7 +103,7 @@ class DocumentService
         return <<<TEXT
         INSTRUÇÕES OBRIGATÓRIAS — leia com atenção antes de gerar o documento:
         - Reproduza SOMENTE o que foi dito explicitamente pelo médico e pelo paciente na transcrição abaixo. Você não tem acesso a nenhuma informação além do texto fornecido.
-        - Não invente, complete ou infira exames, medicações, diagnósticos, CIDs, condutas ou orientações que não tenham sido citados literalmente na transcrição.
+        - Não invente, complete ou infira exames, medicações, diagnósticos, condutas ou orientações que não tenham sido citados literalmente na transcrição.
         - Se o médico mencionar a necessidade de um exame, procedimento ou encaminhamento SEM citar qual (ex: "vou pedir um exame"), registre apenas que essa necessidade foi mencionada, sem citar nome, tipo ou categoria do exame.
         - Não utilize conhecimento médico geral para corrigir ou complementar informações ausentes na transcrição.
         - Não elabore hipóteses diagnósticas, raciocínio clínico próprio ou conclusões que vão além do que foi dito.
