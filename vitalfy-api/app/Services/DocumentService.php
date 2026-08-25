@@ -105,7 +105,7 @@ class DocumentService
         - Reproduza SOMENTE o que foi dito explicitamente pelo médico e pelo paciente na transcrição abaixo. Você não tem acesso a nenhuma informação além do texto fornecido.
         - Não invente, complete ou infira exames, medicações, diagnósticos, CIDs, condutas ou orientações que não tenham sido citados literalmente na transcrição.
         - Se o médico mencionar a necessidade de um exame, procedimento ou encaminhamento SEM citar qual (ex: "vou pedir um exame"), registre apenas que essa necessidade foi mencionada, sem citar nome, tipo ou categoria do exame.
-        - Não utilize conhecimento médico geral para enriquecer, corrigir ou complementar informações ausentes na transcrição.
+        - Não utilize conhecimento médico geral para corrigir ou complementar informações ausentes na transcrição.
         - Não elabore hipóteses diagnósticas, raciocínio clínico próprio ou conclusões que vão além do que foi dito.
         - Utilize terminologia médica formal, em texto corrido, sem tópicos, símbolos (•) ou emojis, salvo instrução em contrário no modelo abaixo.
         - Evite o uso de latim, exceto em termos médicos consagrados.
