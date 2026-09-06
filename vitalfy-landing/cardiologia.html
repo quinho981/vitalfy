@@ -82,49 +82,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            base:     'rgb(var(--c-base) / <alpha-value>)',
-            raised:   'rgb(var(--c-raised) / <alpha-value>)',
-            elev:     'rgb(var(--c-elev) / <alpha-value>)',
-            panel:    'rgb(var(--c-panel) / <alpha-value>)',
-            surface:  'rgb(var(--c-surface) / <alpha-value>)',
-            surface2: 'rgb(var(--c-surface2) / <alpha-value>)',
-            ink:      'rgb(var(--c-ink) / <alpha-value>)',
-            muted:    'rgb(var(--c-muted) / <alpha-value>)',
-            dim:      'rgb(var(--c-dim) / <alpha-value>)',
-            faint:    'rgb(var(--c-faint) / <alpha-value>)',
-            accent:   'rgb(var(--c-accent) / <alpha-value>)',
-            'accent-deep': 'rgb(var(--c-accent-deep) / <alpha-value>)',
-            health:   'rgb(var(--c-health) / <alpha-value>)',
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-          },
-          letterSpacing: {
-            tightest: '-0.04em',
-          },
-        }
-      }
-    }
-  </script>
+
+    <link rel="stylesheet" href="assets/css/tailwind.css" />
 
   <script>
-    // Apply theme before paint to avoid flash. Dark is the default.
-    (function () {
-      try {
-        var saved = localStorage.getItem('vitalfy-theme');
-        if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
-        else if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
-          document.documentElement.setAttribute('data-theme', 'light');
-      } catch (e) {}
-    })();
-  </script>
+// Apply theme before paint to avoid flash. Dark is the default.
+// CSP hash (BE-R13-02): recalculate sha256 in vitalfy.conf if this block changes.
+(function () {
+  try {
+    var saved = localStorage.getItem('vitalfy-theme');
+    if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
+      document.documentElement.setAttribute('data-theme', 'light');
+  } catch (e) {}
+})();
+</script>
 
   <style>
     :root {
@@ -917,73 +889,9 @@
     </div>
   </footer>
 
-  <!-- Lucide -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <script>
-    // Theme toggle
-    const root = document.documentElement;
-    const themeBtn = document.getElementById('theme-btn');
-    const syncPressed = () => themeBtn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'light'));
-    syncPressed();
-    themeBtn.addEventListener('click', () => {
-      const isLight = root.getAttribute('data-theme') === 'light';
-      if (isLight) root.removeAttribute('data-theme'); else root.setAttribute('data-theme', 'light');
-      try { localStorage.setItem('vitalfy-theme', isLight ? 'dark' : 'light'); } catch (e) {}
-      syncPressed();
-    });
+  <!-- Lucide (vendored, pinned 1.41.0) -->
+    <script src="assets/js/lucide.js" defer></script>
+    <script src="assets/js/landing.js" defer></script>
 
-    // Icons
-    lucide.createIcons();
-
-    // Nav scroll state
-    const navInner = document.getElementById('nav-inner');
-    const onScroll = () => {
-      if (window.scrollY > 16) {
-        navInner.classList.add('glass', 'shadow-lg', 'shadow-black/30');
-      } else {
-        navInner.classList.remove('glass', 'shadow-lg', 'shadow-black/30');
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    // Mobile menu
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('hidden') === false;
-      menuBtn.setAttribute('aria-expanded', String(open));
-    });
-    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      menuBtn.setAttribute('aria-expanded', 'false');
-    }));
-
-    // Reveal on scroll (Framer-Motion-style whileInView)
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    // Demo tabs
-    const tabs = document.querySelectorAll('.demo-tab');
-    const panels = document.querySelectorAll('.demo-panel');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => {
-          t.classList.remove('border-accent', 'text-ink');
-          t.classList.add('border-transparent', 'text-dim');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('border-accent', 'text-ink');
-        tab.classList.remove('border-transparent', 'text-dim');
-        tab.setAttribute('aria-selected', 'true');
-        const target = tab.dataset.tab;
-        panels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
-      });
-    });
-  </script>
 </body>
 </html>
