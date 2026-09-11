@@ -65,8 +65,11 @@ class ClinicalFactsExtractor
     /**
      * Serialização determinística das seções, na ordem do array — dois
      * documentos do mesmo template precisam produzir o mesmo prompt.
+     * Público pelo mesmo motivo de DocumentService::buildTemplatePayload():
+     * é o ponto de teste puro (BE-R23-09, ClinicalFactsPromptTest), sem
+     * tocar config() nem rede.
      */
-    private function serializeSections(array $sections): string
+    public function serializeSections(array $sections): string
     {
         $lines = [];
 
