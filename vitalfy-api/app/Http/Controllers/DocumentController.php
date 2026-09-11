@@ -161,9 +161,26 @@ class DocumentController extends Controller
         ]);
     }
 
+    /**
+     * BE-R23-08 (ai-vitalfy/action-plans/backend/R23.md): document_id é
+     * opcional durante a janela de convivência com FE-R23-01 (front antigo
+     * em produção ainda não o envia). Presente, resolve o Document,
+     * autoriza por posse (fecha de passagem R25) e carrega os fatos
+     * validados da transcrição para servirem de envelope do refino.
+     */
     public function refine(Request $request): JsonResponse
     {
-        $refined = $this->documentService->refineDocument($request->all());
+        $data = $request->all();
+
+        $documentId = $request->input('document_id');
+
+        if ($documentId !== null) {
+            $document = Document::findOrFail($documentId);
+            $this->authorize('update', $document);
+            $data['clinical_facts'] = $document->transcript?->clinical_facts;
+        }
+
+        $refined = $this->documentService->refineDocument($data);
 
         return response()->json([
             'content' => $refined

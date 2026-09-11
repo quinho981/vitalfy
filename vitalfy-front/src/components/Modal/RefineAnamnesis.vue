@@ -211,7 +211,12 @@ const applyRefinement = async () => {
             ? customInstruction.value
             : null,
         patient: props.patientName,
-        conversation: props.content
+        conversation: props.content,
+        // FE-R23-01 (ai-vitalfy/action-plans/frontend/R23.md): sem isto o
+        // back não tem como localizar transcripts.clinical_facts nem
+        // autorizar por posse (BE-R23-08). Back ainda sem esse código trata
+        // o campo como ignorado, então isto pode ir a produção antes dele.
+        document_id: props.documentId
     };
 
     try {
