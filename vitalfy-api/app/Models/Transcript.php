@@ -22,6 +22,7 @@ class Transcript extends Model
         'user_id',
         'patient',
         'conversation',
+        'clinical_facts',
         'end_conversation_time',
         'transcript_type_id',
         'file_size',
@@ -33,9 +34,18 @@ class Transcript extends Model
 
     protected $casts = [
         'conversation' => 'array',
+        'clinical_facts' => 'array',
         'file_size' => 'integer',
         'status' => TranscriptStatusEnum::class,
     ];
+
+    /**
+     * BE-R23-03 (ai-vitalfy/action-plans/backend/R23.md): clinical_facts e
+     * contrato interno, nunca exposto pela API -- PUT /transcripts/{id}
+     * (TranscriptController::update()) devolve o model inteiro, e sem isto
+     * vazaria fatos clinicos no corpo da resposta.
+     */
+    protected $hidden = ['clinical_facts'];
 
     public function user(): BelongsTo 
     {

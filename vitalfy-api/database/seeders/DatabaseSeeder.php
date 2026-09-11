@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DocumentTemplateCategorySeeder::class,
             DocumentTemplateSeeder::class,
+            DocumentTemplateSectionsSeeder::class,
             TranscriptTypesSeeder::class,
         ]);
     }

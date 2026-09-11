@@ -136,9 +136,10 @@ class DocumentService
         string $template,
         bool $forceJsonFormat = false,
         string $reasoningEffort = 'low',
-        ?string $systemInstructions = null
+        ?string $systemInstructions = null,
+        float $temperature = 0.4
     ): string {
-        $payload = $this->buildTemplatePayload($context, $template, $forceJsonFormat, $reasoningEffort, $systemInstructions);
+        $payload = $this->buildTemplatePayload($context, $template, $forceJsonFormat, $reasoningEffort, $systemInstructions, $temperature);
 
         try {
             $response = Groq::chat()->completions()->create($payload);
@@ -160,7 +161,8 @@ class DocumentService
         string $template,
         bool $forceJsonFormat = false,
         string $reasoningEffort = 'low',
-        ?string $systemInstructions = null
+        ?string $systemInstructions = null,
+        float $temperature = 0.4
     ): array {
         $context = $this->mergeContextChunks($context);
 
@@ -195,7 +197,7 @@ class DocumentService
 
         $payload = [
             'model' => self::MODEL_NAME,
-            'temperature' => 0.4,
+            'temperature' => $temperature,
             'top_p' => 0.9,
             'messages' => $messages,
         ];

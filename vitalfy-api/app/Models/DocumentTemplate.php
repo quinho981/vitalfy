@@ -17,8 +17,22 @@ class DocumentTemplate extends Model
         'name',
         'category_id',
         'content',
-        'description'
+        'description',
+        'sections',
     ];
+
+    protected $casts = [
+        'sections' => 'array',
+    ];
+
+    /**
+     * BE-R23-03 (ai-vitalfy/action-plans/backend/R23.md): sections e o
+     * contrato interno de montagem do documento -- GET /templates
+     * (DocumentTemplateController::index()) devolve o model inteiro, e sem
+     * isto vazaria a estrutura de 55 documentos para qualquer usuario
+     * autenticado.
+     */
+    protected $hidden = ['sections'];
 
     public function documents(): HasMany
     {

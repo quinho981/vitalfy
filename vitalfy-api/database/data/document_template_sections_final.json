@@ -1,0 +1,4196 @@
+[
+  {
+    "template_id": 1,
+    "template_name": "Alergia e Imunologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Descrever início dos sintomas, evolução, frequência, duração e recorrência",
+          "Relacionar com possíveis gatilhos (alimentos, medicamentos, poeira, ácaros, pólen, animais, picadas de inseto, frio, calor, exercício, etc.)"
+        ]
+      },
+      {
+        "key": "tipo_de_reacao_alergica",
+        "label": "Tipo de Reação Alérgica",
+        "render": "prose",
+        "hints": [
+          "Exemplo: urticária, angioedema, rinite alérgica, asma, dermatite atópica, anafilaxia",
+          "Descrever manifestações como prurido, vermelhidão, inchaço, falta de ar, tosse, chiado, congestão nasal, lacrimejamento"
+        ]
+      },
+      {
+        "key": "tempo_de_inicio_da_reacao",
+        "label": "Tempo de Início da Reação",
+        "render": "prose",
+        "hints": [
+          "Imediata (minutos a horas) ou tardia (horas a dias após exposição)"
+        ]
+      },
+      {
+        "key": "fatores_desencadeantes",
+        "label": "Fatores Desencadeantes (Gatilhos)",
+        "render": "prose",
+        "hints": [
+          "Identificar possíveis agentes associados às crises"
+        ]
+      },
+      {
+        "key": "historico_alergico_pessoal",
+        "label": "Histórico Alérgico Pessoal",
+        "render": "prose",
+        "hints": [
+          "Alergias conhecidas (medicamentos, alimentos, ambientais)",
+          "Episódios prévios",
+          "Internações ou reações graves (ex: anafilaxia)"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_familiar_de_alergias_ou_doencas_imunologicas",
+        "label": "Histórico Familiar de Alergias ou Doenças Imunológicas",
+        "render": "prose",
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "doencas_associadas",
+        "label": "Doenças Associadas",
+        "render": "prose",
+        "hints": [
+          "Exemplo: asma, rinite, dermatite atópica, doenças autoimunes"
+        ]
+      },
+      {
+        "key": "medicacoes_em_uso",
+        "label": "Medicações em Uso",
+        "render": "prose",
+        "hints": [
+          "Antialérgicos, corticoides, imunossupressores, broncodilatadores, entre outros"
+        ],
+        "status_enum": [
+          "em_uso",
+          "prescrito",
+          "suspenso",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "exposicao_ambiental",
+        "label": "Exposição Ambiental",
+        "render": "prose",
+        "hints": [
+          "Contato com poeira, mofo, animais, poluentes, ambientes fechados ou úmidos"
+        ]
+      },
+      {
+        "key": "exames_realizados_ou_sugeridos",
+        "label": "Exames Realizados ou Sugeridos",
+        "render": "prose",
+        "hints": [
+          "Exemplo: teste cutâneo (prick test), IgE específica, exames laboratoriais, espirometria"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "suspeita_diagnostica",
+        "label": "Suspeita Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose",
+        "hints": [
+          "Exemplo: evitar gatilhos, uso de medicamentos, imunoterapia, acompanhamento especializado"
+        ]
+      },
+      {
+        "key": "orientacoes_ao_paciente",
+        "label": "Orientações ao Paciente",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 2,
+    "template_name": "Anestesiologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica",
+        "label": "História Clínica",
+        "render": "prose",
+        "hints": [
+          "Motivo do procedimento",
+          "Comorbidades relevantes",
+          "Histórico anestésico prévio"
+        ]
+      },
+      {
+        "key": "medicacoes_em_uso",
+        "label": "Medicações em Uso",
+        "render": "prose",
+        "status_enum": [
+          "em_uso",
+          "prescrito",
+          "suspenso",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "alergias",
+        "label": "Alergias",
+        "render": "prose",
+        "status_enum": [
+          "relatada",
+          "negada"
+        ]
+      },
+      {
+        "key": "avaliacao_pre_anestesica",
+        "label": "Avaliação Pré-Anestésica",
+        "render": "prose",
+        "hints": [
+          "Risco cirúrgico",
+          "Via aérea",
+          "Intercorrências relevantes"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "suspeita_diagnostica",
+        "label": "Suspeita Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 3,
+    "template_name": "Angiologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor",
+          "Edema",
+          "Varizes",
+          "Claudicação",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_vascular_relevante",
+        "label": "Histórico Vascular Relevante",
+        "render": "prose",
+        "hints": [
+          "Trombose",
+          "Insuficiência venosa",
+          "Cirurgias vasculares"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "fatores_de_risco",
+        "label": "Fatores de Risco",
+        "render": "prose",
+        "hints": [
+          "Tabagismo",
+          "Diabetes",
+          "Hipertensão",
+          "Sedentarismo"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 4,
+    "template_name": "Cardiologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Descrever início dos sintomas, evolução, frequência, duração e fatores desencadeantes ou de melhora"
+        ]
+      },
+      {
+        "key": "sintomas_cardiovasculares_associados",
+        "label": "Sintomas Cardiovasculares Associados",
+        "render": "prose",
+        "hints": [
+          "Exemplo: dor torácica, aperto no peito, dispneia (falta de ar), palpitações, tontura, síncope (desmaio), fadiga, edema em membros inferiores"
+        ]
+      },
+      {
+        "key": "caracteristicas_da_dor_toracica",
+        "label": "Características da Dor Torácica (se presente)",
+        "render": "prose",
+        "hints": [
+          "Localização, intensidade, tipo da dor (aperto, queimação, pontada), irradiação (braço, mandíbula, costas), duração e relação com esforço físico"
+        ]
+      },
+      {
+        "key": "fatores_de_risco_cardiovascular",
+        "label": "Fatores de Risco Cardiovascular",
+        "render": "prose",
+        "hints": [
+          "Hipertensão arterial",
+          "Diabetes mellitus",
+          "Dislipidemia (colesterol elevado)",
+          "Tabagismo",
+          "Sedentarismo",
+          "Obesidade"
+        ]
+      },
+      {
+        "key": "historico_cardiaco_pessoal",
+        "label": "Histórico Cardíaco Pessoal",
+        "render": "prose",
+        "hints": [
+          "Infarto prévio",
+          "Arritmias",
+          "Insuficiência cardíaca",
+          "Angina",
+          "Procedimentos ou cirurgias cardíacas (cateterismo, angioplastia, marca-passo, etc.)"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_familiar_cardiovascular",
+        "label": "Histórico Familiar Cardiovascular",
+        "render": "prose",
+        "hints": [
+          "Doenças cardíacas em familiares próximos, especialmente infarto precoce ou morte súbita"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "medicacoes_em_uso",
+        "label": "Medicações em Uso",
+        "render": "prose",
+        "hints": [
+          "Especialmente medicamentos cardiovasculares"
+        ],
+        "status_enum": [
+          "em_uso",
+          "prescrito",
+          "suspenso",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "exames_cardiacos_realizados_ou_solicitados",
+        "label": "Exames Cardíacos Realizados ou Solicitados",
+        "render": "prose",
+        "hints": [
+          "Exemplo: eletrocardiograma, ecocardiograma, teste ergométrico, holter, MAPA, exames laboratoriais"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "suspeita_diagnostica",
+        "label": "Suspeita Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose",
+        "hints": [
+          "Exemplo: ajuste de medicação, solicitação de exames, mudança de estilo de vida, acompanhamento cardiológico"
+        ]
+      },
+      {
+        "key": "orientacoes_ao_paciente",
+        "label": "Orientações ao Paciente",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 5,
+    "template_name": "Cirurgia Cardiovascular",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor torácica",
+          "Dispneia",
+          "Palpitações",
+          "Síncope",
+          "Intolerância ao esforço",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_cardiovascular_relevante",
+        "label": "Histórico Cardiovascular Relevante",
+        "render": "prose",
+        "hints": [
+          "Doença coronariana",
+          "Valvopatias",
+          "Insuficiência cardíaca",
+          "Hipertensão arterial",
+          "Procedimentos cardiovasculares prévios"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Ecocardiograma",
+          "Cateterismo cardíaco",
+          "Angiotomografia",
+          "Teste ergométrico",
+          "Outros exames cardiovasculares"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Benefícios esperados",
+          "Riscos discutidos",
+          "Alternativas terapêuticas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 6,
+    "template_name": "Cirurgia da Mão",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor",
+          "Dormência",
+          "Formigamento",
+          "Limitação funcional",
+          "Trauma",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_relevante",
+        "label": "Histórico Relevante",
+        "render": "prose",
+        "hints": [
+          "Lesões prévias",
+          "Fraturas",
+          "Cirurgias anteriores",
+          "Doenças osteoarticulares",
+          "Atividades ocupacionais relacionadas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Radiografias",
+          "Ultrassonografia",
+          "Ressonância magnética",
+          "Eletroneuromiografia"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Impacto funcional",
+          "Benefícios esperados",
+          "Riscos discutidos"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 7,
+    "template_name": "Cirurgia de Cabeça e Pescoço",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Nódulos cervicais",
+          "Alterações da tireoide",
+          "Rouquidão",
+          "Disfagia",
+          "Lesões em cabeça e pescoço",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_relevante",
+        "label": "Histórico Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças da tireoide",
+          "Neoplasias prévias",
+          "Tabagismo",
+          "Etilismo",
+          "Cirurgias prévias na região"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Ultrassonografia",
+          "Tomografia",
+          "Ressonância magnética",
+          "Punção aspirativa",
+          "Biópsias"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Benefícios esperados",
+          "Riscos discutidos",
+          "Alternativas terapêuticas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 8,
+    "template_name": "Cirurgia do Aparelho Digestivo",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor abdominal",
+          "Náuseas ou vômitos",
+          "Alterações intestinais",
+          "Disfagia",
+          "Refluxo",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_digestivo_relevante",
+        "label": "Histórico Digestivo Relevante",
+        "render": "prose",
+        "hints": [
+          "Cirurgias digestivas prévias",
+          "Doenças hepatobiliares",
+          "Doenças intestinais",
+          "Doença do refluxo",
+          "Pancreatopatias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Endoscopia",
+          "Colonoscopia",
+          "Tomografia",
+          "Ultrassonografia",
+          "Outros exames relacionados"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Benefícios esperados",
+          "Riscos discutidos",
+          "Alternativas terapêuticas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 9,
+    "template_name": "Cirurgia Geral",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor",
+          "Massa ou abaulamento",
+          "Hérnia",
+          "Sintomas digestivos",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_cirurgico_relevante",
+        "label": "Histórico Cirúrgico Relevante",
+        "render": "prose",
+        "hints": [
+          "Cirurgias prévias",
+          "Internações",
+          "Complicações cirúrgicas",
+          "Comorbidades relevantes"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Benefícios esperados",
+          "Riscos discutidos",
+          "Alternativas terapêuticas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 10,
+    "template_name": "Cirurgia Pediátrica",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Início dos sintomas",
+          "Evolução do quadro",
+          "Sintomas associados",
+          "Impacto funcional"
+        ]
+      },
+      {
+        "key": "historico_pediatrico_relevante",
+        "label": "Histórico Pediátrico Relevante",
+        "render": "prose",
+        "hints": [
+          "Gestação",
+          "Parto",
+          "Desenvolvimento",
+          "Malformações congênitas",
+          "Internações prévias",
+          "Cirurgias prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Benefícios esperados",
+          "Riscos discutidos com os responsáveis",
+          "Alternativas terapêuticas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes_aos_responsaveis",
+        "label": "Orientações aos Responsáveis",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 11,
+    "template_name": "Cirurgia Plástica",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "objetivo_da_consulta",
+        "label": "Objetivo da Consulta",
+        "render": "prose",
+        "hints": [
+          "Procedimento estético",
+          "Procedimento reparador",
+          "Procedimento reconstrutivo",
+          "Expectativas do paciente"
+        ]
+      },
+      {
+        "key": "historia_clinica_relevante",
+        "label": "História Clínica Relevante",
+        "render": "prose",
+        "hints": [
+          "Procedimentos prévios",
+          "Histórico de cicatrização",
+          "Doenças associadas",
+          "Uso de medicamentos",
+          "Tabagismo"
+        ]
+      },
+      {
+        "key": "avaliacao_da_regiao_de_interesse",
+        "label": "Avaliação da Região de Interesse",
+        "render": "prose",
+        "hints": [
+          "Alterações observadas",
+          "Queixas estéticas ou funcionais",
+          "Impacto na qualidade de vida"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Elegibilidade para o procedimento",
+          "Riscos e benefícios discutidos",
+          "Alinhamento de expectativas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 12,
+    "template_name": "Cirurgia Torácica",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor torácica",
+          "Tosse",
+          "Dispneia",
+          "Hemoptise",
+          "Achados pulmonares",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_toracico_relevante",
+        "label": "Histórico Torácico Relevante",
+        "render": "prose",
+        "hints": [
+          "Tabagismo",
+          "Doenças pulmonares prévias",
+          "Neoplasias",
+          "Cirurgias torácicas prévias",
+          "Internações respiratórias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose",
+        "hints": [
+          "Indicação cirúrgica",
+          "Riscos e benefícios discutidos",
+          "Possíveis alternativas terapêuticas"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 13,
+    "template_name": "Cirurgia Vascular",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor",
+          "Edema",
+          "Varizes",
+          "Claudicação",
+          "Alterações vasculares",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_vascular_relevante",
+        "label": "Histórico Vascular Relevante",
+        "render": "prose",
+        "hints": [
+          "Trombose venosa",
+          "Insuficiência venosa",
+          "Doença arterial periférica",
+          "Procedimentos vasculares prévios"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_cirurgica",
+        "label": "Avaliação Cirúrgica",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 14,
+    "template_name": "Clínica Médica",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas relatados pelo paciente",
+          "Data aproximada de início",
+          "Evolução do quadro",
+          "Fatores de melhora ou piora",
+          "Sintomas associados"
+        ]
+      },
+      {
+        "key": "historico_clinico_relevante",
+        "label": "Histórico Clínico Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças prévias",
+          "Comorbidades",
+          "Internações",
+          "Cirurgias",
+          "Alergias",
+          "Medicações em uso"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_familiar_relevante",
+        "label": "Histórico Familiar Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças hereditárias ou familiares relevantes mencionadas durante a consulta"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "habitos_e_estilo_de_vida",
+        "label": "Hábitos e Estilo de Vida",
+        "render": "prose",
+        "hints": [
+          "Tabagismo",
+          "Etilismo",
+          "Atividade física",
+          "Alimentação",
+          "Outros hábitos relevantes"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Exames laboratoriais",
+          "Exames de imagem",
+          "Outros exames complementares discutidos durante a consulta"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_clinica",
+        "label": "Avaliação Clínica",
+        "render": "prose",
+        "hints": [
+          "Principais problemas clínicos identificados",
+          "Hipóteses diagnósticas",
+          "Diagnósticos estabelecidos"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_plano_terapeutico",
+        "label": "Conduta e Plano Terapêutico",
+        "render": "prose",
+        "hints": [
+          "Medicações prescritas",
+          "Solicitação de exames",
+          "Encaminhamentos",
+          "Recomendações de acompanhamento"
+        ]
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 15,
+    "template_name": "Coloproctologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor anal",
+          "Sangramento",
+          "Alterações do hábito intestinal",
+          "Incontinência",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_coloproctologico_relevante",
+        "label": "Histórico Coloproctológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Hemorroidas",
+          "Fissuras",
+          "Fístulas",
+          "Doenças inflamatórias intestinais",
+          "Cirurgias prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 16,
+    "template_name": "Dermatologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Lesões cutâneas",
+          "Prurido",
+          "Alterações de pele, unhas ou cabelos",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_dermatologico_relevante",
+        "label": "Histórico Dermatológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças dermatológicas prévias",
+          "Tratamentos realizados",
+          "Histórico familiar",
+          "Exposição solar relevante"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 17,
+    "template_name": "Endocrinologia e Metabologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Alterações de peso",
+          "Sintomas hormonais",
+          "Alterações metabólicas",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_endocrino_relevante",
+        "label": "Histórico Endócrino Relevante",
+        "render": "prose",
+        "hints": [
+          "Diabetes",
+          "Doenças da tireoide",
+          "Obesidade",
+          "Dislipidemia",
+          "Doenças hormonais prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 18,
+    "template_name": "Endoscopia",
+    "sections": [
+      {
+        "key": "indicacao_do_procedimento",
+        "label": "Indicação do Procedimento",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_resumida",
+        "label": "História Clínica Resumida",
+        "render": "prose"
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "achados_ou_resultados_relevantes",
+        "label": "Achados ou Resultados Relevantes",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_recomendacoes",
+        "label": "Conduta e Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 19,
+    "template_name": "Gastroenterologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor abdominal",
+          "Alterações intestinais",
+          "Refluxo",
+          "Náuseas ou vômitos",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_gastroenterologico_relevante",
+        "label": "Histórico Gastroenterológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Gastrite",
+          "Doença do refluxo",
+          "Hepatopatias",
+          "Doenças intestinais",
+          "Cirurgias digestivas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 20,
+    "template_name": "Genética Médica",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_atual",
+        "label": "História Clínica Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas",
+          "Diagnósticos prévios",
+          "Evolução do quadro"
+        ]
+      },
+      {
+        "key": "historico_familiar_relevante",
+        "label": "Histórico Familiar Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças hereditárias",
+          "Malformações",
+          "Consanguinidade",
+          "Casos semelhantes na família"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_geneticos_e_complementares",
+        "label": "Exames Genéticos e Complementares",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "hipotese_diagnostica",
+        "label": "Hipótese Diagnóstica",
+        "render": "prose"
+      },
+      {
+        "key": "conduta_e_recomendacoes",
+        "label": "Conduta e Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 21,
+    "template_name": "Geriatria",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas atuais",
+          "Evolução funcional",
+          "Alterações cognitivas",
+          "Quedas",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_geriatrico_relevante",
+        "label": "Histórico Geriátrico Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças crônicas",
+          "Polifarmácia",
+          "Dependência funcional",
+          "Internações prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_funcional",
+        "label": "Avaliação Funcional",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 22,
+    "template_name": "Ginecologia e Obstetrícia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas ginecológicos ou obstétricos",
+          "Alterações menstruais",
+          "Dor pélvica",
+          "Sintomas gestacionais",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_ginecologico_e_obstetrico_relevante",
+        "label": "Histórico Ginecológico e Obstétrico Relevante",
+        "render": "prose",
+        "hints": [
+          "Gestações",
+          "Partos",
+          "Abortamentos",
+          "Métodos contraceptivos",
+          "Cirurgias ginecológicas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 23,
+    "template_name": "Hematologia e Hemoterapia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas relacionados ao quadro hematológico",
+          "Sangramentos",
+          "Tromboses",
+          "Fadiga",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_hematologico_relevante",
+        "label": "Histórico Hematológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Anemias",
+          "Distúrbios da coagulação",
+          "Neoplasias hematológicas",
+          "Transfusões prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 24,
+    "template_name": "Homeopatia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas físicos",
+          "Sintomas emocionais",
+          "Fatores de melhora ou piora",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_de_saude_relevante",
+        "label": "Histórico de Saúde Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças prévias",
+          "Tratamentos realizados",
+          "Histórico familiar"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 25,
+    "template_name": "Infectologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas infecciosos",
+          "Tempo de evolução",
+          "Exposições relevantes",
+          "Tratamentos realizados"
+        ]
+      },
+      {
+        "key": "historico_infectologico_relevante",
+        "label": "Histórico Infectológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Infecções prévias",
+          "Imunossupressão",
+          "Vacinação",
+          "Viagens ou contatos de risco"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 26,
+    "template_name": "Mastologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor mamária",
+          "Nódulos",
+          "Secreções",
+          "Alterações mamárias",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_mamario_relevante",
+        "label": "Histórico Mamário Relevante",
+        "render": "prose",
+        "hints": [
+          "Exames prévios",
+          "Cirurgias",
+          "Histórico familiar de câncer de mama",
+          "Doenças mamárias anteriores"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 27,
+    "template_name": "Medicina de Emergência",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Início dos sintomas",
+          "Evolução",
+          "Gravidade",
+          "Sintomas associados"
+        ]
+      },
+      {
+        "key": "historico_clinico_relevante",
+        "label": "Histórico Clínico Relevante",
+        "render": "prose",
+        "hints": [
+          "Comorbidades",
+          "Medicações em uso",
+          "Alergias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_clinica",
+        "label": "Avaliação Clínica",
+        "render": "prose"
+      },
+      {
+        "key": "conduta_e_plano_terapeutico",
+        "label": "Conduta e Plano Terapêutico",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 28,
+    "template_name": "Medicina de Família e Comunidade",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas atuais",
+          "Evolução do quadro",
+          "Impacto na rotina"
+        ]
+      },
+      {
+        "key": "historico_de_saude_relevante",
+        "label": "Histórico de Saúde Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças crônicas",
+          "Medicações em uso",
+          "Histórico familiar",
+          "Hábitos de vida"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_plano_de_cuidados",
+        "label": "Conduta e Plano de Cuidados",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 29,
+    "template_name": "Medicina do Trabalho",
+    "sections": [
+      {
+        "key": "motivo_da_avaliacao",
+        "label": "Motivo da Avaliação",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_atual",
+        "label": "História Clínica Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas",
+          "Evolução",
+          "Impacto laboral"
+        ]
+      },
+      {
+        "key": "historico_ocupacional_relevante",
+        "label": "Histórico Ocupacional Relevante",
+        "render": "prose",
+        "hints": [
+          "Função exercida",
+          "Exposições ocupacionais",
+          "Acidentes de trabalho"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_da_capacidade_laboral",
+        "label": "Avaliação da Capacidade Laboral",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_recomendacoes",
+        "label": "Conduta e Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 30,
+    "template_name": "Medicina do Esporte",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Lesão",
+          "Dor",
+          "Desempenho físico",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_esportivo_relevante",
+        "label": "Histórico Esportivo Relevante",
+        "render": "prose",
+        "hints": [
+          "Modalidade praticada",
+          "Frequência de treinamento",
+          "Lesões prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 31,
+    "template_name": "Medicina Física e Reabilitação",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor",
+          "Limitações funcionais",
+          "Mobilidade",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_funcional_relevante",
+        "label": "Histórico Funcional Relevante",
+        "render": "prose",
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "objetivos_da_reabilitacao",
+        "label": "Objetivos da Reabilitação",
+        "render": "prose"
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 32,
+    "template_name": "Medicina Intensiva",
+    "sections": [
+      {
+        "key": "resumo_clinico",
+        "label": "Resumo Clínico",
+        "render": "prose"
+      },
+      {
+        "key": "evolucao_atual",
+        "label": "Evolução Atual",
+        "render": "prose",
+        "hints": [
+          "Estado geral",
+          "Sintomas",
+          "Intercorrências",
+          "Resposta ao tratamento"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_clinica",
+        "label": "Avaliação Clínica",
+        "render": "prose"
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 33,
+    "template_name": "Medicina Legal e Perícia Médica",
+    "sections": [
+      {
+        "key": "motivo_da_avaliacao",
+        "label": "Motivo da Avaliação",
+        "render": "prose"
+      },
+      {
+        "key": "historico_clinico_relevante",
+        "label": "Histórico Clínico Relevante",
+        "render": "prose",
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "limitacoes_e_capacidade_funcional",
+        "label": "Limitações e Capacidade Funcional",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "documentacao_e_exames_apresentados",
+        "label": "Documentação e Exames Apresentados",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "conclusao_pericial",
+        "label": "Conclusão Pericial",
+        "render": "prose"
+      },
+      {
+        "key": "recomendacoes",
+        "label": "Recomendações",
+        "render": "prose"
+      }
+    ]
+  },
+  {
+    "template_id": 34,
+    "template_name": "Medicina Nuclear",
+    "sections": [
+      {
+        "key": "indicacao_clinica",
+        "label": "Indicação Clínica",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_resumida",
+        "label": "História Clínica Resumida",
+        "render": "prose"
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "hipotese_diagnostica",
+        "label": "Hipótese Diagnóstica",
+        "render": "prose"
+      },
+      {
+        "key": "conduta_e_recomendacoes",
+        "label": "Conduta e Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      }
+    ]
+  },
+  {
+    "template_id": 35,
+    "template_name": "Medicina Preventiva e Social",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_atual",
+        "label": "História Clínica Atual",
+        "render": "prose",
+        "hints": [
+          "Estado geral de saúde",
+          "Fatores de risco",
+          "Hábitos de vida",
+          "Queixas relacionadas à prevenção"
+        ]
+      },
+      {
+        "key": "historico_de_saude_relevante",
+        "label": "Histórico de Saúde Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças crônicas",
+          "Histórico familiar",
+          "Vacinação",
+          "Rastreamentos prévios"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_de_risco_e_prevencao",
+        "label": "Avaliação de Risco e Prevenção",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_recomendacoes",
+        "label": "Conduta e Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 36,
+    "template_name": "Nefrologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Alterações urinárias",
+          "Edema",
+          "Hipertensão",
+          "Dor lombar",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_nefrologico_relevante",
+        "label": "Histórico Nefrológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Doença renal crônica",
+          "Litíase renal",
+          "Infecções urinárias",
+          "Diálise",
+          "Transplante renal"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 37,
+    "template_name": "Neurocirurgia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor",
+          "Déficits neurológicos",
+          "Alterações motoras ou sensitivas",
+          "Limitações funcionais",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_neurocirurgico_relevante",
+        "label": "Histórico Neurocirúrgico Relevante",
+        "render": "prose",
+        "hints": [
+          "Cirurgias prévias",
+          "Traumas",
+          "Tumores",
+          "Doenças da coluna",
+          "Doenças intracranianas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 38,
+    "template_name": "Neurologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Cefaleia",
+          "Tontura",
+          "Convulsões",
+          "Alterações motoras ou sensitivas",
+          "Alterações cognitivas",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_neurologico_relevante",
+        "label": "Histórico Neurológico Relevante",
+        "render": "prose",
+        "hints": [
+          "AVC",
+          "Epilepsia",
+          "Enxaqueca",
+          "Doenças neurodegenerativas",
+          "Traumas neurológicos"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 39,
+    "template_name": "Nutrologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Hábitos alimentares",
+          "Alterações de peso",
+          "Sintomas relacionados à alimentação",
+          "Evolução do quadro"
+        ]
+      },
+      {
+        "key": "historico_nutrologico_relevante",
+        "label": "Histórico Nutrológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Obesidade",
+          "Deficiências nutricionais",
+          "Cirurgias bariátricas",
+          "Doenças metabólicas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 40,
+    "template_name": "Oftalmologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Descrever início dos sintomas, evolução, lateralidade (olho direito, esquerdo ou ambos), fatores de piora ou melhora"
+        ]
+      },
+      {
+        "key": "sintomas_oculares_associados",
+        "label": "Sintomas Oculares Associados",
+        "render": "prose",
+        "hints": [
+          "Exemplo: dor ocular, visão borrada, visão dupla, fotofobia, lacrimejamento, secreção ocular, prurido, sensação de corpo estranho, halos luminosos, perda visual súbita ou progressiva"
+        ]
+      },
+      {
+        "key": "historico_oftalmologico",
+        "label": "Histórico Oftalmológico",
+        "render": "prose",
+        "hints": [
+          "Uso de óculos ou lentes de contato",
+          "Cirurgias oculares prévias",
+          "Doenças oculares anteriores (glaucoma, catarata, conjuntivite recorrente, etc.)"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_medico_geral",
+        "label": "Histórico Médico Geral",
+        "render": "prose",
+        "hints": [
+          "Doenças sistêmicas relevantes que possam afetar os olhos (ex: diabetes, hipertensão, doenças autoimunes)"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "medicacoes_em_uso",
+        "label": "Medicações em Uso",
+        "render": "prose",
+        "status_enum": [
+          "em_uso",
+          "prescrito",
+          "suspenso",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "suspeita_diagnostica",
+        "label": "Suspeita Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "exames_oftalmologicos_sugeridos",
+        "label": "Exames Oftalmológicos Sugeridos",
+        "render": "prose",
+        "hints": [
+          "Exemplo: tonometria, fundoscopia, mapeamento de retina, campimetria, OCT, retinografia"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "conduta_e_encaminhamento",
+        "label": "Conduta e Encaminhamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes_ao_paciente",
+        "label": "Orientações ao Paciente",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 41,
+    "template_name": "Oncologia Clínica",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Diagnóstico oncológico",
+          "Sintomas atuais",
+          "Evolução da doença",
+          "Sintomas relacionados ao tratamento",
+          "Impacto funcional"
+        ]
+      },
+      {
+        "key": "historico_oncologico_relevante",
+        "label": "Histórico Oncológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Tipo de neoplasia",
+          "Data aproximada do diagnóstico",
+          "Estadiamento mencionado",
+          "Tratamentos prévios",
+          "Cirurgias oncológicas",
+          "Radioterapia",
+          "Quimioterapia",
+          "Terapias-alvo ou imunoterapia"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_familiar_relevante",
+        "label": "Histórico Familiar Relevante",
+        "render": "prose",
+        "hints": [
+          "Casos de câncer na família",
+          "Síndromes hereditárias mencionadas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Exames laboratoriais",
+          "Tomografia",
+          "Ressonância magnética",
+          "PET-CT",
+          "Biópsias",
+          "Anatomopatológico"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_oncologica",
+        "label": "Avaliação Oncológica",
+        "render": "prose",
+        "hints": [
+          "Situação atual da doença",
+          "Resposta ao tratamento",
+          "Progressão, estabilidade ou remissão quando mencionadas",
+          "Objetivos terapêuticos discutidos"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_planejamento",
+        "label": "Conduta e Planejamento",
+        "render": "prose",
+        "hints": [
+          "Tratamentos propostos",
+          "Solicitação de exames",
+          "Encaminhamentos",
+          "Programação de acompanhamento"
+        ]
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 42,
+    "template_name": "Ortopedia e Traumatologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Descrever início da dor ou lesão, evolução dos sintomas, localização anatômica, intensidade da dor, fatores que pioram ou melhoram, presença de irradiação, limitação de movimento ou funcionalidade"
+        ]
+      },
+      {
+        "key": "mecanismo_de_trauma_ou_lesao",
+        "label": "Mecanismo de Trauma ou Lesão",
+        "render": "prose",
+        "hints": [
+          "Caso exista, descrever se houve queda, impacto, torção, esforço físico, atividade esportiva ou acidente"
+        ]
+      },
+      {
+        "key": "sintomas_associados",
+        "label": "Sintomas Associados",
+        "render": "prose",
+        "hints": [
+          "Exemplo: edema (inchaço), rigidez articular, estalos, fraqueza muscular, formigamento, perda de força, limitação de movimento ou instabilidade articular"
+        ]
+      },
+      {
+        "key": "historico_ortopedico",
+        "label": "Histórico Ortopédico",
+        "render": "prose",
+        "hints": [
+          "Lesões anteriores",
+          "Fraturas prévias",
+          "Cirurgias ortopédicas",
+          "Doenças musculoesqueléticas pré-existentes"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_medico_geral",
+        "label": "Histórico Médico Geral",
+        "render": "prose",
+        "hints": [
+          "Doenças sistêmicas relevantes que possam impactar o sistema musculoesquelético"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "medicacoes_em_uso",
+        "label": "Medicações em Uso",
+        "render": "prose",
+        "status_enum": [
+          "em_uso",
+          "prescrito",
+          "suspenso",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "exames_de_imagem_ou_avaliacoes_realizadas",
+        "label": "Exames de Imagem ou Avaliações Realizadas",
+        "render": "prose",
+        "hints": [
+          "Exemplo: radiografia, ressonância magnética, tomografia, ultrassonografia musculoesquelética"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "suspeita_diagnostica",
+        "label": "Suspeita Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose",
+        "hints": [
+          "Exemplo: medicação, fisioterapia, imobilização, infiltração, orientação de repouso ou indicação cirúrgica"
+        ]
+      },
+      {
+        "key": "orientacoes_ao_paciente",
+        "label": "Orientações ao Paciente",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 43,
+    "template_name": "Otorrinolaringologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Descrever início dos sintomas, evolução, duração, frequência e recorrência",
+          "Indicar lateralidade quando aplicável (direito, esquerdo ou bilateral)"
+        ]
+      },
+      {
+        "key": "sintomas_otologicos",
+        "label": "Sintomas Otológicos (Ouvido)",
+        "render": "prose",
+        "hints": [
+          "Exemplo: dor de ouvido (otalgia), perda auditiva, zumbido (tinnitus), sensação de ouvido tampado, secreção (otorréia), tontura ou vertigem"
+        ]
+      },
+      {
+        "key": "sintomas_nasais",
+        "label": "Sintomas Nasais",
+        "render": "prose",
+        "hints": [
+          "Exemplo: obstrução nasal, congestão, coriza, espirros, prurido nasal, sangramento (epistaxe), perda de olfato (anosmia)"
+        ]
+      },
+      {
+        "key": "sintomas_de_garganta_e_laringe",
+        "label": "Sintomas de Garganta e Laringe",
+        "render": "prose",
+        "hints": [
+          "Exemplo: dor de garganta, dificuldade para engolir (disfagia), rouquidão (disfonia), tosse, sensação de corpo estranho"
+        ]
+      },
+      {
+        "key": "sintomas_associados",
+        "label": "Sintomas Associados",
+        "render": "prose",
+        "hints": [
+          "Exemplo: febre, mal-estar, cefaleia, dor facial, pressão nos seios da face, fadiga"
+        ]
+      },
+      {
+        "key": "historico_otorrinolaringologico",
+        "label": "Histórico Otorrinolaringológico",
+        "render": "prose",
+        "hints": [
+          "Infecções recorrentes (otite, sinusite, amigdalite)",
+          "Cirurgias prévias (ex: septoplastia, amigdalectomia)",
+          "Problemas auditivos ou respiratórios prévios"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "fatores_de_risco_e_exposicao",
+        "label": "Fatores de Risco e Exposição",
+        "render": "prose",
+        "hints": [
+          "Tabagismo",
+          "Exposição a poluição, poeira, alérgenos",
+          "Uso frequente da voz",
+          "Mudanças climáticas ou ambientais"
+        ]
+      },
+      {
+        "key": "medicacoes_em_uso",
+        "label": "Medicações em Uso",
+        "render": "prose",
+        "status_enum": [
+          "em_uso",
+          "prescrito",
+          "suspenso",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "exames_realizados_ou_sugeridos",
+        "label": "Exames Realizados ou Sugeridos",
+        "render": "prose",
+        "hints": [
+          "Exemplo: audiometria, nasofibroscopia, endoscopia nasal, exames de imagem"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "suspeita_diagnostica",
+        "label": "Suspeita Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose",
+        "hints": [
+          "Exemplo: medicação, lavagem nasal, fisioterapia respiratória, acompanhamento, indicação cirúrgica"
+        ]
+      },
+      {
+        "key": "orientacoes_ao_paciente",
+        "label": "Orientações ao Paciente",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 44,
+    "template_name": "Patologia",
+    "sections": [
+      {
+        "key": "indicacao_clinica",
+        "label": "Indicação Clínica",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_resumida",
+        "label": "História Clínica Resumida",
+        "render": "prose"
+      },
+      {
+        "key": "material_ou_amostra_avaliada",
+        "label": "Material ou Amostra Avaliada",
+        "render": "prose"
+      },
+      {
+        "key": "achados_relevantes",
+        "label": "Achados Relevantes",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "recomendacoes",
+        "label": "Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 45,
+    "template_name": "Patologia Clínica / Medicina Laboratorial",
+    "sections": [
+      {
+        "key": "indicacao_clinica",
+        "label": "Indicação Clínica",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_resumida",
+        "label": "História Clínica Resumida",
+        "render": "prose"
+      },
+      {
+        "key": "exames_laboratoriais_relevantes",
+        "label": "Exames Laboratoriais Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "interpretacao_dos_resultados",
+        "label": "Interpretação dos Resultados",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_recomendacoes",
+        "label": "Conduta e Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 46,
+    "template_name": "Pediatria",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas atuais",
+          "Início e evolução",
+          "Comportamento da criança"
+        ]
+      },
+      {
+        "key": "historico_pediatrico_relevante",
+        "label": "Histórico Pediátrico Relevante",
+        "render": "prose",
+        "hints": [
+          "Gestação e parto",
+          "Desenvolvimento",
+          "Vacinação",
+          "Doenças prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes_aos_responsaveis",
+        "label": "Orientações aos Responsáveis",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 47,
+    "template_name": "Pneumologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Tosse",
+          "Falta de ar",
+          "Chiado",
+          "Dor torácica",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_respiratorio_relevante",
+        "label": "Histórico Respiratório Relevante",
+        "render": "prose",
+        "hints": [
+          "Asma",
+          "DPOC",
+          "Pneumonias",
+          "Tabagismo",
+          "Doenças pulmonares prévias"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 48,
+    "template_name": "Psiquiatria",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Humor",
+          "Ansiedade",
+          "Sono",
+          "Atenção",
+          "Comportamento",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_psiquiatrico_relevante",
+        "label": "Histórico Psiquiátrico Relevante",
+        "render": "prose",
+        "hints": [
+          "Diagnósticos prévios",
+          "Tratamentos anteriores",
+          "Internações",
+          "Uso de medicamentos"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "aspectos_psicossociais_relevantes",
+        "label": "Aspectos Psicossociais Relevantes",
+        "render": "prose",
+        "hints": [
+          "Trabalho",
+          "Família",
+          "Relacionamentos",
+          "Eventos estressores"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 49,
+    "template_name": "Radiologia e Diagnóstico por Imagem",
+    "sections": [
+      {
+        "key": "indicacao_clinica",
+        "label": "Indicação Clínica",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica_resumida",
+        "label": "História Clínica Resumida",
+        "render": "prose"
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "achados_importantes_relatados",
+        "label": "Achados Importantes Relatados",
+        "render": "prose"
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "recomendacoes",
+        "label": "Recomendações",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 50,
+    "template_name": "Radioterapia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_clinica",
+        "label": "História Clínica",
+        "render": "prose",
+        "hints": [
+          "Diagnóstico oncológico",
+          "Evolução da doença",
+          "Sintomas atuais"
+        ]
+      },
+      {
+        "key": "tratamentos_oncologicos_relevantes",
+        "label": "Tratamentos Oncológicos Relevantes",
+        "render": "prose",
+        "hints": [
+          "Cirurgias",
+          "Quimioterapia",
+          "Radioterapia prévia"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "planejamento_terapeutico",
+        "label": "Planejamento Terapêutico",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 51,
+    "template_name": "Reumatologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Dor articular",
+          "Rigidez",
+          "Edema",
+          "Limitações funcionais",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_reumatologico_relevante",
+        "label": "Histórico Reumatológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças autoimunes",
+          "Artrites",
+          "Lúpus",
+          "Espondiloartrites",
+          "Tratamentos prévios"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 52,
+    "template_name": "Urologia",
+    "sections": [
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas urinários",
+          "Dor",
+          "Alterações miccionais",
+          "Disfunções sexuais",
+          "Evolução dos sintomas"
+        ]
+      },
+      {
+        "key": "historico_urologico_relevante",
+        "label": "Histórico Urológico Relevante",
+        "render": "prose",
+        "hints": [
+          "Cálculos renais",
+          "Infecções urinárias",
+          "Cirurgias urológicas",
+          "Doenças prostáticas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose"
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 53,
+    "template_name": "Modelo SOAP",
+    "sections": [
+      {
+        "key": "subjetivo",
+        "label": "Subjetivo (S)",
+        "render": "prose",
+        "hints": [
+          "Queixa principal",
+          "Sintomas relatados pelo paciente",
+          "História da doença atual",
+          "Informações relevantes do histórico médico, familiar e social mencionadas durante a consulta"
+        ]
+      },
+      {
+        "key": "objetivo",
+        "label": "Objetivo (O)",
+        "render": "prose",
+        "hints": [
+          "Achados do exame físico mencionados pelo médico",
+          "Sinais clínicos observados",
+          "Resultados de exames laboratoriais ou de imagem discutidos durante a consulta",
+          "Medidas objetivas relevantes (pressão arterial, frequência cardíaca, peso, temperatura, entre outros)"
+        ]
+      },
+      {
+        "key": "avaliacao",
+        "label": "Avaliação (A)",
+        "render": "prose",
+        "hints": [
+          "Problemas clínicos identificados",
+          "Hipóteses diagnósticas",
+          "Diagnósticos estabelecidos",
+          "Resposta ao tratamento (quando aplicável)"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica (CID)",
+        "render": "cid",
+        "status_enum": [
+          "hipotese",
+          "estabelecido",
+          "descartado"
+        ]
+      },
+      {
+        "key": "plano",
+        "label": "Plano (P)",
+        "render": "prose",
+        "hints": [
+          "Conduta médica",
+          "Solicitação de exames",
+          "Prescrições",
+          "Encaminhamentos",
+          "Recomendações de acompanhamento"
+        ]
+      },
+      {
+        "key": "orientacoes",
+        "label": "Orientações",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 54,
+    "template_name": "Modelo SOAP Veterinário",
+    "sections": [
+      {
+        "key": "subjetivo",
+        "label": "Subjetivo (S)",
+        "render": "prose",
+        "hints": [
+          "Identificação do paciente quando disponível:",
+          "Nome",
+          "Espécie",
+          "Raça",
+          "Sexo",
+          "Idade",
+          "Queixa principal relatada pelo tutor",
+          "Histórico da doença atual",
+          "Sintomas observados pelo tutor",
+          "Alterações comportamentais",
+          "Alterações alimentares",
+          "Alterações urinárias ou fecais",
+          "Histórico médico relevante",
+          "Uso de medicamentos",
+          "Histórico preventivo relevante:",
+          "Vacinação",
+          "Vermifugação",
+          "Controle de ectoparasitas"
+        ]
+      },
+      {
+        "key": "objetivo",
+        "label": "Objetivo (O)",
+        "render": "prose",
+        "hints": [
+          "Achados do exame físico mencionados pelo médico-veterinário",
+          "Peso corporal",
+          "Temperatura",
+          "Frequência cardíaca",
+          "Frequência respiratória",
+          "Escore corporal",
+          "Resultados de exames laboratoriais",
+          "Resultados de exames de imagem",
+          "Outros dados objetivos relevantes"
+        ]
+      },
+      {
+        "key": "avaliacao",
+        "label": "Avaliação (A)",
+        "render": "prose",
+        "hints": [
+          "Principais problemas clínicos identificados",
+          "Hipóteses diagnósticas",
+          "Diagnósticos estabelecidos",
+          "Resposta ao tratamento quando mencionada",
+          "Prognóstico quando discutido"
+        ]
+      },
+      {
+        "key": "lista_de_problemas",
+        "label": "Lista de Problemas",
+        "render": "list"
+      },
+      {
+        "key": "plano",
+        "label": "Plano (P)",
+        "render": "prose",
+        "hints": [
+          "Conduta médica",
+          "Tratamentos instituídos",
+          "Medicações prescritas",
+          "Solicitação de exames",
+          "Procedimentos realizados ou planejados",
+          "Encaminhamentos",
+          "Plano de acompanhamento"
+        ]
+      },
+      {
+        "key": "orientacoes_ao_tutor",
+        "label": "Orientações ao Tutor",
+        "render": "list"
+      }
+    ]
+  },
+  {
+    "template_id": 55,
+    "template_name": "Medicina Veterinária",
+    "sections": [
+      {
+        "key": "identificacao_do_paciente",
+        "label": "Identificação do Paciente",
+        "render": "prose",
+        "hints": [
+          "Espécie",
+          "Raça",
+          "Sexo",
+          "Idade",
+          "Nome do animal"
+        ]
+      },
+      {
+        "key": "queixa_principal",
+        "label": "Queixa Principal",
+        "render": "prose"
+      },
+      {
+        "key": "historia_da_doenca_atual",
+        "label": "História da Doença Atual",
+        "render": "prose",
+        "hints": [
+          "Sintomas observados pelo tutor",
+          "Data aproximada de início",
+          "Evolução do quadro",
+          "Alterações de comportamento",
+          "Alterações alimentares",
+          "Alterações urinárias ou fecais",
+          "Outros sinais clínicos relevantes"
+        ]
+      },
+      {
+        "key": "historico_veterinario_relevante",
+        "label": "Histórico Veterinário Relevante",
+        "render": "prose",
+        "hints": [
+          "Doenças prévias",
+          "Cirurgias",
+          "Internações",
+          "Uso contínuo de medicamentos",
+          "Alergias conhecidas"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "historico_preventivo",
+        "label": "Histórico Preventivo",
+        "render": "prose",
+        "hints": [
+          "Vacinação",
+          "Vermifugação",
+          "Controle de ectoparasitas",
+          "Castração"
+        ],
+        "status_enum": [
+          "relatado",
+          "negado"
+        ]
+      },
+      {
+        "key": "exames_relevantes",
+        "label": "Exames Relevantes",
+        "render": "prose",
+        "hints": [
+          "Exames laboratoriais",
+          "Exames de imagem",
+          "Outros exames complementares mencionados"
+        ],
+        "status_enum": [
+          "realizado",
+          "solicitado",
+          "mencionado_sem_especificacao"
+        ]
+      },
+      {
+        "key": "avaliacao_clinica",
+        "label": "Avaliação Clínica",
+        "render": "prose",
+        "hints": [
+          "Principais achados clínicos",
+          "Hipóteses diagnósticas",
+          "Diagnósticos estabelecidos"
+        ]
+      },
+      {
+        "key": "impressao_diagnostica",
+        "label": "Impressão Diagnóstica",
+        "render": "prose",
+        "hints": [
+          "Liste os diagnósticos ou suspeitas diagnósticas mencionadas durante a consulta"
+        ]
+      },
+      {
+        "key": "conduta_e_tratamento",
+        "label": "Conduta e Tratamento",
+        "render": "prose",
+        "hints": [
+          "Medicações prescritas",
+          "Procedimentos realizados",
+          "Solicitação de exames",
+          "Encaminhamentos"
+        ]
+      },
+      {
+        "key": "orientacoes_ao_tutor",
+        "label": "Orientações ao Tutor",
+        "render": "list"
+      }
+    ]
+  }
+]
