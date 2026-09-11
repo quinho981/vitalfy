@@ -71,4 +71,53 @@ class PromptDelimitationTest extends TestCase
         $this->assertStringContainsString('&lt;transcricao_bruta&gt;', $result);
         $this->assertStringContainsString('&lt;/transcricao_bruta&gt;', $result);
     }
+
+    /**
+     * BE-R23-01 (ai-vitalfy/action-plans/backend/R23.md): prova a assimetria
+     * entre o caminho do documento (system + user) e o de AI Insights (user
+     * único, inalterado). Monta os payloads com buildTemplatePayload() —
+     * mesma montagem que generateLlmDocument() e generateInsightsAI() usam
+     * internamente via llmResponseByTemplate() — sem tocar rede nem banco.
+     */
+    public function test_caminho_do_documento_recebe_system_e_insights_permanece_com_uma_unica_mensagem_user(): void
+    {
+        $service = new DocumentService();
+        $context = [['text' => 'paciente: dor de cabeça.']];
+
+        // Mesma chamada que generateLlmDocument() faz: $forceJsonFormat
+        // false, $systemInstructions preenchido.
+        $documentPayload = $service->buildTemplatePayload(
+            $context,
+            '<h2><strong>{titulo}</strong></h2><p></p>{context}',
+            false,
+            'low',
+            $service->clinicalDocumentSystemInstructions()
+        );
+
+        // Mesma chamada que generateInsightsAI() faz: $forceJsonFormat
+        // true, sem $systemInstructions — byte-a-byte como antes de
+        // BE-R23-01.
+        $insightsPayload = $service->buildTemplatePayload(
+            $context,
+            'Text for Analysis: {context}',
+            true,
+            'medium'
+        );
+
+        $this->assertCount(2, $documentPayload['messages']);
+        $this->assertSame('system', $documentPayload['messages'][0]['role']);
+        $this->assertSame('user', $documentPayload['messages'][1]['role']);
+        $this->assertStringContainsString(
+            'INSTRUÇÕES OBRIGATÓRIAS',
+            $documentPayload['messages'][0]['content']
+        );
+        $this->assertStringNotContainsString(
+            'INSTRUÇÕES OBRIGATÓRIAS',
+            $documentPayload['messages'][1]['content']
+        );
+
+        $this->assertCount(1, $insightsPayload['messages']);
+        $this->assertSame('user', $insightsPayload['messages'][0]['role']);
+        $this->assertArrayNotHasKey(1, $insightsPayload['messages']);
+    }
 }

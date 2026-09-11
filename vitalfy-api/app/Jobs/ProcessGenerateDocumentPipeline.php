@@ -114,7 +114,11 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
                     $transcript->save();
 
                     $groqStart = microtime(true);
-                    $documentContent = $documentService->generateLlmDocument($transcript->conversation, $this->templateId);
+                    $documentContent = $documentService->generateLlmDocument(
+                        $transcript->conversation,
+                        $this->templateId,
+                        $transcript->id
+                    );
                     $groqMs = (int) ((microtime(true) - $groqStart) * 1000);
 
                     $document = $transcript->document()->create([
