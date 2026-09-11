@@ -12,7 +12,7 @@ namespace App\Support;
  * FeatureFlags. Não conhece Groq, HTTP nem Eloquent; document_templates.sections
  * chega como argumento, nunca lido do banco por esta classe.
  */
-final class ClinicalFactsValidator
+class ClinicalFactsValidator
 {
     private const SCHEMA_VERSION = 'clinical-facts/1';
 

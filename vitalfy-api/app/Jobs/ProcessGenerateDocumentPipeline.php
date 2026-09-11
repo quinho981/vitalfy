@@ -5,10 +5,15 @@ namespace App\Jobs;
 use App\Enums\TranscriptStatusEnum;
 use App\Events\TranscriptCreated;
 use App\Mail\TranscriptLimitWarningMail;
+use App\Models\DocumentTemplate;
 use App\Models\Transcript;
+use App\Services\ClinicalFactsExtractor;
 use App\Services\DeepgramService;
 use App\Services\DocumentService;
 use App\Services\TranscriptService;
+use App\Support\ClinicalDocumentRenderer;
+use App\Support\ClinicalFactsValidator;
+use App\Support\FeatureFlags;
 use App\Support\PlanLimits;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -74,8 +79,14 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
     ) {
     }
 
-    public function handle(DeepgramService $deepgramService, DocumentService $documentService, TranscriptService $transcriptService): void
-    {
+    public function handle(
+        DeepgramService $deepgramService,
+        DocumentService $documentService,
+        TranscriptService $transcriptService,
+        ClinicalFactsExtractor $clinicalFactsExtractor,
+        ClinicalFactsValidator $clinicalFactsValidator,
+        ClinicalDocumentRenderer $clinicalDocumentRenderer
+    ): void {
         $transcript = Transcript::find($this->transcriptId);
 
         if (! $transcript || $transcript->status === TranscriptStatusEnum::Completed) {
@@ -113,19 +124,50 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
                     $transcript->status = TranscriptStatusEnum::Generating;
                     $transcript->save();
 
-                    $groqStart = microtime(true);
-                    $documentContent = $documentService->generateLlmDocument(
-                        $transcript->conversation,
-                        $this->templateId,
-                        $transcript->id
-                    );
-                    $groqMs = (int) ((microtime(true) - $groqStart) * 1000);
+                    $documentContent = null;
+                    $factsFallback = false;
+                    $factsTimings = [];
+
+                    // BE-R23-06 (ai-vitalfy/action-plans/backend/R23.md):
+                    // extração + montagem entram AQUI, entre transcrição e
+                    // geração, sem etapa nova nem status novo. Qualquer
+                    // falha (extração, validação ou montagem) devolve null
+                    // e cai no caminho de hoje — nunca relança.
+                    if (FeatureFlags::clinicalFactsExtraction()) {
+                        $documentContent = $this->tryGenerateFromFacts(
+                            $transcript,
+                            $clinicalFactsExtractor,
+                            $clinicalFactsValidator,
+                            $clinicalDocumentRenderer,
+                            $documentService,
+                            $factsTimings
+                        );
+                        $factsFallback = $documentContent === null;
+                    }
+
+                    if ($documentContent === null) {
+                        $groqStart = microtime(true);
+                        $documentContent = $documentService->generateLlmDocument(
+                            $transcript->conversation,
+                            $this->templateId,
+                            $transcript->id
+                        );
+                        $groqMs = (int) ((microtime(true) - $groqStart) * 1000);
+                    }
 
                     $document = $transcript->document()->create([
                         'document_template_id' => $this->templateId,
                         'patient' => $transcript->patient,
                         'result' => $documentContent,
+                        'facts_fallback_at' => $factsFallback ? now() : null,
                     ]);
+
+                    if (!empty($factsTimings)) {
+                        Log::info('document.facts.timings', array_merge(
+                            ['transcript_id' => $transcript->id],
+                            $factsTimings
+                        ));
+                    }
                 } else {
                     $document = $transcript->document;
                 }
@@ -180,6 +222,77 @@ class ProcessGenerateDocumentPipeline implements ShouldQueue
         $transcript->save();
 
         $this->deleteStoredAudio($transcript);
+    }
+
+    /**
+     * BE-R23-06: extrai, valida e monta o documento a partir dos fatos.
+     * Devolve o HTML já sanitizado, ou null quando qualquer etapa falhar —
+     * null é o sinal para o caller cair no caminho de hoje
+     * (generateLlmDocument()). Nunca relança: cada Throwable interno é
+     * registrado como fallback e absorvido aqui.
+     *
+     * A guarda de idempotência compara template_id, não só ausência
+     * (SH-R23-01, decisão 1): uma retentativa do mesmo template pula a
+     * extração e só remonta a partir de clinical_facts já persistido; uma
+     * geração com outro template extrai de novo.
+     *
+     * @param array<string, int> $timings preenchido com facts_ms e/ou render_ms, por referência
+     */
+    private function tryGenerateFromFacts(
+        Transcript $transcript,
+        ClinicalFactsExtractor $extractor,
+        ClinicalFactsValidator $validator,
+        ClinicalDocumentRenderer $renderer,
+        DocumentService $documentService,
+        array &$timings
+    ): ?string {
+        $template = DocumentTemplate::find($this->templateId);
+
+        if (! $template || empty($template->sections)) {
+            Log::warning('document.facts.fallback', [
+                'transcript_id' => $transcript->id,
+                'reason' => 'template sem sections populado',
+            ]);
+            return null;
+        }
+
+        try {
+            $needsExtraction = $transcript->clinical_facts === null
+                || ($transcript->clinical_facts['template_id'] ?? null) !== $template->id;
+
+            if ($needsExtraction) {
+                $factsStart = microtime(true);
+                $rawFacts = $extractor->extract($transcript->conversation, $template->id, $template->sections);
+                $timings['facts_ms'] = (int) ((microtime(true) - $factsStart) * 1000);
+
+                $mergedContext = $documentService->mergeContextChunks($transcript->conversation);
+                $result = $validator->validate($rawFacts, $template->id, $template->sections, $mergedContext);
+
+                if (! $result->valid) {
+                    Log::warning('document.facts.fallback', [
+                        'transcript_id' => $transcript->id,
+                        'reason' => $result->reason,
+                        'stats' => $result->stats,
+                    ]);
+                    return null;
+                }
+
+                $transcript->clinical_facts = $result->facts;
+                $transcript->save();
+            }
+
+            $renderStart = microtime(true);
+            $html = $renderer->render($transcript->clinical_facts, $template->sections, $template->name);
+            $timings['render_ms'] = (int) ((microtime(true) - $renderStart) * 1000);
+
+            return $documentService->sanitizeClinicalHtml($html);
+        } catch (Throwable $e) {
+            Log::warning('document.facts.fallback', [
+                'transcript_id' => $transcript->id,
+                'reason' => $e->getMessage(),
+            ]);
+            return null;
+        }
     }
 
     /**

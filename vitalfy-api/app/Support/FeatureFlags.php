@@ -27,4 +27,23 @@ class FeatureFlags
     {
         return filter_var(env('FEATURE_ASYNC_TRANSCRIPT_PIPELINE', true), FILTER_VALIDATE_BOOLEAN);
     }
+
+    /**
+     * SH-R23-02 (ai-vitalfy/action-plans/shared/R23.md): mesmo mecanismo e
+     * mesmo motivo de asyncTranscriptPipeline() — env() direto, não
+     * config(), para sobreviver a config:cache (foi o que quebrou APP_URL
+     * em R16). Corte próprio, não reaproveita FEATURE_ASYNC_TRANSCRIPT_PIPELINE:
+     * desligar o assíncrono para consertar a extração devolveria
+     * Deepgram+Groq para dentro do request HTTP, o risco R1 inteiro de
+     * volta -- blast radius desproporcional.
+     *
+     * Default FALSE, ao contrário de asyncTranscriptPipeline(): esta é
+     * opt-in, não kill-switch -- o comportamento novo ainda não foi visto
+     * em tráfego real nenhum, e o comportamento antigo é o que o produto
+     * entrega hoje.
+     */
+    public static function clinicalFactsExtraction(): bool
+    {
+        return filter_var(env('FEATURE_CLINICAL_FACTS_EXTRACTION', false), FILTER_VALIDATE_BOOLEAN);
+    }
 }
