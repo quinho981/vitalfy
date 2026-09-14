@@ -147,12 +147,16 @@ return [
           \"schema_version\": \"clinical-facts/1\",
           \"template_id\": <copy exactly the template id given at the end of the task below, as a number>,
           \"title\": {\"text\": \"<short clinical title, formal Portuguese>\", \"source_key\": \"<key of the section this title was derived from>\"},
-          \"sections\": [
-            {\"key\": \"<one of the section keys given in the task below>\", \"items\": [
-              {\"text\": \"<sentence>\", \"status\": \"<status>\", \"speaker\": <int or null>, \"evidence\": \"<literal excerpt>\", \"code\": \"<only for CID sections>\"}
-            ]}
-          ]
+          \"sections\": {
+            \"<one of the section keys given in the task below>\": [
+              {\"text\": \"<sentence>\", \"status\": \"<status>\", \"speaker\": <int or null>, \"evidence\": \"<literal excerpt>\", \"code\": <ICD code as string, or null>}
+            ]
+          }
         }
+
+        `sections` is an OBJECT, never an array: every property name is one of the section keys given
+        in the task below, and its value is that section's array of items. Never repeat the section key
+        as a field inside the items.
 
         RULES PER FIELD:
         - `text`: the sentence that will be published in the clinical document, in formal medical
@@ -169,7 +173,8 @@ return [
         - `evidence`: the literal excerpt from the transcript — copy the exact words, do not paraphrase.
           This is mechanically checked against the transcript afterwards; a paraphrase will cause the fact
           to be discarded.
-        - `code`: ONLY for items inside a section whose `render` is `cid`, and only when the diagnosis
+        - `code`: always present, and `null` for every item outside a CID section. Filled ONLY for
+          items inside a section whose `render` is `cid`, and only when the diagnosis
           itself was stated and is anchored by `evidence`. Fill this with the ICD-10 code for that stated
           diagnosis — this single field is a terminology lookup, not new clinical content, and is the one
           exception to \"do not use external medical knowledge\". Never add a code for a diagnosis that
@@ -178,9 +183,9 @@ return [
           never renders in the CID list.
 
         SECTIONS:
-        - Every section key given in the task below MUST appear in `sections`, even when you found nothing
-          for it — in that case give it `items: []`. An absent section and an empty section must never be
-          treated differently.
+        - Every section key given in the task below MUST appear as a property of `sections`, even when
+          you found nothing for it — in that case give it an empty array `[]`. An absent section and an
+          empty section must never be treated differently.
         - Do not invent a section key that was not given to you.
 
         LIMITS:

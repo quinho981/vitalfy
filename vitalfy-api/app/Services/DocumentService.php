@@ -9,7 +9,10 @@ use App\Models\DocumentTemplate;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
 use LucianoTonet\GroqLaravel\Facades\Groq;
+use LucianoTonet\GroqPHP\GroqException;
 
 class DocumentService
 {
@@ -137,18 +140,109 @@ class DocumentService
         bool $forceJsonFormat = false,
         string $reasoningEffort = 'low',
         ?string $systemInstructions = null,
-        float $temperature = 0.4
+        float $temperature = 0.4,
+        ?int $maxCompletionTokens = null,
+        ?array $jsonSchema = null,
+        ?array &$usage = null,
+        ?string $model = null
     ): string {
-        $payload = $this->buildTemplatePayload($context, $template, $forceJsonFormat, $reasoningEffort, $systemInstructions, $temperature);
+        $payload = $this->buildTemplatePayload($context, $template, $forceJsonFormat, $reasoningEffort, $systemInstructions, $temperature, $maxCompletionTokens, $jsonSchema, $model);
 
         try {
-            $response = Groq::chat()->completions()->create($payload);
+            $response = $this->sendGroqRequest($payload);
         } catch (\Throwable $e) {
             Log::error('Erro no Groq: ' . $e->getMessage());
             throw $e;
         }
 
+        // O bloco `usage` da resposta era descartado aqui: o único jeito de
+        // saber quantos tokens um documento custou era chamar a API por
+        // fora da aplicação. Sem ele não há como observar a taxa de cache
+        // (o caching do Groq é automático e implícito — não existe
+        // parâmetro para ligá-lo, só o número que diz se pegou), nem o
+        // custo de raciocínio, nem os sinais numéricos que SH-R23-02 pede.
+        // Por referência, e não no retorno, para não mexer na assinatura
+        // que os três call sites existentes usam.
+        $usage = $response['usage'] ?? null;
+
         return $response['choices'][0]['message']['content'];
+    }
+
+    /**
+     * O teto de vazão do Groq é por (organização, MODELO)
+     * (ai-vitalfy/CAPACITY.md): a extração factual e os insights do mesmo
+     * documento disputam a mesma janela de 60s enquanto rodarem no mesmo
+     * modelo. Apontar os insights para outro modelo dá a eles um balde
+     * próprio, sem gastar mais — é a alavanca 4 daquele documento.
+     *
+     * Lido por env() direto e não por config(), pelo mesmo motivo de
+     * App\Support\FeatureFlags: valor dentro de config/*.php congela com
+     * `config:cache`, e a intenção aqui é poder trocar o modelo no .env do
+     * servidor e ver efeito na requisição seguinte. Vazio ou ausente
+     * mantém o modelo único de MODEL_NAME — o comportamento de hoje.
+     */
+    private function insightsModel(): string
+    {
+        return env('GROQ_INSIGHTS_MODEL') ?: self::MODEL_NAME;
+    }
+
+    /**
+     * Envia o payload ao Groq sem passar por
+     * LucianoTonet\GroqPHP\Completions::create(), cujo createRequest()
+     * (Completions.php:132) monta o corpo a partir de uma lista fechada de
+     * parâmetros e descarta em silêncio tudo que não está nela. Foi o que
+     * manteve `reasoning_effort` e `max_completion_tokens` fora de TODAS as
+     * requisições desta aplicação desde que foram escritos.
+     *
+     * Groq::makeRequest() é exatamente o mesmo transporte que a biblioteca
+     * usa por dentro — o que muda aqui é só quem monta o corpo, que passa a
+     * ser o payload inteiro, sem filtro.
+     *
+     * Recupera também `failed_generation` do corpo do erro. A biblioteca o
+     * descarta (Completions.php:190 constrói a GroqException sem esse
+     * argumento) mesmo sendo o campo que as mensagens de erro do Groq
+     * mandam consultar — sem ele, "Failed to validate JSON. See
+     * 'failed_generation'" é um beco sem saída.
+     *
+     * A dívida real por trás disto é a versão: 0.0.10, de outubro de 2024,
+     * com a 1.4.2 publicada. Subir de major resolveria na raiz e é a
+     * correção limpa; enquanto não sobe, o corpo é montado aqui.
+     */
+    private function sendGroqRequest(array $payload): array
+    {
+        $request = new Request(
+            'POST',
+            Groq::baseUrl() . '/chat/completions',
+            [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . Groq::apiKey(),
+            ],
+            json_encode($payload)
+        );
+
+        try {
+            $response = Groq::makeRequest($request);
+        } catch (RequestException $e) {
+            throw $this->groqExceptionFrom($e);
+        }
+
+        return json_decode((string) $response->getBody(), true) ?? [];
+    }
+
+    private function groqExceptionFrom(RequestException $e): GroqException
+    {
+        $body = $e->getResponse() ? (string) $e->getResponse()->getBody() : '';
+        $decoded = json_decode($body, true);
+        $error = $decoded['error'] ?? [];
+
+        return new GroqException(
+            $error['message'] ?? $e->getMessage(),
+            $e->getResponse()?->getStatusCode() ?? 0,
+            $error['type'] ?? 'api_error',
+            $e->getResponse()?->getHeaders() ?? [],
+            null,
+            $error['failed_generation'] ?? null
+        );
     }
 
     /**
@@ -162,8 +256,12 @@ class DocumentService
         bool $forceJsonFormat = false,
         string $reasoningEffort = 'low',
         ?string $systemInstructions = null,
-        float $temperature = 0.4
+        float $temperature = 0.4,
+        ?int $maxCompletionTokens = null,
+        ?array $jsonSchema = null,
+        ?string $model = null
     ): array {
+        $model ??= self::MODEL_NAME;
         $context = $this->mergeContextChunks($context);
 
         $prompt = str_replace('{context}', $this->delimitUntrustedContext($context), $template);
@@ -196,17 +294,47 @@ class DocumentService
         }
 
         $payload = [
-            'model' => self::MODEL_NAME,
+            'model' => $model,
             'temperature' => $temperature,
             'top_p' => 0.9,
             'messages' => $messages,
         ];
 
-        if (str_starts_with(self::MODEL_NAME, 'openai/gpt-oss')) {
+        if (str_starts_with($model, 'openai/gpt-oss')) {
             $payload['reasoning_effort'] = $reasoningEffort;
         }
 
-        if ($forceJsonFormat) {
+        // Sem teto explícito o Groq aplica o default de 2048 tokens de
+        // completion, que os modelos gpt-oss consomem inteiro no canal de
+        // raciocínio antes de emitir qualquer saída: o retorno vem vazio e,
+        // com response_format, a requisição falha com "Failed to validate
+        // JSON" e um failed_generation de zero caractere. Foi o que
+        // derrubou 100% das extrações de BE-R23-04 no primeiro teste
+        // manual da flag. Null preserva os call sites que não precisam do
+        // corte explícito.
+        //
+        // A chave é `max_tokens`, e não `max_completion_tokens`, porque
+        // LucianoTonet\GroqPHP\Completions::createRequest() monta o corpo a
+        // partir de uma lista fechada de parâmetros (Completions.php:132) —
+        // o que não está nela é descartado sem aviso, e
+        // `max_completion_tokens` não está. A API aceita `max_tokens` como
+        // alias. Qualquer parâmetro novo daqui para frente precisa ser
+        // conferido contra essa lista antes de ser considerado enviado.
+        if ($maxCompletionTokens !== null) {
+            $payload['max_tokens'] = $maxCompletionTokens;
+        }
+
+        // $jsonSchema é o bloco `json_schema` completo (name/strict/schema),
+        // montado por quem conhece o domínio — aqui só embrulha. Quando
+        // presente vence json_object: é o modo estrito, em que a API
+        // rejeita a geração que não obedece ao schema em vez de devolver
+        // um JSON sintaticamente válido e semanticamente destruído.
+        if ($jsonSchema !== null) {
+            $payload['response_format'] = [
+                'type' => 'json_schema',
+                'json_schema' => $jsonSchema,
+            ];
+        } elseif ($forceJsonFormat) {
             $payload['response_format'] = [ 'type' => 'json_object' ];
         }
 
@@ -263,7 +391,7 @@ class DocumentService
     public function generateInsightsAI(array $context): array
     {
         $promptTemplate = config("prompts.ai_insights");
-        $insights = $this->llmResponseByTemplate($context, $promptTemplate, true, 'medium');
+        $insights = $this->llmResponseByTemplate($context, $promptTemplate, true, 'medium', model: $this->insightsModel());
         $decoded = json_decode($insights, true);
 
         $this->assertValidMedicalAnalysis($decoded['medical_analysis'] ?? null);

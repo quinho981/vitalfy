@@ -20,6 +20,16 @@ use Tests\TestCase;
  * case_severity fora do enum ACCR) nao pode virar uma linha em ai_insights.
  * ProcessGenerateInsightsAI::handle() acessava as chaves direto, sem
  * verificar nada.
+ *
+ * ATUALIZADO em 13/09/2026: a garantia de BE-R7-03 — payload fora do
+ * contrato nao vira linha em ai_insights — segue intacta e continua sendo o
+ * que estes testes provam. O que mudou foi o MECANISMO da falha. Desde que
+ * o job ganhou `tries = 3` para sobreviver a rate limit, deixar a
+ * InvalidMedicalAnalysisException propagar faria as tres tentativas
+ * acontecerem: ~8.700 tokens gastos para receber tres vezes o mesmo payload
+ * invalido, ocupando a janela de TPM de que o proximo documento precisa.
+ * O job agora chama $this->fail() e nao retenta. A excecao deixa de escapar
+ * de handle(), e por isso os dois primeiros testes nao a esperam mais.
  */
 class ProcessGenerateInsightsAIValidationTest extends TestCase
 {
@@ -52,7 +62,7 @@ class ProcessGenerateInsightsAIValidationTest extends TestCase
         ]);
     }
 
-    public function test_case_severity_fora_do_enum_nao_persiste_e_propaga_excecao(): void
+    public function test_case_severity_fora_do_enum_nao_persiste_e_falha_sem_retentar(): void
     {
         $document = $this->createDocument();
 
@@ -66,17 +76,13 @@ class ProcessGenerateInsightsAIValidationTest extends TestCase
 
         $job = new ProcessGenerateInsightsAI($document->id, [['speaker' => 'médico', 'text' => 'teste']]);
 
-        $this->expectException(InvalidMedicalAnalysisException::class);
+        $job->handle(app(DocumentService::class));
 
-        try {
-            $job->handle(app(DocumentService::class));
-        } finally {
-            $this->assertDatabaseCount('ai_insights', 0);
-            $this->assertNull($document->transcript->fresh()->description);
-        }
+        $this->assertDatabaseCount('ai_insights', 0);
+        $this->assertNull($document->transcript->fresh()->description);
     }
 
-    public function test_chave_ausente_nao_persiste_e_propaga_excecao(): void
+    public function test_chave_ausente_nao_persiste_e_falha_sem_retentar(): void
     {
         $document = $this->createDocument();
 
@@ -88,13 +94,9 @@ class ProcessGenerateInsightsAIValidationTest extends TestCase
 
         $job = new ProcessGenerateInsightsAI($document->id, [['speaker' => 'médico', 'text' => 'teste']]);
 
-        $this->expectException(InvalidMedicalAnalysisException::class);
+        $job->handle(app(DocumentService::class));
 
-        try {
-            $job->handle(app(DocumentService::class));
-        } finally {
-            $this->assertDatabaseCount('ai_insights', 0);
-        }
+        $this->assertDatabaseCount('ai_insights', 0);
     }
 
     public function test_resposta_valida_continua_persistindo_normalmente(): void

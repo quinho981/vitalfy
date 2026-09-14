@@ -57,11 +57,13 @@ class ClinicalFactsPromptTest extends TestCase
             forceJsonFormat: true,
             reasoningEffort: 'medium',
             systemInstructions: $prompts['clinical_facts_system'],
-            temperature: 0.0
+            temperature: 0.0,
+            maxCompletionTokens: 8192,
+            jsonSchema: $extractor->buildResponseSchema($this->sections())
         );
     }
 
-    public function test_payload_tem_system_e_user_separados_com_temperatura_zero_e_json_object(): void
+    public function test_payload_tem_system_e_user_separados_com_temperatura_zero_e_json_schema(): void
     {
         $payload = $this->buildExtractionPayload([['text' => 'médico: bom dia.']], 12);
 
@@ -69,7 +71,25 @@ class ClinicalFactsPromptTest extends TestCase
         $this->assertSame('system', $payload['messages'][0]['role']);
         $this->assertSame('user', $payload['messages'][1]['role']);
         $this->assertSame(0.0, $payload['temperature']);
-        $this->assertSame(['type' => 'json_object'], $payload['response_format']);
+        $this->assertSame('json_schema', $payload['response_format']['type']);
+        $this->assertTrue($payload['response_format']['json_schema']['strict']);
+    }
+
+    /**
+     * O default de 2048 do Groq é consumido inteiro pelo canal de
+     * raciocínio do gpt-oss-20b antes de qualquer saída — sem teto
+     * explícito acima dele a extração devolve vazio e falha em 100% das
+     * chamadas.
+     */
+    public function test_payload_tem_teto_de_tokens_acima_do_default_do_groq(): void
+    {
+        $payload = $this->buildExtractionPayload([['text' => 'médico: bom dia.']], 12);
+
+        // `max_tokens` e não `max_completion_tokens`: a segunda é
+        // descartada pela lista fechada de parâmetros da biblioteca do Groq
+        // (Completions.php:132) e nunca chega à API.
+        $this->assertArrayHasKey('max_tokens', $payload);
+        $this->assertGreaterThan(2048, $payload['max_tokens']);
     }
 
     public function test_nenhuma_regra_permanente_aparece_na_mensagem_user(): void

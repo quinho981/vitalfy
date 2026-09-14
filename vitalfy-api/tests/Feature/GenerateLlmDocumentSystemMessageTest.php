@@ -6,6 +6,7 @@ use App\Models\DocumentTemplate;
 use App\Models\DocumentTemplateCategory;
 use App\Services\DocumentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use GuzzleHttp\Psr7\Response;
 use LucianoTonet\GroqLaravel\Facades\Groq;
 use Tests\TestCase;
 
@@ -35,11 +36,18 @@ class GenerateLlmDocumentSystemMessageTest extends TestCase
 
         $captured = null;
 
-        Groq::shouldReceive('chat->completions->create')
+        Groq::shouldReceive('baseUrl')->andReturn('https://api.groq.com/openai/v1');
+        Groq::shouldReceive('apiKey')->andReturn('chave-de-teste');
+        Groq::shouldReceive('makeRequest')
             ->once()
-            ->andReturnUsing(function (array $payload) use (&$captured) {
-                $captured = $payload;
-                return ['choices' => [['message' => ['content' => '<h2><strong>Título</strong></h2><p></p>']]]];
+            ->andReturnUsing(function ($request) use (&$captured) {
+                // o corpo serializado é o que de fato chega à API — é nele,
+                // e não no array em memória, que o parâmetro descartado
+                // aparecia como ausente
+                $captured = json_decode((string) $request->getBody(), true);
+                return new Response(200, [], json_encode(
+                    ['choices' => [['message' => ['content' => '<h2><strong>Título</strong></h2><p></p>']]]]
+                ));
             });
 
         (new DocumentService())->generateLlmDocument(
